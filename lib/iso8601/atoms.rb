@@ -12,15 +12,11 @@ module ISO8601
 
     private
       def is_integer?(arg, error_message=nil)
-        if arg.integer?
-          if arg < 0
-            raise RangeError, error_message
-          end
-        else
+        if !arg.is_a? Integer
           raise TypeError, error_message
+        elsif arg < 0
+          raise RangeError, error_message
         end
-      rescue NoMethodError => e
-        raise TypeError, error_message
       end
       def factor(f)
         # factor to calculate conversions
