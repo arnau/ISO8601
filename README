@@ -6,7 +6,7 @@ times) standard.
 
 ## TODO
 
-* Decimal fraction in ISO8601:Atom
+* Decimal fraction in dateTime and duration patterns
 * Week patterns (P[n]Y[n]W)
 
 ## Dependencies
