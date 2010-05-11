@@ -8,7 +8,7 @@ module ISO8601
                   (-)?(\d{2})
                 )?
                 (?:
-                  \2?(\d{2})
+                  (\2)?(\d{2})
                 )?
               )?
               (?:
@@ -17,31 +17,41 @@ module ISO8601
                   (:)?(\d{2})
                 )?
                 (?:
-                  \6?(\d{2})
+                  (\7)?(\d{2})
                 )?
-                (?:
-                  (Z|([+-])(\d{2})(\6?\d{2})?)
+                (
+                  Z|([+-])
+                    (\d{2})
+                    (?:
+                      (\7)?
+                      (\d{2})
+                    )?
                 )?
               )?
             $/x.match(dateTime) or raise ISO8601::Errors::UnknownPattern.new(dateTime)
 
       @dateTime = dateTime
-
-      @dateSeparator = @dt[2]
-      @time = @dt[5]
-      @timeSeparator = @dt[6]
-
+      @time = @dt[6]
+      @dateSeparator = @dt[2] == @dt[4] ? @dt[2] : nil
+      @timeSeparator = 
+      if (!@dt[7].nil? and (!@dt[9].nil? and !@dt[10].nil?) and (!@dt[14].nil? and !@dt[15].nil?)) or
+         (!@dt[7].nil? and (!@dt[9].nil? and !@dt[10].nil?) and @dt[15].nil?) or
+         (!@dt[7].nil? and @dt[10].nil? and @dt[15].nil?)
+        @dt[7]
+      else
+        nil
+      end
       @year = @dt[1].nil? ? nil : @dt[1].to_i
       @month = @dt[3].nil? ? nil : @dt[3].to_i
-      @day = @dt[4].nil? ? nil : @dt[4].to_i
-      @hour = @dt[5].nil? ? nil : @dt[5].to_i
-      @minute = @dt[7].nil? ? nil : @dt[7].to_i
-      @second = @dt[8].nil? ? nil : @dt[8].to_i
+      @day = @dt[5].nil? ? nil : @dt[5].to_i
+      @hour = @dt[6].nil? ? nil : @dt[6].to_i
+      @minute = @dt[8].nil? ? nil : @dt[8].to_i
+      @second = @dt[10].nil? ? nil : @dt[10].to_i
       @timezone = {
-        :full => @dt[9],
-        :sign => @dt[10],
-        :hour => @dt[11].nil? ? nil : @dt[11].to_i,
-        :minute => @dt[12].nil? ? nil : @dt[12].to_i,
+        :full => @dt[11],
+        :sign => @dt[12],
+        :hour => @dt[13].nil? ? nil : @dt[13].to_i,
+        :minute => @dt[15].nil? ? nil : @dt[15].to_i,
       }
 
       valid_pattern?

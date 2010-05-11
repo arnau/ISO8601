@@ -14,9 +14,16 @@ class TestDateTime < Test::Unit::TestCase
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-1-09") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("20101-09") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("201-0109") }
-    
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-05-09T103012+0400") }
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("20100509T10:30:12+04:00") }
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-05-09T10:30:12+0400") }
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-05-09T10:3012+0400") }
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-05-09T10:3012") }
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010:05:09T10:30:12+04:00") }
+
     assert_raise(RangeError) { ISO8601::DateTime.new("2010-01-32") }
     assert_raise(RangeError) { ISO8601::DateTime.new("2010-02-31") }
+    assert_raise(RangeError) { ISO8601::DateTime.new("2010-13-31") }
     
     assert_nothing_raised() { ISO8601::DateTime.new("2010") }
     assert_nothing_raised() { ISO8601::DateTime.new("2010-05") }
