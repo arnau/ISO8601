@@ -7,27 +7,27 @@ module ISO8601
     end
     def years
       atom = @duration[1].nil? ? 0 : @duration[1].chop.to_i
-      ISO8601::Year.new(atom, @base)
+      ISO8601::Years.new(atom, @base)
     end
     def months
       atom = @duration[2].nil? ? 0 : @duration[2].chop.to_i
-      ISO8601::Month.new(atom, @base)
+      ISO8601::Months.new(atom, @base)
     end
     def days
       atom = @duration[3].nil? ? 0 : @duration[3].chop.to_i
-      ISO8601::Day.new(atom, @base)
+      ISO8601::Days.new(atom, @base)
     end
     def hours
       atom = @duration[5].nil? ? 0 : @duration[5].chop.to_i
-      ISO8601::Hour.new(atom, @base)
+      ISO8601::Hours.new(atom, @base)
     end
     def minutes
       atom = @duration[6].nil? ? 0 : @duration[6].chop.to_i
-      ISO8601::Minute.new(atom, @base)
+      ISO8601::Minutes.new(atom, @base)
     end
     def seconds
       atom = @duration[7].nil? ? 0 : @duration[7].chop.to_i
-      ISO8601::Second.new(atom, @base)
+      ISO8601::Seconds.new(atom, @base)
     end
     def to_seconds
       years = self.years.to_seconds
