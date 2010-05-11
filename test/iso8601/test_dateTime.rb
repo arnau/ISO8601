@@ -11,13 +11,31 @@ class TestDateTime < Test::Unit::TestCase
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-0") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-0-09") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-1-09") }
-
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-1-09") }
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("20101-09") }
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("201-0109") }
+    
     assert_raise(RangeError) { ISO8601::DateTime.new("2010-01-32") }
     assert_raise(RangeError) { ISO8601::DateTime.new("2010-02-31") }
     
     assert_nothing_raised() { ISO8601::DateTime.new("2010") }
     assert_nothing_raised() { ISO8601::DateTime.new("2010-05") }
     assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09") }
+    assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09") }
+    assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09T10") }
+    assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09T10:30") }
+    assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09T10:30:12") }
+    assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09T10:30:12Z") }
+    assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09T10:30:12+04:00") }
+    assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09T10:30:12-04:00") }
+    assert_nothing_raised() { ISO8601::DateTime.new("2010-05-09T10:30:12+04") }
+    assert_nothing_raised() { ISO8601::DateTime.new("201005") }
+    assert_nothing_raised() { ISO8601::DateTime.new("20100509") }
+    assert_nothing_raised() { ISO8601::DateTime.new("20100509T103012") }
+    assert_nothing_raised() { ISO8601::DateTime.new("20100509T103012Z") }
+    assert_nothing_raised() { ISO8601::DateTime.new("20100509T103012+0400") }
+    assert_nothing_raised() { ISO8601::DateTime.new("20100509T103012-0400") }
+    assert_nothing_raised() { ISO8601::DateTime.new("20100509T103012+04") }
   end
   
   def test_atom_methods
