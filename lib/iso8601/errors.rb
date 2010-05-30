@@ -9,5 +9,15 @@ module ISO8601
         super("The pattern “#{pattern}” is not allowed in this implementation of ISO8601.")
       end
     end
+    class DurationError < ::StandardError
+      def initialize(duration)
+        super("Unexpected type of duration “#{duration}”.")
+      end
+    end
+    class DurationBaseError < ISO8601::Errors::DurationError
+      def initialize(duration)
+        super("Wrong base for #{duration} duration.")
+      end
+    end
   end
 end
