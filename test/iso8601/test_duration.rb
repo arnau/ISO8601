@@ -17,6 +17,9 @@ class TestDuration < Test::Unit::TestCase
     assert_nothing_raised() { ISO8601::Duration.new("PT1H1M") }
     assert_nothing_raised() { ISO8601::Duration.new("PT1H1S") }
     assert_nothing_raised() { ISO8601::Duration.new("PT1H1M1S") }
+    assert_nothing_raised() { ISO8601::Duration.new("+PT1H1M1S") }
+    assert_nothing_raised() { ISO8601::Duration.new("-PT1H1M1S") }
+    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::Duration.new("~PT1H1M1S") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::Duration.new("T") }
   end
   
@@ -24,7 +27,16 @@ class TestDuration < Test::Unit::TestCase
     assert_equal("P1YT2M24S", (ISO8601::Duration.new("P1YT2M12S") + ISO8601::Duration.new("PT12S")).to_s, "d1 + d2")
     assert_instance_of(ISO8601::Duration, ISO8601::Duration.new("P1YT2M12S") + ISO8601::Duration.new("PT12S"))
   end
-
+  def test_substraction
+    assert_equal("P1YT2M", (ISO8601::Duration.new("P1YT2M12S") - ISO8601::Duration.new("PT12S")).to_s, "d1 - d2 > 0")
+    assert_equal("PT0S", (ISO8601::Duration.new("PT12S") - ISO8601::Duration.new("PT12S")).to_s, "d1 - d2 = 0")
+    assert_equal("-P1YT1M", (ISO8601::Duration.new("PT12S") - ISO8601::Duration.new("P1YT1M12S")).to_s, "d1 - d2 < 0")
+    assert_instance_of(ISO8601::Duration, ISO8601::Duration.new("P1YT2M12S") - ISO8601::Duration.new("PT12S"))
+  end
+  def test_abs
+    assert_equal("P1YT2M", ISO8601::Duration.new("-P1YT2M").abs)
+    assert_equal("P1YT1M", (ISO8601::Duration.new("PT12S") - ISO8601::Duration.new("P1YT1M12S")).abs)
+  end
   def test_date_to_seconds
     assert_equal(63072000, ISO8601::Duration.new("P2Y").to_seconds, "P[n]Y form")
     assert_equal(70956000, ISO8601::Duration.new("P2Y3M").to_seconds, "P[n]Y[n]M form")

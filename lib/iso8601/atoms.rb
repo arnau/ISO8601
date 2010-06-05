@@ -17,8 +17,6 @@ module ISO8601
       def is_integer?(arg, error_message=nil)
         if !arg.is_a? Integer
           raise TypeError, error_message
-        elsif arg < 0
-          raise RangeError, error_message
         end
       end
   end

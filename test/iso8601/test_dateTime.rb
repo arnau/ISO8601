@@ -10,7 +10,6 @@ class TestDateTime < Test::Unit::TestCase
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-0") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-0-09") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-1-09") }
-    assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-1-09") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("20101-09") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("201-0109") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::DateTime.new("2010-05-09T103012+0400") }
