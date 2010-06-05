@@ -1,7 +1,9 @@
 module ISO8601
+
+  # Represents a generic atom in a Duration
   class Atom
     def initialize(atom, base=nil)
-      is_integer?(atom, "First argument for #{self.inspect} must be a positive Integer.")
+      is_integer?(atom, "First argument for #{self.inspect} must be an Integer.")
       @atom = atom
       @base = base
     end
@@ -26,7 +28,7 @@ module ISO8601
       if @base.nil?
         ((365 * 303 + 366 * 97) / 400) * 86400
       else
-        raise TypeError, "Base date not yet implemented."
+        Time.parse("#{@base.year + 1}-01-01") - Time.parse("#{@base.year}-01-01")
       end
     end
   end
@@ -35,7 +37,7 @@ module ISO8601
       if @base.nil?
         (((365 * 303 + 366 * 97) / 400) * 86400) / 12
       else
-        raise TypeError, "Base date not yet implemented."
+        (Time.parse("#{@base.year + 1}-01-01") - Time.parse("#{@base.year}-01-01")) / 12
       end
     end
   end

@@ -22,7 +22,14 @@ class TestDuration < Test::Unit::TestCase
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::Duration.new("~PT1H1M1S") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::Duration.new("T") }
   end
-  
+  def test_base
+    assert_nothing_raised() { ISO8601::Duration.new("P1Y1M1DT1H1M1S", ISO8601::DateTime.new("2010-01-01")) }
+    assert_raise(TypeError) { ISO8601::Duration.new("P1Y1M1DT1H1M1S", "2010-01-01") }
+    assert_raise(TypeError) { ISO8601::Duration.new("P1Y1M1DT1H1M1S", 2010) }
+    assert_instance_of(ISO8601::DateTime, ISO8601::Duration.new("P1Y1M1DT1H1M1S", ISO8601::DateTime.new("2010-01-01")).base)
+    assert_instance_of(NilClass, ISO8601::Duration.new("P1Y1M1DT1H1M1S").base)
+    assert_instance_of(ISO8601::DateTime, (ISO8601::Duration.new("P1Y1M1DT1H1M1S").base = ISO8601::DateTime.new("2010-01-01")))
+  end
   def test_addition
     assert_equal("P1YT2M24S", (ISO8601::Duration.new("P1YT2M12S") + ISO8601::Duration.new("PT12S")).to_s, "d1 + d2")
     assert_instance_of(ISO8601::Duration, ISO8601::Duration.new("P1YT2M12S") + ISO8601::Duration.new("PT12S"))

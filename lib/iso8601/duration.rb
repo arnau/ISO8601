@@ -7,8 +7,14 @@ module ISO8601
       @duration = /^(\+|-)?P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/.match(duration)
       @base = base #date base for duration calculations
       valid_pattern?
+      valid_base?
     end
-
+    
+    def base=(value)
+      @base = value
+      return @base
+    end
+    
     # Returns the original string of the duration
     def to_s
       @duration[0]
@@ -102,7 +108,11 @@ module ISO8601
       def sign
         (@duration[1].nil? or @duration[1] == "+") ? 1 : -1
       end
-
+      def valid_base?
+        if !(@base.is_a? NilClass or @base.is_a? ISO8601::DateTime)
+          raise TypeError
+        end
+      end
       def valid_pattern?
         if @duration.nil? or 
            (@duration[2].nil? and @duration[3].nil? and @duration[4].nil? and @duration[5].nil?) or 
