@@ -59,7 +59,12 @@ module ISO8601
       valid_range?
     end
     def to_time
-      Time.parse(@date_time)
+      raise RangeError if @year.nil?
+      if @month.nil?
+        Time.parse("#{@year}-01")
+      else
+        Time.parse(@date_time)
+      end
     end
     private
       def valid_pattern?
