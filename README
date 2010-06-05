@@ -4,6 +4,14 @@ ISO8601 is a simple implementation of the ISO 8601 (Data elements and
 interchange formats — Information interchange — Representation of dates and 
 times) standard.
 
+## COMMENTS
+
+Because Durations and DateTime has substract method, Durations has sign to represent a negative value:
+
+  * `(ISO8601::Duration.new("PT10S") - ISO8601::Duration.new("PT12S")).to_s #=> "-PT2S"`
+  * `(ISO8601::Duration.new("-PT10S") + ISO8601::Duration.new("PT12S")).to_s #=> "PT2S"`
+
+
 ## TODO
 
 * Decimal fraction in dateTime and duration patterns
@@ -13,5 +21,8 @@ times) standard.
 
 TODO
 
-## Contact
+## License
+ISO8601 is distributed under the LGPL[http://www.gnu.org/licenses/lgpl.html] license.
+
+## Author
 Arnau Siches, <arnau.siches@esbudellat.net>
