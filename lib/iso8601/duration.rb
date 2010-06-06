@@ -22,37 +22,37 @@ module ISO8601
 
     # Returns the years of the duration
     def years
-      atom = @duration[2].nil? ? 0 : @duration[2].chop.to_i
+      atom = @duration[2].nil? ? 0 : @duration[2].chop.to_f
       ISO8601::Years.new(atom * sign, @base)
     end
 
     # Returns the months of the duration
     def months
-      atom = @duration[3].nil? ? 0 : @duration[3].chop.to_i
+      atom = @duration[3].nil? ? 0 : @duration[3].chop.to_f
       ISO8601::Months.new(atom * sign, @base)
     end
 
     # Returns the days of the duration
     def days
-      atom = @duration[4].nil? ? 0 : @duration[4].chop.to_i
+      atom = @duration[4].nil? ? 0 : @duration[4].chop.to_f
       ISO8601::Days.new(atom * sign, @base)
     end
 
     # Returns the hours of the duration
     def hours
-      atom = @duration[6].nil? ? 0 : @duration[6].chop.to_i
+      atom = @duration[6].nil? ? 0 : @duration[6].chop.to_f
       ISO8601::Hours.new(atom * sign, @base)
     end
 
     # Returns the minutes of the duration
     def minutes
-      atom = @duration[7].nil? ? 0 : @duration[7].chop.to_i
+      atom = @duration[7].nil? ? 0 : @duration[7].chop.to_f
       ISO8601::Minutes.new(atom * sign, @base)
     end
     
     # Returns the seconds of the duration
     def seconds
-      atom = @duration[8].nil? ? 0 : @duration[8].chop.to_i
+      atom = @duration[8].nil? ? 0 : @duration[8].chop.to_f
       ISO8601::Seconds.new(atom * sign, @base)
     end
     

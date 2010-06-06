@@ -38,8 +38,11 @@ module ISO8601
     def factor
       if @base.nil?
         ((365 * 303 + 366 * 97) / 400) * 86400
+      elsif @atom == 0
+        0
       else
-        Time.parse("#{@base.year + 1}-01-01") - Time.parse("#{@base.year}-01-01")
+        year = (@base.year + @atom).to_i
+        (Time.parse("#{year}-01-01") - Time.parse("#{@base.year}-01-01")) / @atom
       end
     end
   end
@@ -58,8 +61,13 @@ module ISO8601
     def factor
       if @base.nil?
         (((365 * 303 + 366 * 97) / 400) * 86400) / 12
+      elsif @atom == 0
+        0
       else
-        (Time.parse("#{@base.year + 1}-01-01") - Time.parse("#{@base.year}-01-01")) / 12
+        months = ((@base.month + @atom) % 12)
+        month = months.to_i.to_s.rjust(2, "0")
+        year = @base.year + (months / 12).to_i
+        (Time.parse("#{year}-#{month}-01") - Time.parse("#{@base.year}-#{@base.month.to_s.rjust(2, "0")}-01")) / @atom
       end
     end
   end
