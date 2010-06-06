@@ -3,7 +3,7 @@ module ISO8601
   # Represents a generic atom in a +ISO8601::Duration+.
   class Atom
     def initialize(atom, base=nil)
-      is_integer?(atom, "First argument for #{self.inspect} must be an Integer.")
+      is_number?(atom, "First argument for #{self.inspect} must be an Integer or a Float.")
       @atom = atom
       @base = base
     end
@@ -16,8 +16,8 @@ module ISO8601
     end
 
     private
-      def is_integer?(arg, error_message=nil)
-        if !arg.is_a? Integer
+      def is_number?(arg, error_message=nil)
+        if !(arg.is_a? Integer or arg.is_a? Float)
           raise TypeError, error_message
         end
       end

@@ -5,11 +5,12 @@ require "iso8601"
 class TestAtom < Test::Unit::TestCase
   def test_arguments
     assert_raise(TypeError) { ISO8601::Atom.new("1") }
-    assert_raise(TypeError) { ISO8601::Atom.new(1.0) }
     assert_raise(TypeError) { ISO8601::Atom.new(true) }
     assert_nothing_raised() { ISO8601::Atom.new(-1) }
     assert_nothing_raised() { ISO8601::Atom.new(0) }
     assert_nothing_raised() { ISO8601::Atom.new(1) }
+    assert_nothing_raised() { ISO8601::Atom.new(1.1) }
+    assert_nothing_raised() { ISO8601::Atom.new(-1.1) }
   end
 end
 class TestYears < Test::Unit::TestCase
