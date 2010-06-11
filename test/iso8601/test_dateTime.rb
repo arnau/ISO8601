@@ -55,5 +55,6 @@ class TestDateTime < Test::Unit::TestCase
     assert_instance_of(Time, ISO8601::DateTime.new("2010-05-09").to_time)
     assert_instance_of(Time, ISO8601::DateTime.new("2010-05").to_time)
     assert_instance_of(Time, ISO8601::DateTime.new("2010").to_time)
+    assert_instance_of(Time, ISO8601::DateTime.new("20").to_time)
   end
 end

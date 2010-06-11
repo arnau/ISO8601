@@ -16,6 +16,7 @@ Because Durations and DateTime has substract method, Durations has sign to repre
 
 * Decimal fraction in dateTime and duration patterns
 * Week patterns (P[n]Y[n]W)
+* Recurring time intervals
 
 ## Dependencies
 

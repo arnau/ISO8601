@@ -23,6 +23,8 @@ class TestYears < Test::Unit::TestCase
     assert_equal(63072000, ISO8601::Years.new(2).to_seconds)
     assert_equal(-63072000, ISO8601::Years.new(-2).to_seconds)
     assert_equal(63072000, ISO8601::Years.new(2, ISO8601::DateTime.new("2010-01-01")).to_seconds, "common year")
+    assert_equal(378691200, ISO8601::Years.new(12, ISO8601::DateTime.new("2010-01-01")).to_seconds, "common year")
+    assert_equal(473385600, ISO8601::Years.new(15, ISO8601::DateTime.new("2010-01-01")).to_seconds, "common year")
     assert_equal(63158400, ISO8601::Years.new(2, ISO8601::DateTime.new("2000-01-01")).to_seconds, "leap year")
   end
 end
@@ -40,8 +42,11 @@ class TestMonths < Test::Unit::TestCase
     assert_equal(-5256000, ISO8601::Months.new(-2).to_seconds)
     assert_equal(5097600, ISO8601::Months.new(2, ISO8601::DateTime.new("2010-01-01")).to_seconds, "common year")
     assert_equal(5184000, ISO8601::Months.new(2, ISO8601::DateTime.new("2000-01-01")).to_seconds, "leap year")
-    assert_equal(5094000, ISO8601::Months.new(2, ISO8601::DateTime.new("2010-02-01")).to_seconds, "common year, february")
-    assert_equal(5180400, ISO8601::Months.new(2, ISO8601::DateTime.new("2000-02-01")).to_seconds, "leap year, february")
+    assert_equal(5097600, ISO8601::Months.new(2, ISO8601::DateTime.new("2010-02-01")).to_seconds, "common year, february")
+    assert_equal(5184000, ISO8601::Months.new(2, ISO8601::DateTime.new("2000-02-01")).to_seconds, "leap year, february")
+
+    assert_equal(31622400, ISO8601::Months.new(12, ISO8601::DateTime.new("2000-02-01")).to_seconds, "leap year, february")
+    assert_equal(ISO8601::Years.new(1, ISO8601::DateTime.new("2000-02-01")).to_seconds, ISO8601::Months.new(12, ISO8601::DateTime.new("2000-02-01")).to_seconds, "leap year, february")
   end
 end
 class TestDays < Test::Unit::TestCase

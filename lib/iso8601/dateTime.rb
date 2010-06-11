@@ -61,9 +61,21 @@ module ISO8601
     def to_time
       raise RangeError if @year.nil?
       if @month.nil?
-        Time.parse("#{@year}-01")
+        Time.utc(@year)
       else
-        Time.parse(@date_time)
+        Time.parse(@date_time).getutc
+      end
+    end
+    def +(d)
+      raise TypeError unless (d.is_a? Float or d.is_a? Integer)
+      Time.utc(@year, @month, @day, @hour, @minute, @second) + d
+    end
+    def -(d)
+      raise TypeError unless (d.is_a? Float or d.is_a? Integer or d.is_a? ISO8601::DateTime)
+      if (d.is_a? ISO8601::DateTime)
+        Time.utc(@year, @month, @day, @hour, @minute, @second) - Time.utc(d.year, d.month, d.day, d.hour, d.minute, d.second)
+      else
+        Time.utc(@year, @month, @day, @hour, @minute, @second) - d
       end
     end
     private

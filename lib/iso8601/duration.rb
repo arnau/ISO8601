@@ -2,12 +2,20 @@ module ISO8601
   
   # Represents a duration in ISO 8601 format
   class Duration
-    attr_reader :base
+    attr_reader :base, :atoms
     def initialize(duration, base = nil)
       @duration = /^(\+|-)?P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/.match(duration)
       @base = base #date base for duration calculations
       valid_pattern?
       valid_base?
+      @atoms = {
+        :years => @duration[2].nil? ? 0 : @duration[2].chop.to_f * sign,
+        :months => @duration[3].nil? ? 0 : @duration[3].chop.to_f * sign,
+        :days => @duration[4].nil? ? 0 : @duration[4].chop.to_f * sign,
+        :hours => @duration[6].nil? ? 0 : @duration[6].chop.to_f * sign,
+        :minutes => @duration[7].nil? ? 0 : @duration[7].chop.to_f * sign,
+        :seconds => @duration[8].nil? ? 0 : @duration[8].chop.to_f * sign
+      }
     end
     
     def base=(value)
@@ -22,38 +30,33 @@ module ISO8601
 
     # Returns the years of the duration
     def years
-      atom = @duration[2].nil? ? 0 : @duration[2].chop.to_f
-      ISO8601::Years.new(atom * sign, @base)
+      ISO8601::Years.new(@atoms[:years], @base)
     end
 
     # Returns the months of the duration
     def months
-      atom = @duration[3].nil? ? 0 : @duration[3].chop.to_f
-      ISO8601::Months.new(atom * sign, @base)
+      base = @base.nil? ? nil : @base + self.years.to_seconds # prevent computing duplicated time
+      ISO8601::Months.new(@atoms[:months], base)
     end
 
     # Returns the days of the duration
     def days
-      atom = @duration[4].nil? ? 0 : @duration[4].chop.to_f
-      ISO8601::Days.new(atom * sign, @base)
+      ISO8601::Days.new(@atoms[:days], @base)
     end
 
     # Returns the hours of the duration
     def hours
-      atom = @duration[6].nil? ? 0 : @duration[6].chop.to_f
-      ISO8601::Hours.new(atom * sign, @base)
+      ISO8601::Hours.new(@atoms[:hours], @base)
     end
 
     # Returns the minutes of the duration
     def minutes
-      atom = @duration[7].nil? ? 0 : @duration[7].chop.to_f
-      ISO8601::Minutes.new(atom * sign, @base)
+      ISO8601::Minutes.new(@atoms[:minutes], @base)
     end
     
     # Returns the seconds of the duration
     def seconds
-      atom = @duration[8].nil? ? 0 : @duration[8].chop.to_f
-      ISO8601::Seconds.new(atom * sign, @base)
+      ISO8601::Seconds.new(@atoms[:seconds], @base)
     end
     
     # Returns the duration in seconds

@@ -12,14 +12,12 @@ module ISO8601
       @atom
     end
     def to_seconds
-      @atom.to_f * self.factor
+      @atom * self.factor
     end
 
     private
       def is_number?(arg, error_message=nil)
-        if !(arg.is_a? Integer or arg.is_a? Float)
-          raise TypeError, error_message
-        end
+        raise TypeError, error_message unless (arg.is_a? Integer or arg.is_a? Float)
       end
   end
 
@@ -42,7 +40,7 @@ module ISO8601
         0
       else
         year = (@base.year + @atom).to_i
-        (Time.parse("#{year}-01-01") - Time.parse("#{@base.year}-01-01")) / @atom
+        (Time.utc(year) - Time.utc(@base.year)) / @atom
       end
     end
   end
@@ -64,10 +62,9 @@ module ISO8601
       elsif @atom == 0
         0
       else
-        months = ((@base.month + @atom) % 12)
-        month = months.to_i.to_s.rjust(2, "0")
-        year = @base.year + (months / 12).to_i
-        (Time.parse("#{year}-#{month}-01") - Time.parse("#{@base.year}-#{@base.month.to_s.rjust(2, "0")}-01")) / @atom
+        month = (@base.month + @atom <= 12) ? (@base.month + @atom) : ((@base.month + @atom) % 12)
+        year = @base.year + ((@base.month + @atom) / 12).to_i
+        (Time.utc(year, month) - Time.utc(@base.year, @base.month)) / @atom
       end
     end
   end
