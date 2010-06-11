@@ -15,8 +15,10 @@ Because Durations and DateTime has substract method, Durations has sign to repre
 ## TODO
 
 * Decimal fraction in dateTime and duration patterns
-* Week patterns (P[n]Y[n]W)
 * Recurring time intervals
+* Ordinal date pattern (YYYY-DDD)
+* Week date pattern (YYYY-Www-D)
+* Week duration pattern (P[n]Y[n]W)
 
 ## Dependencies
 
