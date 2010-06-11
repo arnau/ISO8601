@@ -49,9 +49,18 @@ class TestDateTime < Test::Unit::TestCase
     assert_equal(2010, ISO8601::DateTime.new("2010-05-09").year)
     assert_equal(5, ISO8601::DateTime.new("2010-05-09").month)
     assert_equal(9, ISO8601::DateTime.new("2010-05-09").day)
+    assert_equal(10, ISO8601::DateTime.new("2010-05-09T10:05:01").hour)
+    assert_equal(5, ISO8601::DateTime.new("2010-05-09T10:05:01").minute)
+    assert_equal(1, ISO8601::DateTime.new("2010-05-09T10:05:01").second)
   end
   
   def test_to_time
+    assert_instance_of(Time, ISO8601::DateTime.new("2010-05-09T10:05:01-01:00").to_time)
+    assert_instance_of(Time, ISO8601::DateTime.new("2010-05-09T10:05:01+01:00").to_time)
+    assert_instance_of(Time, ISO8601::DateTime.new("2010-05-09T10:05:01Z").to_time)
+    assert_instance_of(Time, ISO8601::DateTime.new("2010-05-09T10:05:01").to_time)
+    assert_instance_of(Time, ISO8601::DateTime.new("2010-05-09T10:05").to_time)
+    assert_instance_of(Time, ISO8601::DateTime.new("2010-05-09T10").to_time)
     assert_instance_of(Time, ISO8601::DateTime.new("2010-05-09").to_time)
     assert_instance_of(Time, ISO8601::DateTime.new("2010-05").to_time)
     assert_instance_of(Time, ISO8601::DateTime.new("2010").to_time)
