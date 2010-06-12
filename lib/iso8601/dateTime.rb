@@ -41,8 +41,9 @@ module ISO8601
       else
         nil
       end
-      @century = @dt[1].nil? ? nil : @dt[1].to_i
+      @century = @dt[1].to_i
       @year = @dt[2].nil? ? nil : (@dt[1] + @dt[2]).to_i
+      # @year = @dt[2].nil? ? (@dt[1] + "00").to_i : (@dt[1] + @dt[2]).to_i
       @month = @dt[4].nil? ? nil : @dt[4].to_i
       @day = @dt[6].nil? ? nil : @dt[6].to_i
       @hour = @dt[7].nil? ? nil : @dt[7].to_i
@@ -84,6 +85,8 @@ module ISO8601
            (!@date_separator.nil? and !@time.nil? and @time_separator.nil? and !@minute.nil?) or
            (@year.nil? and !@month.nil?)
           raise ISO8601::Errors::UnknownPattern.new(@date_time)
+        elsif (@year.nil? and @month.nil?)
+          @year = (@century.to_s + "00").to_i
         end
       end
       def valid_range?
