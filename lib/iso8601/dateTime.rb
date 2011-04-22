@@ -43,17 +43,16 @@ module ISO8601
       end
       @century = @dt[1].to_i
       @year = @dt[2].nil? ? nil : (@dt[1] + @dt[2]).to_i
-      # @year = @dt[2].nil? ? (@dt[1] + "00").to_i : (@dt[1] + @dt[2]).to_i
       @month = @dt[4].nil? ? nil : @dt[4].to_i
       @day = @dt[6].nil? ? nil : @dt[6].to_i
       @hour = @dt[7].nil? ? nil : @dt[7].to_i
       @minute = @dt[9].nil? ? nil : @dt[9].to_i
       @second = @dt[11].nil? ? nil : @dt[11].to_i
       @timezone = {
-        :full => @dt[12],
+        :full => @dt[12].nil? ? (Time.now.gmt_offset / 3600) : (@dt[12] == "Z" ? 0 : @dt[12]),
         :sign => @dt[13],
-        :hour => @dt[14].nil? ? nil : @dt[14].to_i,
-        :minute => @dt[16].nil? ? nil : @dt[16].to_i,
+        :hour => @dt[12].nil? ? (Time.now.gmt_offset / 3600) : (@dt[12] == "Z" ? 0 : @dt[14].to_i),
+        :minute => (@dt[12].nil? or @dt[12] == "Z") ? 0 : @dt[14].to_i
       }
 
       valid_pattern?
