@@ -82,4 +82,8 @@ class TestDuration < Test::Unit::TestCase
     assert_equal(71906443, ISO8601::Duration.new("P2Y3M11DT43S").to_seconds, "P[n]Y[n]M[n]DT[n]S form")
     assert_equal(ISO8601::Duration.new("P1DT12H").to_seconds, ISO8601::Duration.new("PT36H").to_seconds, "P[n]DT[n]H equivalent to PT[n]H")
   end
+
+  def test_seconds_to_iso
+    assert_equal(ISO8601::Duration.new("P1Y2M3DT4H5M6S").to_seconds, ISO8601::Duration.seconds_to_iso(37065906).to_seconds)
+  end
 end
