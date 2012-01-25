@@ -84,13 +84,19 @@ module ISO8601
       # return d1 - d2
     end
     
+    # Convenience method to turn instance method (which can take into
+    # account a base time or duration) into a simple class method.
+    def self.seconds_to_iso(duration)
+      return ISO8601::Duration.new('P0Y').seconds_to_iso(duration)
+    end
+
     def seconds_to_iso(duration)
       sign = "-" if (duration < 0)
       duration = duration.abs
       years, y_mod = (duration / self.years.factor).to_i, (duration % self.years.factor)
       months, m_mod = (y_mod / self.months.factor).to_i, (y_mod % self.months.factor)
       days, d_mod = (m_mod / self.days.factor).to_i, (m_mod % self.days.factor)
-      hours, h_mod = (m_mod / self.hours.factor).to_i, (d_mod % self.hours.factor)
+      hours, h_mod = (d_mod / self.hours.factor).to_i, (d_mod % self.hours.factor)
       minutes, mi_mod = (h_mod / self.minutes.factor).to_i, (h_mod % self.minutes.factor)
       seconds = mi_mod.to_i
       
