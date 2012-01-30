@@ -8,6 +8,7 @@ class TestDuration < Test::Unit::TestCase
     assert_nothing_raised() { ISO8601::Duration.new("P1Y") }
     assert_nothing_raised() { ISO8601::Duration.new("P1Y1M") }
     assert_nothing_raised() { ISO8601::Duration.new("P1Y1M1D") }
+    assert_nothing_raised() { ISO8601::Duration.new("P2W") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::Duration.new("P1Y1M1DT") }
     assert_nothing_raised() { ISO8601::Duration.new("P1Y1M1DT1H") }
     assert_nothing_raised() { ISO8601::Duration.new("P1Y1M1DT1H1M") }
@@ -59,6 +60,7 @@ class TestDuration < Test::Unit::TestCase
     assert_equal(7884000, ISO8601::Duration.new("P3M").to_seconds, "P[n]M form")
     assert_equal(8834400, ISO8601::Duration.new("P3M11D").to_seconds, "P[n]M[n]D form")
     assert_equal(950400, ISO8601::Duration.new("P11D").to_seconds, "P[n]D form")
+    assert_equal(1209600, ISO8601::Duration.new("P2W").to_seconds, "P[n]W form")
   end
 
   def test_time_to_seconds
