@@ -1,5 +1,5 @@
 module ISO8601
-  VERSION = "0.1"
+  VERSION = "0.1.1"
 end
 
 require "time"
