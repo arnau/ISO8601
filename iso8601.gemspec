@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.authors     = ["Arnau Siches"]
   s.email       = ["arnau.siches@gmail.com"]
   s.homepage    = "https://github.com/arnau/ISO8601"
-  s.summary     = %q{Ruby parser to work with ISO8601 dateTimes and durations — http://en.wikipedia.org/wiki/ISO_8601y}
+  s.summary     = %q{Ruby parser to work with ISO8601 dateTimes and durations - http://en.wikipedia.org/wiki/ISO_8601}
   s.description = %q{ISO8601 is a simple implementation of the ISO 8601 (Data elements and
-  interchange formats — Information interchange — Representation of dates and
+  interchange formats - Information interchange - Representation of dates and
   times) standard.}
 
   s.rubyforge_project = "iso8601"
