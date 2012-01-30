@@ -4,7 +4,7 @@ ISO8601 is a simple implementation of the ISO 8601 (Data elements and
 interchange formats — Information interchange — Representation of dates and 
 times) standard.
 
-## COMMENTS
+## Comments
 
 Because Durations and DateTime has substract method, Durations has sign to represent a negative value:
 
@@ -18,14 +18,11 @@ Because Durations and DateTime has substract method, Durations has sign to repre
 * Recurring time intervals
 * Ordinal date pattern (YYYY-DDD)
 * Week date pattern (YYYY-Www-D)
-* Week duration pattern (P[n]Y[n]W)
 
-## Dependencies
+## Contributors
 
-TODO
+* [Nick Lynch](https://github.com/njlynch)
+* [Pelle Braendgaard](https://github.com/pelle)
 
-## License
-ISO8601 is distributed under the LGPL[http://www.gnu.org/licenses/lgpl.html] license.
-
-## Author
-Arnau Siches, <arnau.siches@gmail.com>
+## Credits
+Arnau Siches under [LGPL](http://www.gnu.org/licenses/lgpl.html) license. LICENSE file for details.
