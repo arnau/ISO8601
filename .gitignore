@@ -1,2 +1,4 @@
-.DS_Store
-my/*
+*.gem
+.bundle
+Gemfile.lock
+pkg/*
