@@ -62,6 +62,9 @@ module ISO8601
       raise RangeError if @year.nil?
       if @month.nil?
         Time.utc(@year)
+      elsif @day.nil?
+        date = [@year, @month, '01'].join('-')
+        Time.parse(date).getutc
       else
         Time.parse(@date_time).getutc
       end
