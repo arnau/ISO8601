@@ -24,12 +24,12 @@ module ISO8601
   # A “calendar year” is the cyclic time interval in a calendar which is
   # required for one revolution of the Earth around the Sun and approximated to
   # an integral number of “calendar days”.
-  
+
   #A “duration year” is the duration of 365 or 366 “calendar days” depending on
   # the start and/or the end of the corresponding time interval within the
   # specific “calendar year”.
   class Years < ISO8601::Atom
-    
+
     # The “duration year” average is calculated through time intervals of 400
     # “duration years”. Each cycle of 400 “duration years” has 303 “common
     # years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
@@ -44,7 +44,7 @@ module ISO8601
       end
     end
   end
-  
+
   # A “calendar month” is the time interval resulting from the division of a
   # “calendar year” in 12 time intervals.
 
@@ -68,20 +68,28 @@ module ISO8601
       end
     end
   end
-  
+
+  class Weeks < ISO8601::Atom
+
+    # A week is equal to 604800 seconds.
+    def factor
+      604800
+    end
+  end
+
   # A “calendar day” is the time interval which starts at a certain time of day
   # at a certain “calendar day” and ends at the same time of day at the next
   # “calendar day”.
   class Days < ISO8601::Atom
-    
+
     # A day is equal to 86400 seconds.
     def factor
       86400
     end
   end
-  
+
   class Hours < ISO8601::Atom
-    
+
     # An hour is equal to 3600 seconds.
     def factor
       3600
@@ -94,7 +102,7 @@ module ISO8601
       60
     end
   end
-  
+
   # The second is the base unit of measurement of time in the International
   # System of Units (SI) as defined by the International Committee of Weights
   # and Measures (CIPM, i.e. Comité International des Poids et Mesures)

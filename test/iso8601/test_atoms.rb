@@ -49,6 +49,17 @@ class TestMonths < Test::Unit::TestCase
     assert_equal(ISO8601::Years.new(1, ISO8601::DateTime.new("2000-02-01")).to_seconds, ISO8601::Months.new(12, ISO8601::DateTime.new("2000-02-01")).to_seconds, "leap year, february")
   end
 end
+
+class TestWeeks < Test::Unit::TestCase
+  def test_factor
+    assert_equal(604800, ISO8601::Weeks.new(2).factor)
+  end
+  def test_to_seconds
+    assert_equal(1209600, ISO8601::Weeks.new(2).to_seconds)
+    assert_equal(-1209600, ISO8601::Weeks.new(-2).to_seconds)
+  end
+end
+
 class TestDays < Test::Unit::TestCase
   def test_factor
     assert_equal(86400, ISO8601::Days.new(2).factor)
