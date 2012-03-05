@@ -4,7 +4,7 @@ module ISO8601
   class Duration
     attr_reader :base, :atoms
     def initialize(duration, base = nil)
-      @duration = /^(\+|-)?P(((\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?)|(\d+W))$/.match(duration)
+      @duration = /^(\+|-)?P(((\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+(?:\.\d+)?S)?)?)|(\d+W))$/.match(duration)
       @base = base #date base for duration calculations
       valid_pattern?
       valid_base?
