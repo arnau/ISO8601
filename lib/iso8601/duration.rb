@@ -104,7 +104,7 @@ module ISO8601
       days, d_mod = (m_mod / self.days.factor).to_i, (m_mod % self.days.factor)
       hours, h_mod = (d_mod / self.hours.factor).to_i, (d_mod % self.hours.factor)
       minutes, mi_mod = (h_mod / self.minutes.factor).to_i, (h_mod % self.minutes.factor)
-      seconds = mi_mod.to_i
+      seconds = mi_mod.div(1) == mi_mod ? mi_mod.to_i : mi_mod.to_f # Coerce to Integer when needed (`PT1S` instead of `PT1.0S`)
 
       seconds = (seconds != 0 or (years == 0 and months == 0 and days == 0 and hours == 0 and minutes == 0)) ? "#{seconds}S" : ""
       minutes = (minutes != 0) ? "#{minutes}M" : ""

@@ -71,7 +71,9 @@ class TestDuration < Test::Unit::TestCase
     assert_equal(27003, ISO8601::Duration.new("PT7H30M3S").to_seconds, "PT[n]H[n]M[n]S form")
     assert_equal(2040, ISO8601::Duration.new("PT34M").to_seconds, "PT[n]M form")
     assert_equal(2050, ISO8601::Duration.new("PT34M10S").to_seconds, "PT[n]M[n]S form")
+    assert_equal(2050.4, ISO8601::Duration.new("PT34M10.4S").to_seconds, "PT[n]M[n.m]S form")
     assert_equal(10, ISO8601::Duration.new("PT10S").to_seconds, "PT[n]S form")
+    assert_equal(10.5, ISO8601::Duration.new("PT10.5S").to_seconds, "PT[n.m]S form")
     assert_equal(ISO8601::Duration.new("PT1H15M").to_seconds, ISO8601::Duration.new("PT75M").to_seconds, "PT[n]H[n]M equivalent to PT[n]M")
   end
 
@@ -88,5 +90,6 @@ class TestDuration < Test::Unit::TestCase
 
   def test_seconds_to_iso
     assert_equal(ISO8601::Duration.new("P1Y2M3DT4H5M6S").to_seconds, ISO8601::Duration.seconds_to_iso(37065906).to_seconds)
+    assert_equal(ISO8601::Duration.new("P1Y2M3DT4H5M6.9S").to_seconds, ISO8601::Duration.seconds_to_iso(37065906.9).to_seconds)
   end
 end
