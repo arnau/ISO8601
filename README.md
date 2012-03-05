@@ -14,7 +14,7 @@ Because Durations and DateTime has substract method, Durations has sign to repre
 
 ## TODO
 
-* Decimal fraction in dateTime and duration patterns
+* Decimal fraction in dateTime patterns
 * Recurring time intervals
 * Ordinal date pattern (YYYY-DDD)
 * Week date pattern (YYYY-Www-D)
@@ -23,6 +23,7 @@ Because Durations and DateTime has substract method, Durations has sign to repre
 
 * [Nick Lynch](https://github.com/njlynch)
 * [Pelle Braendgaard](https://github.com/pelle)
+* [Takahiro Noda](https://github.com/tnoda)
 
 ## Credits
 Arnau Siches under [LGPL](http://www.gnu.org/licenses/lgpl.html) license. LICENSE file for details.
