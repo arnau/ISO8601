@@ -18,6 +18,7 @@ class TestDuration < Test::Unit::TestCase
     assert_nothing_raised() { ISO8601::Duration.new("PT1H1M") }
     assert_nothing_raised() { ISO8601::Duration.new("PT1H1S") }
     assert_nothing_raised() { ISO8601::Duration.new("PT1H1M1S") }
+    assert_nothing_raised() { ISO8601::Duration.new("P1Y2M3DT5H20M30.123S")}
     assert_nothing_raised() { ISO8601::Duration.new("+PT1H1M1S") }
     assert_nothing_raised() { ISO8601::Duration.new("-PT1H1M1S") }
     assert_raise(ISO8601::Errors::UnknownPattern) { ISO8601::Duration.new("~PT1H1M1S") }
