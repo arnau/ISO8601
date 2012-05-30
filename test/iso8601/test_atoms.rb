@@ -12,6 +12,11 @@ class TestAtom < Test::Unit::TestCase
     assert_nothing_raised() { ISO8601::Atom.new(1.1) }
     assert_nothing_raised() { ISO8601::Atom.new(-1.1) }
   end
+  
+  def test_to_i
+    assert_kind_of(Integer, ISO8601::Atom.new(1).to_i)
+    assert_kind_of(Integer, ISO8601::Atom.new(1.0).to_i)
+  end
 end
 class TestYears < Test::Unit::TestCase
   def test_factor

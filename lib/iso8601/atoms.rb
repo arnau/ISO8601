@@ -9,7 +9,7 @@ module ISO8601
     end
 
     def to_i
-      @atom
+      @atom.to_i
     end
     def to_seconds
       @atom * self.factor
