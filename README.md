@@ -25,6 +25,7 @@ Although, the spec allows three separator types: period (.), comma (,), and rais
 * [Nick Lynch](https://github.com/njlynch)
 * [Pelle Braendgaard](https://github.com/pelle)
 * [Takahiro Noda](https://github.com/tnoda)
+* [Porras](https://github.com/porras)
 
 ## Credits
 Arnau Siches under [LGPL](http://www.gnu.org/licenses/lgpl.html) license. LICENSE file for details.
