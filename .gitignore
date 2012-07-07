@@ -1,4 +1,11 @@
+# system crap
+.DS_Store
+.*.swp
+
+# files created by running the specs
+tmp
+
+# built gems
+pkg
 *.gem
-.bundle
 Gemfile.lock
-pkg/*
