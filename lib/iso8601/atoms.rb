@@ -1,9 +1,15 @@
 module ISO8601
-
-  # Represents a generic atom in a +ISO8601::Duration+.
+  ##
+  # Represents a generic atom in a {ISO8601::Duration}
+  #
+  # @abstract
   class Atom
+    ##
+    # @param [Numeric] atom The atom value
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
+    #   compute the atom factor.
     def initialize(atom, base=nil)
-      is_number?(atom, "First argument for #{self.inspect} must be an Integer or a Float.")
+      raise TypeError, "The first argument for #{self.inspect} must be an Numeric value." unless atom.kind_of? Numeric
       @atom = atom
       @base = base
     end
@@ -14,11 +20,6 @@ module ISO8601
     def to_seconds
       @atom * self.factor
     end
-
-    private
-      def is_number?(arg, error_message=nil)
-        raise TypeError, error_message unless (arg.is_a? Integer or arg.is_a? Float)
-      end
   end
 
   # A “calendar year” is the cyclic time interval in a calendar which is
