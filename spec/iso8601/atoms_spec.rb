@@ -124,41 +124,51 @@ describe ISO8601::Weeks do
   end
 end
 
-#class TestDays < Test::Unit::TestCase
-  #def test_factor
-    #assert_equal(86400, ISO8601::Days.new(2).factor)
-  #end
-  #def test_to_seconds
-    #assert_equal(172800, ISO8601::Days.new(2).to_seconds)
-    #assert_equal(-172800, ISO8601::Days.new(-2).to_seconds)
-  #end
-#end
-#class TestHours < Test::Unit::TestCase
-  #def test_factor
-    #assert_equal(3600, ISO8601::Hours.new(2).factor)
-  #end
-  #def test_to_seconds
-    #assert_equal(7200, ISO8601::Hours.new(2).to_seconds)
-    #assert_equal(-7200, ISO8601::Hours.new(-2).to_seconds)
-  #end
-#end
-#class TestMinutes < Test::Unit::TestCase
-  #def test_factor
-    #assert_equal(60, ISO8601::Minutes.new(2).factor)
-  #end
-  #def test_to_seconds
-    #assert_equal(120, ISO8601::Minutes.new(2).to_seconds)
-    #assert_equal(-120, ISO8601::Minutes.new(-2).to_seconds)
-  #end
-#end
-#class TestSeconds < Test::Unit::TestCase
-  #def test_factor
-    #assert_equal(1, ISO8601::Seconds.new(2).factor)
-  #end
-  #def test_to_seconds
-    #assert_equal(2, ISO8601::Seconds.new(2).to_seconds)
-    #assert_equal(-2, ISO8601::Seconds.new(-2).to_seconds)
-  #end
-#end
+describe ISO8601::Days do
+  describe '#factor' do
+    it "should return the Day factor" do
+      ISO8601::Days.new(2).factor.should == 86400
+    end
+    it "should return the amount of seconds" do
+      ISO8601::Days.new(2).to_seconds.should == 172800
+      ISO8601::Days.new(-2).to_seconds.should == -172800
+    end
+  end
+end
 
+describe ISO8601::Hours do
+  describe '#factor' do
+    it "should return the Hour factor" do
+      ISO8601::Hours.new(2).factor.should == 3600
+    end
+    it "should return the amount of seconds" do
+      ISO8601::Hours.new(2).to_seconds.should == 7200
+      ISO8601::Hours.new(-2).to_seconds.should == -7200
+    end
+  end
+end
+
+describe ISO8601::Minutes do
+  describe '#factor' do
+    it "should return the Minute factor" do
+      ISO8601::Minutes.new(2).factor.should == 60
+    end
+    it "should return the amount of seconds" do
+      ISO8601::Minutes.new(2).to_seconds.should == 120
+      ISO8601::Minutes.new(-2).to_seconds.should == -120
+    end
+  end
+end
+
+describe ISO8601::Seconds do
+  describe '#factor' do
+    it "should return the Second factor" do
+      ISO8601::Seconds.new(2).factor.should == 1
+    end
+    it "should return the amount of seconds" do
+      ISO8601::Seconds.new(2).to_seconds.should == 2
+      ISO8601::Seconds.new(-2).to_seconds.should == -2
+    end
+  end
+end
 
