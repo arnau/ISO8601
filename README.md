@@ -8,8 +8,8 @@ times) standard.
 
 Because Durations and DateTime has substract method, Durations has sign to represent a negative value:
 
-  * `(ISO8601::Duration.new("PT10S") - ISO8601::Duration.new("PT12S")).to_s #=> "-PT2S"`
-  * `(ISO8601::Duration.new("-PT10S") + ISO8601::Duration.new("PT12S")).to_s #=> "PT2S"`
+    (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s #=> '-PT2S'
+    (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
 
 Although, the spec allows three separator types: period (.), comma (,), and raised period (·) by now I keep just the period option.
 
@@ -27,5 +27,7 @@ Although, the spec allows three separator types: period (.), comma (,), and rais
 * [Takahiro Noda](https://github.com/tnoda)
 * [Porras](https://github.com/porras)
 
-## Credits
-Arnau Siches under [LGPL](http://www.gnu.org/licenses/lgpl.html) license. LICENSE file for details.
+## License
+
+Arnau Siches under the [MIT License](https://github.com/arnau/ISO8601/blob/master/LICENSE)
+
