@@ -1,4 +1,5 @@
-# coding: utf-8
+# encoding: utf-8
+
 module ISO8601
 
   # Contains all ISO8601-specific errors.
