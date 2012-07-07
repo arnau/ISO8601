@@ -108,6 +108,57 @@ describe ISO8601::Months do
       ISO8601::Months.new(12, ISO8601::DateTime.new('2000-02-01')).to_seconds.should == ISO8601::Years.new(1, ISO8601::DateTime.new("2000-02-01")).to_seconds
     end
   end
-
-
 end
+
+describe ISO8601::Weeks do
+  describe '#factor' do
+    it "should return the Week factor" do
+      ISO8601::Weeks.new(2).factor.should == 604800
+    end
+  end
+  describe '#to_seconds' do
+    it "should return the amount of seconds" do
+      ISO8601::Weeks.new(2).to_seconds.should == 1209600
+      ISO8601::Weeks.new(-2).to_seconds.should == -1209600
+    end
+  end
+end
+
+#class TestDays < Test::Unit::TestCase
+  #def test_factor
+    #assert_equal(86400, ISO8601::Days.new(2).factor)
+  #end
+  #def test_to_seconds
+    #assert_equal(172800, ISO8601::Days.new(2).to_seconds)
+    #assert_equal(-172800, ISO8601::Days.new(-2).to_seconds)
+  #end
+#end
+#class TestHours < Test::Unit::TestCase
+  #def test_factor
+    #assert_equal(3600, ISO8601::Hours.new(2).factor)
+  #end
+  #def test_to_seconds
+    #assert_equal(7200, ISO8601::Hours.new(2).to_seconds)
+    #assert_equal(-7200, ISO8601::Hours.new(-2).to_seconds)
+  #end
+#end
+#class TestMinutes < Test::Unit::TestCase
+  #def test_factor
+    #assert_equal(60, ISO8601::Minutes.new(2).factor)
+  #end
+  #def test_to_seconds
+    #assert_equal(120, ISO8601::Minutes.new(2).to_seconds)
+    #assert_equal(-120, ISO8601::Minutes.new(-2).to_seconds)
+  #end
+#end
+#class TestSeconds < Test::Unit::TestCase
+  #def test_factor
+    #assert_equal(1, ISO8601::Seconds.new(2).factor)
+  #end
+  #def test_to_seconds
+    #assert_equal(2, ISO8601::Seconds.new(2).to_seconds)
+    #assert_equal(-2, ISO8601::Seconds.new(-2).to_seconds)
+  #end
+#end
+
+
