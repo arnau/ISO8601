@@ -6,6 +6,7 @@ require 'iso8601'
 Gem::Specification.new do |s|
   s.name = 'iso8601'
   s.version = ISO8601::VERSION
+  s.date = Time.now.strftime('%Y-%m-%d')
   s.authors = ['Arnau Siches']
   s.email = 'arnau.siches@gmail.com'
   s.homepage = 'https://github.com/arnau/ISO8601'
@@ -22,7 +23,8 @@ Gem::Specification.new do |s|
   s.test_files = s.files.grep(%r{^(spec|features)/})
   s.require_paths = ['lib']
 
+  s.has_rdoc = 'yard'
+
   s.add_development_dependency 'rspec', '~> 2.0'
   s.add_development_dependency 'ZenTest', '~> 4.8'
-  #s.add_development_dependency 'yard'
 end
