@@ -9,3 +9,7 @@ tmp
 pkg
 *.gem
 Gemfile.lock
+
+# documentation
+.yardoc
+doc
