@@ -6,7 +6,7 @@ times) standard.
 
 ## Comments
 
-Because Durations and DateTime has substract method, Durations has sign to represent a negative value:
+Because Durations and DateTime has a substract method, Durations has sign to be able to represent a negative value:
 
     (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s #=> '-PT2S'
     (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
