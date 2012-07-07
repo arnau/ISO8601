@@ -54,23 +54,23 @@ module ISO8601
       end
     end
   end
-
+  ##
   # A “calendar month” is the time interval resulting from the division of a
-  # “calendar year” in 12 time intervals.
-
+  #   “calendar year” in 12 time intervals.
+  #
   # A “duration month” is the duration of 28, 29, 30 or 31 “calendar days”
-  # depending on the start and/or the end of the corresponding time interval
-  # within the specific “calendar month”.
+  #   depending on the start and/or the end of the corresponding time interval
+  #   within the specific “calendar month”.
   class Months < ISO8601::Atom
-
+    ##
     # The “duration month” average is calculated through time intervals of 400
-    # “duration years”. Each cycle of 400 “duration years” has 303 “common
-    # years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
+    #   “duration years”. Each cycle of 400 “duration years” has 303 “common
+    #   years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
     def factor
-      if @base.nil?
-        (((365 * 303 + 366 * 97) / 400) * 86400) / 12
-      elsif @atom == 0
+      if @atom == 0
         0
+      elsif @base.nil?
+        (((365 * 303 + 366 * 97) / 400) * 86400) / 12
       else
         month = (@base.month + @atom <= 12) ? (@base.month + @atom) : ((@base.month + @atom) % 12)
         year = @base.year + ((@base.month + @atom) / 12).to_i

@@ -70,3 +70,44 @@ describe ISO8601::Years do
   end
 end
 
+describe ISO8601::Months do
+  describe '#factor' do
+    it "should return the Month factor" do
+      expect { ISO8601::Months.new(1).factor }.to_not raise_error(NotImplementedError)
+      ISO8601::Months.new(2).factor.should == 2628000
+    end
+    it "should return the Month factor for a common year" do
+      ISO8601::Months.new(1, ISO8601::DateTime.new('2010-01-01')).factor.should == 2678400
+    end
+    it "should return the Month factor for a leap year" do
+      ISO8601::Months.new(1, ISO8601::DateTime.new('2000-01-01')).factor.should == 2678400
+    end
+    it "should return the Month factor based on february for a common year" do
+      ISO8601::Months.new(1, ISO8601::DateTime.new('2010-02-01')).factor.should == 2419200
+    end
+    it "should return the Month factor based on february for a leap year" do
+      ISO8601::Months.new(1, ISO8601::DateTime.new('2000-02-01')).factor.should == 2505600
+    end
+  end
+  describe '#to_seconds' do
+    it "should return the amount of seconds" do
+      ISO8601::Months.new(2).to_seconds.should == 5256000
+    end
+    it "should return the amount of seconds for a common year" do
+      ISO8601::Months.new(2, ISO8601::DateTime.new('2010-01-01')).to_seconds.should == 5097600
+    end
+    it "should return the amount of seconds for a leap year" do
+      ISO8601::Months.new(2, ISO8601::DateTime.new('2000-01-01')).to_seconds.should == 5184000
+    end
+    it "should return the amount of seconds based on februrary for a common year" do
+      ISO8601::Months.new(2, ISO8601::DateTime.new('2010-02-01')).to_seconds.should == 5097600
+    end
+    it "should return the amount of seconds based on february for a leap year" do
+      ISO8601::Months.new(2, ISO8601::DateTime.new('2000-02-01')).to_seconds.should == 5184000
+      ISO8601::Months.new(12, ISO8601::DateTime.new('2000-02-01')).to_seconds.should == 31622400
+      ISO8601::Months.new(12, ISO8601::DateTime.new('2000-02-01')).to_seconds.should == ISO8601::Years.new(1, ISO8601::DateTime.new("2000-02-01")).to_seconds
+    end
+  end
+
+
+end
