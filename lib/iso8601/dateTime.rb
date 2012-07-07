@@ -1,32 +1,40 @@
+# encoding: utf-8
+
 module ISO8601
+  ##
+  # A DateTime representation
+  #
+  # @todo Review the pattern `201005`. It has to be `20-10-05` instead of `2010-05`.
+  #   The specification doesn't allow a YYYYMM. It should be always
+  #   YYYY-MM.
   class DateTime
     attr_reader :date_time, :century, :year, :month, :day, :hour, :minute, :second, :timezone
     def initialize(date_time)
       @dt = /^(?:
-                (\d{2})(\d{2})?
+                (\d{2})(\d{2})? # Year. It can be either two digits (the century) or four digits (the full year)
                 (?:
                   (-)?(\d{2})
-                )?
+                )? # Month with an optional separator
                 (?:
-                  (\3)?(\d{2})
+                  (\3)?(\d{2}) # Day with an optional separator which is the same for the Month
                 )?
-              )?
+              )? # Date
               (?:
-                T(\d{2})
+                T(\d{2}) # Hour
                 (?:
-                  (:)?(\d{2})
+                  (:)?(\d{2}) # Minute with an optional separator
                 )?
                 (?:
-                  (\8)?(\d{2})
-                )?
+                  (\8)?(\d{2}) # Second with an optional separator which is the same that for the Minute
+                )? # Time
                 (
                   Z|([+-])
-                    (\d{2})
+                    (\d{2}) # Timezone hour
                     (?:
-                      (\8)?
-                      (\d{2})
+                      (\8)? # Separator which should be the same that for the Minute
+                      (\d{2}) # Timezone minute
                     )?
-                )?
+                )? # Timezone
               )?
             $/x.match(date_time) or raise ISO8601::Errors::UnknownPattern.new(date_time)
 
