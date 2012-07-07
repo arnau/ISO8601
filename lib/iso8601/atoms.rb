@@ -14,12 +14,20 @@ module ISO8601
       @atom = atom
       @base = base
     end
-
+    ##
+    # The integer representation of the atom
     def to_i
       @atom.to_i
     end
+    ##
+    # The amount of seconds of the atom
     def to_seconds
       @atom * self.factor
+    end
+    ##
+    # The atom factor to compute the amount of seconds for the atom
+    def factor
+      raise NotImplementedError, "The #factor method should be implemented for each subclass"
     end
   end
 

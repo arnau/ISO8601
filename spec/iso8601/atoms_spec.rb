@@ -20,7 +20,6 @@ describe ISO8601::Atom do
   it "should create a new atom" do
     ISO8601::Atom.new(-1).should be_an_instance_of(ISO8601::Atom)
   end
-
   describe '#to_i' do
     it "should return an integer" do
       ISO8601::Atom.new(1).to_i.should be_a_kind_of(Integer)
@@ -31,11 +30,17 @@ describe ISO8601::Atom do
       ISO8601::Atom.new(n).to_i.should == n.to_i
     end
   end
+  describe '#factor' do
+    it "should raise a NotImplementedError" do
+      expect { ISO8601::Atom.new(1).factor }.to raise_error(NotImplementedError)
+    end
+  end
 end
 
 describe ISO8601::Years do
   describe '#factor' do
     it "should return the Year factor" do
+      expect { ISO8601::Years.new(1).factor }.to_not raise_error(NotImplementedError)
       ISO8601::Years.new(2).factor.should == 31536000
       ISO8601::Years.new(1).factor.should == 31536000
     end
