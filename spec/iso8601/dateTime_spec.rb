@@ -59,7 +59,7 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('20100509T103012-0400') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
   end
 
-  it "should return the atomic value" do
+  it "should return each atomic value" do
     dt = ISO8601::DateTime.new('2010-05-09T12:02:01+04:00')
     dt.century.should == 20
     dt.year.should == 2010
@@ -72,5 +72,34 @@ describe ISO8601::DateTime do
     dt.timezone[:sign].should == '+'
     dt.timezone[:hour].should == 4
     dt.timezone[:minute].should == 0
+    dt = ISO8601::DateTime.new('2010-05-09T10Z')
+    dt.century.should == 20
+    dt.year.should == 2010
+    dt.month.should == 5
+    dt.day.should == 9
+    dt.hour.should == 10
+    dt.minute.should == nil
+    dt.second.should == nil
+    dt.timezone[:full].should == 0
+    dt.timezone[:sign].should == nil
+    dt.timezone[:hour].should == 0
+    dt.timezone[:minute].should == 0
   end
+
+  describe '#to_time' do
+    it "should return a Time instance" do
+      ISO8601::DateTime.new('20').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010-05').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010-05-09').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010-05-09T12').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010-05-09T12:02').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010-05-09T12:02:01').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010-05-09T12:02:01+04').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010-05-09T12:02:01+04:00').to_time.should be_an_instance_of(Time)
+      ISO8601::DateTime.new('2010-05-09T12:02:01-04:00').to_time.should be_an_instance_of(Time)
+    end
+  end
+
+
 end
