@@ -60,7 +60,7 @@ module ISO8601
         :full => @dt[12].nil? ? (Time.now.gmt_offset / 3600) : (@dt[12] == "Z" ? 0 : @dt[12]),
         :sign => @dt[13],
         :hour => @dt[12].nil? ? (Time.now.gmt_offset / 3600) : (@dt[12] == "Z" ? 0 : @dt[14].to_i),
-        :minute => (@dt[12].nil? or @dt[12] == "Z") ? 0 : @dt[14].to_i
+        :minute => (@dt[12].nil? or @dt[12] == "Z") ? 0 : @dt[13].to_i
       }
 
       valid_pattern?
