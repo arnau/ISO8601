@@ -35,6 +35,7 @@ so:
 * Recurring time intervals
 * Ordinal date pattern (YYYY-DDD)
 * Week date pattern (YYYY-Www-D)
+* Treat the `201005` as `2000-10-05` instead of `2010-05`
 
 ## Contributors
 
