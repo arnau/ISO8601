@@ -9,6 +9,8 @@ module ISO8601
   #   YYYY-MM.
   class DateTime
     attr_reader :date_time, :century, :year, :month, :day, :hour, :minute, :second, :timezone
+    ##
+    # @param [String] date_time The datetime pattern
     def initialize(date_time)
       @dt = /^(?:
                 (\d{2})(\d{2})? # Year. It can be either two digits (the century) or four digits (the full year)
@@ -66,6 +68,10 @@ module ISO8601
       valid_pattern?
       valid_range?
     end
+    ##
+    # Converts the object to a Time instance
+    #
+    # @return [Time] The object converted
     def to_time
       raise RangeError if @year.nil?
       if @month.nil?
@@ -77,17 +83,21 @@ module ISO8601
         Time.parse(@date_time).getutc
       end
     end
+    ##
+    # Addition
+    #
+    # @param [Numeric] The seconds to add
     def +(d)
-      raise TypeError unless (d.is_a? Float or d.is_a? Integer)
+      raise TypeError unless d.kind_of? Numeric
       Time.utc(@year, @month, @day, @hour, @minute, @second) + d
     end
+    ##
+    # Substraction
+    #
+    # @param [Numeric] The seconds to substract
     def -(d)
-      raise TypeError unless (d.is_a? Float or d.is_a? Integer or d.is_a? ISO8601::DateTime)
-      if (d.is_a? ISO8601::DateTime)
-        Time.utc(@year, @month, @day, @hour, @minute, @second) - Time.utc(d.year, d.month, d.day, d.hour, d.minute, d.second)
-      else
-        Time.utc(@year, @month, @day, @hour, @minute, @second) - d
-      end
+      raise TypeError unless d.kind_of? Numeric
+      Time.utc(@year, @month, @day, @hour, @minute, @second) - d
     end
     private
       def valid_pattern?

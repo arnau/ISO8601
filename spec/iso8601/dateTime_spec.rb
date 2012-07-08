@@ -101,5 +101,16 @@ describe ISO8601::DateTime do
     end
   end
 
+  describe '#+' do
+    it "should return the result of the addition" do
+      (ISO8601::DateTime.new('2012-07-07T20:20:20Z') + 10).should == ISO8601::DateTime.new('2012-07-07T20:20:30Z').to_time
+    end
+  end
+
+  describe '#-' do
+    it "should return the result of the substraction" do
+      (ISO8601::DateTime.new('2012-07-07T20:20:20Z') - 10).should == ISO8601::DateTime.new('2012-07-07T20:20:10Z').to_time
+    end
+  end
 
 end
