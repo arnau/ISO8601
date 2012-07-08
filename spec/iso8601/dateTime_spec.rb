@@ -23,12 +23,12 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('2010-13-30') }.to raise_error(RangeError)
   end
 
-  it "should parse correctly the reduced precision year (just the century)" do
+  it "should parse the reduced precision year (just the century)" do
     expect { ISO8601::DateTime.new('20') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
     ISO8601::DateTime.new('20').year.should == 2000
   end
 
-  it "should parse correctly any allowed pattern" do
+  it "should parse any allowed pattern" do
     expect { ISO8601::DateTime.new('2010') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::DateTime.new('2010-05') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::DateTime.new('2010-05-09') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
@@ -85,7 +85,11 @@ describe ISO8601::DateTime do
     dt.timezone[:hour].should == 0
     dt.timezone[:minute].should == 0
   end
-
+  describe '#to_s' do
+    it "should return the string representation" do
+      ISO8601::DateTime.new('2010-05-09').to_s.should == '2010-05-09'
+    end
+  end
   describe '#to_time' do
     it "should return a Time instance" do
       ISO8601::DateTime.new('20').to_time.should be_an_instance_of(Time)

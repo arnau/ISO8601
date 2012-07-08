@@ -7,8 +7,9 @@ module ISO8601
   # @todo Review the pattern `201005`. It has to be `20-10-05` instead of `2010-05`.
   #   The specification doesn't allow a YYYYMM. It should be always
   #   YYYY-MM.
+  # @todo Change #+ and #- to return a ISO8601::DateTime instance
   class DateTime
-    attr_reader :date_time, :century, :year, :month, :day, :hour, :minute, :second, :timezone
+    attr_reader :century, :year, :month, :day, :hour, :minute, :second, :timezone
     ##
     # @param [String] date_time The datetime pattern
     def initialize(date_time)
@@ -67,6 +68,11 @@ module ISO8601
 
       valid_pattern?
       valid_range?
+    end
+    ##
+    # Returns the datetime string representation
+    def to_s
+      @date_time
     end
     ##
     # Converts the object to a Time instance
