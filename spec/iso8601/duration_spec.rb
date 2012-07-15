@@ -67,6 +67,7 @@ describe ISO8601::Duration do
       (ISO8601::Duration.new('PT12S') - ISO8601::Duration.new('PT12S')).to_s.should == 'PT0S'
       (ISO8601::Duration.new('PT12S') - ISO8601::Duration.new('PT1S')).to_s.should == 'PT11S'
       (ISO8601::Duration.new('PT1S') - ISO8601::Duration.new('PT12S')).to_s.should == '-PT11S'
+      (ISO8601::Duration.new('PT1S') - ISO8601::Duration.new('-PT12S')).to_s.should == 'PT13S'
     end
   end
 
@@ -109,14 +110,18 @@ describe ISO8601::Duration do
 
   end
 
+  describe '#==' do
+    ISO8601::Duration.new('PT1H').should == ISO8601::Duration.new('PT1H')
+  end
+
   describe '#to_abs' do
     it "should return a kind of duration" do
       ISO8601::Duration.new('-PT1H').abs.should be_an_instance_of ISO8601::Duration
     end
     it "should return the absolute value of the duration" do
-      ISO8601::Duration.new('-PT1H').abs.to_s.should == ISO8601::Duration.new('PT1H').to_s
+      ISO8601::Duration.new('-PT1H').abs.should == ISO8601::Duration.new('PT1H')
+      (ISO8601::Duration.new('PT1H') - ISO8601::Duration.new('PT2H')).abs.should == ISO8601::Duration.new('PT1H')
+      (ISO8601::Duration.new('PT1H') - ISO8601::Duration.new('-PT2H')).abs.should == ISO8601::Duration.new('PT3H')
     end
-    #assert_equal("P1YT2M", ISO8601::Duration.new("-P1YT2M").abs)
-    #assert_equal("P1YT1M", (ISO8601::Duration.new("PT12S") - ISO8601::Duration.new("P1YT1M12S")).abs)
   end
 end

@@ -102,7 +102,8 @@ module ISO8601
     ##
     # @return [ISO8601::Duration] The absolute representation of the duration
     def abs
-      return ISO8601::Duration.new(self.to_s.sub!(/^[-+]/, ''))
+      absolute = self.to_s.sub(/^[-+]/, '')
+      return ISO8601::Duration.new(absolute)
     end
     ##
     # Addition
@@ -132,6 +133,13 @@ module ISO8601
       else
         return seconds_to_iso(duration)
       end
+    end
+    ##
+    # @param [ISO8601::Duration] duration The duration to compare
+    #
+    # @return [Boolean]
+    def ==(duration)
+      (self.to_s == duration.to_s)
     end
 
     def seconds_to_iso(duration)
