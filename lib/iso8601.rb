@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module ISO8601
-  VERSION = '0.3.0'
+  VERSION = '0.4.0'
 end
 
 require 'time'
