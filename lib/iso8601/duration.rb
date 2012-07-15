@@ -9,10 +9,12 @@ module ISO8601
   class Duration
     attr_reader :base, :atoms
     ##
-    # @param [String] duration The duration pattern
+    # @param [String, Numeric] pattern The duration pattern
     # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
     #   calculate the duration properly
-    def initialize(duration, base = nil)
+    def initialize(pattern, base = nil)
+      # we got seconds instead of an ISO8601 duration
+      pattern = "PT#{pattern}S" if (pattern.kind_of? Numeric)
       @duration = /^(\+|-)? # Sign
                    P(
                       (
@@ -27,7 +29,7 @@ module ISO8601
                       )
                       |(\d+W) # Weeks
                     ) # Duration
-                  $/x.match(duration) or raise ISO8601::Errors::UnknownPattern.new(duration)
+                  $/x.match(pattern) or raise ISO8601::Errors::UnknownPattern.new(pattern)
 
       @base = base
       valid_pattern?
@@ -113,8 +115,8 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def +(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if @base != duration.base
-      d1 = self.to_seconds
+      raise ISO8601::Errors::DurationBaseError.new(duration) if @base.to_s != duration.base.to_s
+      d1 = to_seconds
       d2 = duration.to_seconds
       return seconds_to_iso(d1 + d2)
     end
@@ -126,7 +128,7 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def -(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if @base != duration.base
+      raise ISO8601::Errors::DurationBaseError.new(duration) if @base.to_s != duration.base.to_s
       d1 = to_seconds
       d2 = duration.to_seconds
       duration = d1 - d2
@@ -142,7 +144,7 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
     def ==(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if @base != duration.base
+      raise ISO8601::Errors::DurationBaseError.new(duration) if @base.to_s != duration.base.to_s
       (self.to_seconds == duration.to_seconds)
     end
 

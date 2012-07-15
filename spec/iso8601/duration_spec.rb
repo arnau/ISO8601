@@ -35,6 +35,12 @@ describe ISO8601::Duration do
     }.to raise_error(TypeError)
   end
 
+  it "should return a Duration instance from a Numeric input" do
+    puts ISO8601::Duration.new(37065906, ISO8601::DateTime.new('2012-01-01')).should be_an_instance_of ISO8601::Duration
+    ISO8601::Duration.new(36993906, ISO8601::DateTime.new('2012-01-01')).should == ISO8601::Duration.new('P1Y2M3DT4H5M6S', ISO8601::DateTime.new('2012-01-01'))
+
+  end
+
   describe '#base' do
     it "should return the base datetime" do
       dt = ISO8601::DateTime.new('2010-01-01')
@@ -153,4 +159,5 @@ describe ISO8601::Duration do
       (ISO8601::Duration.new('PT1H') - ISO8601::Duration.new('-PT2H')).abs.should == ISO8601::Duration.new('PT3H')
     end
   end
+
 end
