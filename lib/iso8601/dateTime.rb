@@ -7,7 +7,6 @@ module ISO8601
   # @todo Review the pattern `201005`. It has to be `20-10-05` instead of `2010-05`.
   #   The specification doesn't allow a YYYYMM. It should be always
   #   YYYY-MM.
-  # @todo Change #+ and #- to return a ISO8601::DateTime instance
   class DateTime
     attr_reader :century, :year, :month, :day, :hour, :minute, :second, :timezone
     ##
