@@ -135,7 +135,7 @@ describe ISO8601::Duration do
 
     it "should return the seconds of a PT[n]H[n]M duration" do
       ISO8601::Duration.new('PT10S', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 1, 0, 0, 10) - Time.utc(2012, 1))
-      ISO8601::Duration.new('PT10.4S', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 1, 0, 0, 10.4) - Time.utc(2012, 1))
+      ISO8601::Duration.new('PT10.4S', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == 10.4
     end
 
   end
