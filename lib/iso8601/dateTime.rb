@@ -1,32 +1,42 @@
+# encoding: utf-8
+
 module ISO8601
+  ##
+  # A DateTime representation
+  #
+  # @todo Review the pattern `201005`. It has to be `20-10-05` instead of `2010-05`.
+  #   The specification doesn't allow a YYYYMM. It should be always
+  #   YYYY-MM.
   class DateTime
-    attr_reader :date_time, :century, :year, :month, :day, :hour, :minute, :second, :timezone
+    attr_reader :century, :year, :month, :day, :hour, :minute, :second, :timezone
+    ##
+    # @param [String] date_time The datetime pattern
     def initialize(date_time)
       @dt = /^(?:
-                (\d{2})(\d{2})?
+                (\d{2})(\d{2})? # Year. It can be either two digits (the century) or four digits (the full year)
                 (?:
                   (-)?(\d{2})
-                )?
+                )? # Month with an optional separator
                 (?:
-                  (\3)?(\d{2})
+                  (\3)?(\d{2}) # Day with an optional separator which is the same for the Month
                 )?
-              )?
+              )? # Date
               (?:
-                T(\d{2})
+                T(\d{2}) # Hour
                 (?:
-                  (:)?(\d{2})
+                  (:)?(\d{2}) # Minute with an optional separator
                 )?
                 (?:
-                  (\8)?(\d{2})
-                )?
+                  (\8)?(\d{2}) # Second with an optional separator which is the same that for the Minute
+                )? # Time
                 (
                   Z|([+-])
-                    (\d{2})
+                    (\d{2}) # Timezone hour
                     (?:
-                      (\8)?
-                      (\d{2})
+                      (\8)? # Separator which should be the same that for the Minute
+                      (\d{2}) # Timezone minute
                     )?
-                )?
+                )? # Timezone
               )?
             $/x.match(date_time) or raise ISO8601::Errors::UnknownPattern.new(date_time)
 
@@ -52,12 +62,21 @@ module ISO8601
         :full => @dt[12].nil? ? (Time.now.gmt_offset / 3600) : (@dt[12] == "Z" ? 0 : @dt[12]),
         :sign => @dt[13],
         :hour => @dt[12].nil? ? (Time.now.gmt_offset / 3600) : (@dt[12] == "Z" ? 0 : @dt[14].to_i),
-        :minute => (@dt[12].nil? or @dt[12] == "Z") ? 0 : @dt[14].to_i
+        :minute => (@dt[12].nil? or @dt[12] == "Z") ? 0 : @dt[13].to_i
       }
 
       valid_pattern?
       valid_range?
     end
+    ##
+    # Returns the datetime string representation
+    def to_s
+      @date_time
+    end
+    ##
+    # Converts the object to a Time instance
+    #
+    # @return [Time] The object converted
     def to_time
       raise RangeError if @year.nil?
       if @month.nil?
@@ -69,17 +88,21 @@ module ISO8601
         Time.parse(@date_time).getutc
       end
     end
+    ##
+    # Addition
+    #
+    # @param [ISO8601::DateTime] The seconds to add
     def +(d)
-      raise TypeError unless (d.is_a? Float or d.is_a? Integer)
-      Time.utc(@year, @month, @day, @hour, @minute, @second) + d
+      raise TypeError unless d.kind_of? Numeric
+      ISO8601::DateTime.new((Time.utc(@year, @month, @day, @hour, @minute, @second) + d).to_datetime.iso8601)
     end
+    ##
+    # Substraction
+    #
+    # @param [ISO8601::DateTime] The seconds to substract
     def -(d)
-      raise TypeError unless (d.is_a? Float or d.is_a? Integer or d.is_a? ISO8601::DateTime)
-      if (d.is_a? ISO8601::DateTime)
-        Time.utc(@year, @month, @day, @hour, @minute, @second) - Time.utc(d.year, d.month, d.day, d.hour, d.minute, d.second)
-      else
-        Time.utc(@year, @month, @day, @hour, @minute, @second) - d
-      end
+      raise TypeError unless d.kind_of? Numeric
+      ISO8601::DateTime.new((Time.utc(@year, @month, @day, @hour, @minute, @second) - d).to_datetime.iso8601)
     end
     private
       def valid_pattern?

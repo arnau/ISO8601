@@ -6,12 +6,28 @@ times) standard.
 
 ## Comments
 
-Because Durations and DateTime has a substract method, Durations has sign to be able to represent a negative value:
+### Duration sign
+
+Because Durations and DateTime has a substraction method, Durations has sign to be able to represent a negative value:
 
     (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s #=> '-PT2S'
     (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
 
+### Separators
+
 Although, the spec allows three separator types: period (.), comma (,), and raised period (·) by now I keep just the period option.
+
+### Century treatment
+
+The specification says that you can express a reduced precision year
+just giving the century (i.e. '20' to refer the inclusive range 2000-2999).
+
+This implementation expands the century to the first value for its range
+so:
+
+    ISO8601::DateTime.new('20').century # => 20
+    ISO8601::DateTime.new('20').year # => 2000
+
 
 ## TODO
 
@@ -19,6 +35,7 @@ Although, the spec allows three separator types: period (.), comma (,), and rais
 * Recurring time intervals
 * Ordinal date pattern (YYYY-DDD)
 * Week date pattern (YYYY-Www-D)
+* Treat the `201005` as `2000-10-05` instead of `2010-05`
 
 ## Contributors
 
