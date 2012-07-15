@@ -99,15 +99,17 @@ module ISO8601
       years, months, weeks, days, hours, minutes, seconds = self.years.to_seconds, self.months.to_seconds, self.weeks.to_seconds, self.days.to_seconds, self.hours.to_seconds, self.minutes.to_seconds, self.seconds.to_seconds
       return years + months + weeks + days + hours + minutes + seconds
     end
-
-    # Returns the absolute value of duration
+    ##
+    # @return [ISO8601::Duration] The absolute representation of the duration
     def abs
-      return self.to_s.sub!(/^[-+]/, "")
+      return ISO8601::Duration.new(self.to_s.sub!(/^[-+]/, ''))
     end
     ##
     # Addition
     #
     # @param [ISO8601::Duration] duration The duration to add
+    #
+    # @return [ISO8601::Duration]
     def +(duration)
       raise ISO8601::Errors::DurationBaseError.new(duration) if @base != duration.base
       d1 = self.to_seconds
@@ -118,6 +120,8 @@ module ISO8601
     # Substraction
     #
     # @param [ISO8601::Duration] duration The duration to substract
+    #
+    # @return [ISO8601::Duration]
     def -(duration)
       raise ISO8601::Errors::DurationBaseError.new(duration) if @base != duration.base
       d1 = to_seconds
