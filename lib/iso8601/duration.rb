@@ -110,6 +110,7 @@ module ISO8601
     #
     # @param [ISO8601::Duration] duration The duration to add
     #
+    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def +(duration)
       raise ISO8601::Errors::DurationBaseError.new(duration) if @base != duration.base
@@ -122,6 +123,7 @@ module ISO8601
     #
     # @param [ISO8601::Duration] duration The duration to substract
     #
+    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def -(duration)
       raise ISO8601::Errors::DurationBaseError.new(duration) if @base != duration.base
@@ -137,9 +139,11 @@ module ISO8601
     ##
     # @param [ISO8601::Duration] duration The duration to compare
     #
+    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
     def ==(duration)
-      (self.to_s == duration.to_s)
+      raise ISO8601::Errors::DurationBaseError.new(duration) if @base != duration.base
+      (self.to_seconds == duration.to_seconds)
     end
 
     def seconds_to_iso(duration)

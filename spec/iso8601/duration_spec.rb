@@ -108,10 +108,31 @@ describe ISO8601::Duration do
       ISO8601::Duration.new('P2W', ISO8601::DateTime.new('2012-02-01')).to_seconds.should == (Time.utc(2012, 2, 15) - Time.utc(2012, 2))
     end
 
+    it "should return the seconds of a PT[n]H duration" do
+      ISO8601::Duration.new('PT5H', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 1, 5) - Time.utc(2012, 1))
+      ISO8601::Duration.new('P1YT5H', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2013, 1, 1, 5) - Time.utc(2012, 1))
+    end
+
+    it "should return the seconds of a PT[n]H[n]M duration" do
+      ISO8601::Duration.new('PT5M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 1, 0, 5) - Time.utc(2012, 1))
+      ISO8601::Duration.new('PT1H5M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 1, 1, 5) - Time.utc(2012, 1))
+      ISO8601::Duration.new('PT1H5M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == ISO8601::Duration.new('PT65M', ISO8601::DateTime.new('2012-01-01')).to_seconds
+    end
+
+    it "should return the seconds of a PT[n]H[n]M duration" do
+      ISO8601::Duration.new('PT10S', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 1, 0, 0, 10) - Time.utc(2012, 1))
+      ISO8601::Duration.new('PT10.4S', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 1, 0, 0, 10.4) - Time.utc(2012, 1))
+    end
+
   end
 
   describe '#==' do
-    ISO8601::Duration.new('PT1H').should == ISO8601::Duration.new('PT1H')
+    it "should raise an ISO8601::Errors::DurationBaseError" do
+      expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) == ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
+    end
+    it "should return True" do
+      ISO8601::Duration.new('PT1H').should == ISO8601::Duration.new('PT1H')
+    end
   end
 
   describe '#to_abs' do
