@@ -44,54 +44,57 @@ module ISO8601
     end
     ##
     # Assigns a new base datetime
+    #
+    # @return [ISO8601::DateTime, nil]
     def base=(value)
       @base = value
       valid_base?
       return @base
     end
     ##
-    # Returns the string representation of the duration
+    # @return [String] The string representation of the duration
     def to_s
       @duration[0]
     end
-
-    # Returns the years of the duration
+    ##
+    # @return [ISO8601::Years] The years of the duration
     def years
       ISO8601::Years.new(@atoms[:years], @base)
     end
-
-    # Returns the months of the duration
+    ##
+    # @return [ISO8601::Months] The months of the duration
     def months
-      base = @base.nil? ? nil : @base + self.years.to_seconds # prevent computing duplicated time
+      # Changes the base to compute the months for the right base year
+      base = @base.nil? ? nil : @base + self.years.to_seconds
       ISO8601::Months.new(@atoms[:months], base)
     end
-
-    # Returns the weeks of the duration
+    ##
+    # @return [ISO8601::Weeks] The weeks of the duration
     def weeks
       ISO8601::Weeks.new(@atoms[:weeks], @base)
     end
-
-    # Returns the days of the duration
+    ##
+    # @return [ISO8601::Days] The days of the duration
     def days
       ISO8601::Days.new(@atoms[:days], @base)
     end
-
-    # Returns the hours of the duration
+    ##
+    # @return [ISO8601::Hours] The hours of the duration
     def hours
       ISO8601::Hours.new(@atoms[:hours], @base)
     end
-
-    # Returns the minutes of the duration
+    ##
+    # @return [ISO8601::Minutes] The minutes of the duration
     def minutes
       ISO8601::Minutes.new(@atoms[:minutes], @base)
     end
-
-    # Returns the seconds of the duration
+    ##
+    # @return [ISO8601::Seconds] The seconds of the duration
     def seconds
       ISO8601::Seconds.new(@atoms[:seconds], @base)
     end
-
-    # Returns the duration in seconds
+    ##
+    # @return [Numeric] The duration in seconds
     def to_seconds
       years, months, weeks, days, hours, minutes, seconds = self.years.to_seconds, self.months.to_seconds, self.weeks.to_seconds, self.days.to_seconds, self.hours.to_seconds, self.minutes.to_seconds, self.seconds.to_seconds
       return years + months + weeks + days + hours + minutes + seconds

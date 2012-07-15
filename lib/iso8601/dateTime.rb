@@ -95,7 +95,7 @@ module ISO8601
     # @param [Numeric] The seconds to add
     def +(d)
       raise TypeError unless d.kind_of? Numeric
-      Time.utc(@year, @month, @day, @hour, @minute, @second) + d
+      ISO8601::DateTime.new((Time.utc(@year, @month, @day, @hour, @minute, @second) + d).to_datetime.iso8601)
     end
     ##
     # Substraction
@@ -103,7 +103,7 @@ module ISO8601
     # @param [Numeric] The seconds to substract
     def -(d)
       raise TypeError unless d.kind_of? Numeric
-      Time.utc(@year, @month, @day, @hour, @minute, @second) - d
+      ISO8601::DateTime.new((Time.utc(@year, @month, @day, @hour, @minute, @second) - d).to_datetime.iso8601)
     end
     private
       def valid_pattern?

@@ -12,7 +12,7 @@ module ISO8601
     #   compute the atom factor.
     def initialize(atom, base=nil)
       raise TypeError, "The atom argument for #{self.inspect} should be a Numeric value." unless atom.kind_of? Numeric
-      raise TypeError, "The base argument for #{self.inspect} should be a ISO86::DateTime instance or nil." unless base.kind_of? ISO8601::DateTime or base.nil?
+      raise TypeError, "The base argument for #{self.inspect} should be a ISO8601::DateTime instance or nil." unless base.kind_of? ISO8601::DateTime or base.nil?
       @atom = atom
       @base = base
     end

@@ -69,4 +69,44 @@ describe ISO8601::Duration do
       (ISO8601::Duration.new('PT1S') - ISO8601::Duration.new('PT12S')).to_s.should == '-PT11S'
     end
   end
+
+  describe '#to_seconds' do
+    it "should return the seconds of a P[n]Y duration in a common year" do
+      ISO8601::Duration.new('P2Y', ISO8601::DateTime.new('2010-01-01')).to_seconds.should == (Time.utc(2012, 1) - Time.utc(2010, 1))
+    end
+    it "should return the seconds of a P[n]Y duration in a leap year" do
+      ISO8601::Duration.new('P2Y', ISO8601::DateTime.new('2000-01-01')).to_seconds.should == (Time.utc(2002, 1) - Time.utc(2000, 1))
+    end
+    it "should return the seconds of a P[n]Y[n]M duration in a common year" do
+      ISO8601::Duration.new('P2Y3M', ISO8601::DateTime.new('2010-01-01')).to_seconds.should == (Time.utc(2012, 4) - Time.utc(2010, 1))
+    end
+    it "should return the seconds of a P[n]Y[n]M duration in a leap year" do
+      ISO8601::Duration.new('P2Y3M', ISO8601::DateTime.new('2000-01-01')).to_seconds.should == (Time.utc(2002, 4) - Time.utc(2000, 1))
+    end
+    it "should return the seconds of a P[n]M duration in a common year" do
+      ISO8601::Duration.new('P1M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 2) - Time.utc(2012, 1))
+      ISO8601::Duration.new('P2M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 3) - Time.utc(2012, 1))
+      ISO8601::Duration.new('P14M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2013, 3) - Time.utc(2012, 1))
+    end
+    it "should return the seconds of a P[n]M duration in a leap year" do
+      ISO8601::Duration.new('P1M', ISO8601::DateTime.new('2000-01-01')).to_seconds.should == (Time.utc(2000, 2) - Time.utc(2000, 1))
+      ISO8601::Duration.new('P2M', ISO8601::DateTime.new('2000-01-01')).to_seconds.should == (Time.utc(2000, 3) - Time.utc(2000, 1))
+      ISO8601::Duration.new('P14M', ISO8601::DateTime.new('2000-01-01')).to_seconds.should == (Time.utc(2001, 3) - Time.utc(2000, 1))
+    end
+    it "should return the seconds of a P[n]Y[n]M[n]D duration" do
+      ISO8601::Duration.new('P2Y11D', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2014, 1, 12) - Time.utc(2012, 1))
+      ISO8601::Duration.new('P1Y1M1D', ISO8601::DateTime.new('2010-05-01')).to_seconds.should == (Time.utc(2011, 6, 2) - Time.utc(2010, 5))
+    end
+    it "should return the seconds of a P[n]D duration" do
+      ISO8601::Duration.new('P1D', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 2) - Time.utc(2012, 1, 1))
+      ISO8601::Duration.new('P11D', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 12) - Time.utc(2012, 1, 1))
+      ISO8601::Duration.new('P3M11D', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 4, 12) - Time.utc(2012, 1))
+    end
+    it "should return the seconds of a P[n]W duration" do
+      ISO8601::Duration.new('P2W', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 1, 15) - Time.utc(2012, 1))
+      ISO8601::Duration.new('P2W', ISO8601::DateTime.new('2012-02-01')).to_seconds.should == (Time.utc(2012, 2, 15) - Time.utc(2012, 2))
+    end
+
+  end
+
 end
