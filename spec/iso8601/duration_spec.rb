@@ -54,6 +54,10 @@ describe ISO8601::Duration do
   end
 
   describe '#+' do
+    it "should raise an ISO8601::Errors::DurationBaseError" do
+      expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) + ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
+    end
+
     it "should return the result of the addition" do
       (ISO8601::Duration.new('P1Y1M1DT1H1M1S') + ISO8601::Duration.new('PT10S')).to_s.should == 'P1Y1M1DT1H1M11S'
       (ISO8601::Duration.new('P1Y1M1DT1H1M1S') + ISO8601::Duration.new('PT10S')).should be_an_instance_of(ISO8601::Duration)
@@ -61,6 +65,10 @@ describe ISO8601::Duration do
   end
 
   describe '#-' do
+    it "should raise an ISO8601::Errors::DurationBaseError" do
+      expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) - ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
+    end
+
     it "should return the result of the substraction" do
       (ISO8601::Duration.new('P1Y1M1DT1H1M1S') - ISO8601::Duration.new('PT10S')).should be_an_instance_of(ISO8601::Duration)
       (ISO8601::Duration.new('P1Y1M1DT1H1M11S') - ISO8601::Duration.new('PT10S')).to_s.should == 'P1Y1M1DT1H1M1S'
