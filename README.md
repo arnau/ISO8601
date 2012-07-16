@@ -4,6 +4,10 @@ ISO8601 is a simple implementation of the ISO 8601 (Data elements and
 interchange formats — Information interchange — Representation of dates and 
 times) standard.
 
+## Build status
+[![Build Status](https://secure.travis-ci.org/arnau/ISO8601.png?branch=master)](http://travis-ci.org/arnau/ISO8601/)
+
+
 ## Comments
 
 ### Duration sign
