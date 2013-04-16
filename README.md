@@ -48,6 +48,7 @@ so:
 * [Pelle Braendgaard](https://github.com/pelle)
 * [Takahiro Noda](https://github.com/tnoda)
 * [Porras](https://github.com/porras)
+* [Kenichi Kamiya](https://github.com/kachick)
 
 ## License
 
