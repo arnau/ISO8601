@@ -120,7 +120,7 @@ module ISO8601
         elsif !day.nil? and (Time.parse(@date_time).month != month)
           raise RangeError
         end
-      rescue ArgumentError => e
+      rescue ArgumentError
         raise RangeError
       end
   end
