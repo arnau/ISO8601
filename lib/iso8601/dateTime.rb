@@ -91,7 +91,7 @@ module ISO8601
     ##
     # Addition
     #
-    # @param [ISO8601::DateTime] The seconds to add
+    # @param [ISO8601::DateTime] d The seconds to add
     def +(d)
       raise TypeError unless d.kind_of? Numeric
       ISO8601::DateTime.new((Time.utc(@year, @month, @day, @hour, @minute, @second) + d).iso8601)
@@ -99,7 +99,7 @@ module ISO8601
     ##
     # Substraction
     #
-    # @param [ISO8601::DateTime] The seconds to substract
+    # @param [ISO8601::DateTime] d The seconds to substract
     def -(d)
       raise TypeError unless d.kind_of? Numeric
       ISO8601::DateTime.new((Time.utc(@year, @month, @day, @hour, @minute, @second) - d).iso8601)
