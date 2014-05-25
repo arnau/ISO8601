@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 $:.push File.expand_path('../lib', __FILE__)
-require 'iso8601'
+require 'iso8601/version'
 
 Gem::Specification.new do |s|
   s.name = 'iso8601'
