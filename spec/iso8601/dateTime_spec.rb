@@ -24,39 +24,39 @@ describe ISO8601::DateTime do
   end
 
   it "should parse the reduced precision year (just the century)" do
-    expect { ISO8601::DateTime.new('20') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::DateTime.new('20') }.to_not raise_error
     ISO8601::DateTime.new('20').year.should == 2000
   end
 
   it "should parse any allowed pattern" do
-    expect { ISO8601::DateTime.new('2010') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05-09') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05-09T10') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05-09T10:30') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05-09T10:30:12') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05-09T10:30:12Z') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05-09T10:30:12+04') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05-09T10:30:12+04:00') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('2010-05-09T10:30:12-04:00') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::DateTime.new('2010') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05-09') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05-09T10') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05-09T10:30') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05-09T10:30:12') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05-09T10:30:12Z') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05-09T10:30:12+04') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05-09T10:30:12+04:00') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2010-05-09T10:30:12-04:00') }.to_not raise_error
   end
   it "should parse correctly any allowed reduced pattern" do
-    expect { ISO8601::DateTime.new('20') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    #expect { ISO8601::DateTime.new('201005') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::DateTime.new('20') }.to_not raise_error
+    #expect { ISO8601::DateTime.new('201005') }.to_not raise_error
     #ISO8601::DateTime.new('201005').year.should == 2000
     #ISO8601::DateTime.new('201005').month.should == 10
     #ISO8601::DateTime.new('201005').day.should == 5
 
-    expect { ISO8601::DateTime.new('20100509') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::DateTime.new('20100509') }.to_not raise_error
     ISO8601::DateTime.new('20100509').year.should == 2010
     ISO8601::DateTime.new('20100509').month.should == 5
     ISO8601::DateTime.new('20100509').day.should == 9
 
-    expect { ISO8601::DateTime.new('20100509T103012') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('20100509T103012Z') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('20100509T103012+04') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('20100509T103012+0400') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::DateTime.new('20100509T103012-0400') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::DateTime.new('20100509T103012') }.to_not raise_error
+    expect { ISO8601::DateTime.new('20100509T103012Z') }.to_not raise_error
+    expect { ISO8601::DateTime.new('20100509T103012+04') }.to_not raise_error
+    expect { ISO8601::DateTime.new('20100509T103012+0400') }.to_not raise_error
+    expect { ISO8601::DateTime.new('20100509T103012-0400') }.to_not raise_error
   end
 
   it "should return each atomic value" do

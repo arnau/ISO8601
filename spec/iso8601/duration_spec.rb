@@ -14,19 +14,19 @@ describe ISO8601::Duration do
     expect { ISO8601::Duration.new('.P1Y') }.to raise_error(ISO8601::Errors::UnknownPattern)
   end
   it "should parse any allowed pattern" do
-    expect { ISO8601::Duration.new('P1Y') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('P1Y1M') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('P1Y1M1D') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('P1Y1M1DT1H') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('P1Y1M1DT1H1M') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1.0S') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('P1W') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('+P1Y') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
-    expect { ISO8601::Duration.new('-P1Y') }.to_not raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::Duration.new('P1Y') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1D') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT1H') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT1H1M') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1.0S') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1W') }.to_not raise_error
+    expect { ISO8601::Duration.new('+P1Y') }.to_not raise_error
+    expect { ISO8601::Duration.new('-P1Y') }.to_not raise_error
   end
   it "should raise a TypeError when the base is not a ISO8601::DateTime" do
-    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', ISO8601::DateTime.new('2010-01-01')) }.to_not raise_error(TypeError)
+    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', ISO8601::DateTime.new('2010-01-01')) }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', '2010-01-01') }.to raise_error(TypeError)
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', 2010) }.to raise_error(TypeError)
     expect {

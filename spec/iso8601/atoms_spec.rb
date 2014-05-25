@@ -4,20 +4,20 @@ require 'spec_helper'
 
 describe ISO8601::Atom do
   it "should raise a TypeError when receives anything but a Numeric value" do
-    expect { ISO8601::Atom.new('1') }.to raise_error(TypeError)
-    expect { ISO8601::Atom.new(true) }.to raise_error(TypeError)
-    expect { ISO8601::Atom.new(-1.1) }.to_not raise_error(TypeError)
-    expect { ISO8601::Atom.new(-1) }.to_not raise_error(TypeError)
-    expect { ISO8601::Atom.new(0) }.to_not raise_error(TypeError)
-    expect { ISO8601::Atom.new(1) }.to_not raise_error(TypeError)
-    expect { ISO8601::Atom.new(1.1) }.to_not raise_error(TypeError)
+    expect { ISO8601::Atom.new('1') }.to raise_error
+    expect { ISO8601::Atom.new(true) }.to raise_error
+    expect { ISO8601::Atom.new(-1.1) }.to_not raise_error
+    expect { ISO8601::Atom.new(-1) }.to_not raise_error
+    expect { ISO8601::Atom.new(0) }.to_not raise_error
+    expect { ISO8601::Atom.new(1) }.to_not raise_error
+    expect { ISO8601::Atom.new(1.1) }.to_not raise_error
   end
   it "should raise a TypeError when receives anything but a ISO8601::DateTime instance or nil" do
-    expect { ISO8601::Atom.new(1, ISO8601::DateTime.new('2012-07-07')) }.to_not raise_error(TypeError)
-    expect { ISO8601::Atom.new(1, nil) }.to_not raise_error(TypeError)
-    expect { ISO8601::Atom.new(1, true) }.to raise_error(TypeError)
-    expect { ISO8601::Atom.new(1, 'foo') }.to raise_error(TypeError)
-    expect { ISO8601::Atom.new(1, 10) }.to raise_error(TypeError)
+    expect { ISO8601::Atom.new(1, ISO8601::DateTime.new('2012-07-07')) }.to_not raise_error
+    expect { ISO8601::Atom.new(1, nil) }.to_not raise_error
+    expect { ISO8601::Atom.new(1, true) }.to raise_error
+    expect { ISO8601::Atom.new(1, 'foo') }.to raise_error
+    expect { ISO8601::Atom.new(1, 10) }.to raise_error
   end
   it "should create a new atom" do
     ISO8601::Atom.new(-1).should be_an_instance_of(ISO8601::Atom)
@@ -42,7 +42,7 @@ end
 describe ISO8601::Years do
   describe '#factor' do
     it "should return the Year factor" do
-      expect { ISO8601::Years.new(1).factor }.to_not raise_error(NotImplementedError)
+      expect { ISO8601::Years.new(1).factor }.to_not raise_error
       ISO8601::Years.new(2).factor.should == 31536000
       ISO8601::Years.new(1).factor.should == 31536000
     end
@@ -75,7 +75,7 @@ end
 describe ISO8601::Months do
   describe '#factor' do
     it "should return the Month factor" do
-      expect { ISO8601::Months.new(1).factor }.to_not raise_error(NotImplementedError)
+      expect { ISO8601::Months.new(1).factor }.to_not raise_error
       ISO8601::Months.new(2).factor.should == 2628000
     end
     it "should return the Month factor for a common year" do
