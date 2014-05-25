@@ -1,7 +1,7 @@
 # ISO8601
 
-ISO8601 is a simple implementation of the ISO 8601 (Data elements and 
-interchange formats — Information interchange — Representation of dates and 
+ISO8601 is a simple implementation of the ISO 8601 (Data elements and
+interchange formats — Information interchange — Representation of dates and
 times) standard.
 
 ## Build status
@@ -13,14 +13,16 @@ times) standard.
 
 ### Duration sign
 
-Because Durations and DateTime has a substraction method, Durations has sign to be able to represent a negative value:
+Because Durations and DateTime has a substraction method, Durations has
+sign to be able to represent a negative value:
 
-    (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s #=> '-PT2S'
+    (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s  #=> '-PT2S'
     (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
 
 ### Separators
 
-Although, the spec allows three separator types: period (.), comma (,), and raised period (·) by now I keep just the period option.
+Although, the spec allows three separator types: period (.), comma (,), and
+raised period (·) by now I keep just the period option.
 
 ### Century treatment
 
@@ -53,4 +55,3 @@ so:
 ## License
 
 Arnau Siches under the [MIT License](https://github.com/arnau/ISO8601/blob/master/LICENSE)
-
