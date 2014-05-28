@@ -8,7 +8,7 @@ RSpec.configure do |config|
   config.color = true
   config.order = 'random'
   config.formatter = :documentation
-  config.fail_fast = true
+  # config.fail_fast = true
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
 end

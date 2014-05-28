@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'time'
+require 'forwardable'
 
 require 'iso8601/version'
 require 'iso8601/errors'

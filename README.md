@@ -24,16 +24,14 @@ sign to be able to represent a negative value:
 Although, the spec allows three separator types: period (.), comma (,), and
 raised period (·) by now I keep just the period option.
 
-### Century treatment
 
-The specification says that you can express a reduced precision year
-just giving the century (i.e. '20' to refer the inclusive range 2000-2999).
+## Upgrading to 0.5
 
-This implementation expands the century to the first value for its range
-so:
-
-    ISO8601::DateTime.new('20').century # => 20
-    ISO8601::DateTime.new('20').year # => 2000
+* `ISO8601::DateTime#century` no longer exists. Truncated representations were
+removed in ISO 8601:2004.
+* `ISO8601::DateTime#zone` delegates to core `DateTime`.
+* `ISO8601::DateTime#timezone` no longer exists. Now it delegates to
+`DateTime#zone`.
 
 
 ## TODO
@@ -43,6 +41,7 @@ so:
 * Ordinal date pattern (YYYY-DDD)
 * Week date pattern (YYYY-Www-D)
 * Treat the `201005` as `2000-10-05` instead of `2010-05`
+
 
 ## Contributors
 
