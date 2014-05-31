@@ -68,6 +68,11 @@ describe ISO8601::DateTime do
     dt.zone.should == '+04:00'
   end
 
+  it "should return the right sign for the given year" do
+    ISO8601::DateTime.new('-2014-05-31T16:26:00Z').year.should == -2014
+    ISO8601::DateTime.new('+2014-05-31T16:26:00Z').year.should == 2014
+  end
+
   context "delegated methods" do
     it "should return the string representation" do
       ISO8601::DateTime.new('2010-05-09').to_s.should == '2010-05-09T00:00:00+00:00'
