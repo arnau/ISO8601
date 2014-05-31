@@ -68,7 +68,6 @@ module ISO8601
       valid_separators?(separators)
 
       components = date_components + time_components
-      components = components.compact.map(&:to_f)
       components = (components << zone).compact
 
       ::DateTime.new(*components)
@@ -92,6 +91,10 @@ module ISO8601
       )$/x.match(date).to_a.compact
 
       raise ISO8601::Errors::UnknownPattern.new(@original) if year.nil?
+
+      year = year.to_i
+      month &&= month.to_i
+      day &&= day.to_i
 
       [year, month, day, separator]
     end
@@ -118,6 +121,10 @@ module ISO8601
       )$/x.match(time).to_a.compact
 
       raise ISO8601::Errors::UnknownPattern.new(@original) if hours.nil?
+
+      hours &&= hours.to_i
+      minutes &&= minutes.to_i
+      seconds &&= seconds.to_f
 
       [hours, minutes, seconds, separator]
     end
