@@ -69,7 +69,7 @@ component.
 
 `DateTime#to_a` allow decomposing to an array of atoms:
 
-    atoms = ISO8601::DateTime.new('2014-05-31T10:11:12Z').to_a
+    atoms = ISO8601::DateTime.new('2014-05-31T10:11:12Z').to_a # => [2014, 5, 31, 10, 11, 12, '+00:00']
     dt = DateTime.new(*atoms)
 
 
