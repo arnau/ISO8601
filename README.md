@@ -25,6 +25,49 @@ Although, the spec allows three separator types: period (.), comma (,), and
 raised period (·) by now I keep just the period option.
 
 
+## Differences with core Date, Time and DateTime
+
+Core `Date.parse` and `DateTime.parse` doesn't allow reduced precision. For
+example:
+
+    DateTime.parse('2014-05') # => ArgumentError: invalid date
+
+But the standard covers this situation assuming any missing piece as its lower
+value:
+
+    ISO8601::DateTime.new('2014-05').to_s # => "2014-05-01T00:00:00+00:00"
+    ISO8601::DateTime.new('2014').to_s # => "2014-01-01T00:00:00+00:00"
+
+The same assumption happens in core classes with `.new`:
+
+    DateTime.new(2014,5) # => #<DateTime: 2014-05-01T00:00:00+00:00 ((2456779j,0s,0n),+0s,2299161j)>
+    DateTime.new(2014) # => #<DateTime: 2014-01-01T00:00:00+00:00 ((2456659j,0s,0n),+0s,2299161j)>
+
+
+The value of second in core classes are handled by two methods: `#second` and
+`#second_fraction`:
+
+    dt = DateTime.parse('2014-05-06T10:11:12.5')
+    dt.second # => 12
+    dt.second_fraction # => (1/2)
+
+This gem approaches second fraction using floats:
+
+    dt = ISO8601::DateTime.new('2014-05-06T10:11:12.5')
+    dt.second # => 12.5
+
+Unmatching precison is handled strongly. Notice the time fragment is lost in
+`DateTime.parse` without warning only if the loose precision is in the time
+component.
+
+    ISO8601::DateTime.new('2014-05-06T101112')  # => ISO8601::Errors::UnknownPattern
+    DateTime.parse('2014-05-06T101112')  # => #<DateTime: 2014-05-06T00:00:00+00:00 ((2456784j,0s,0n),+0s,2299161j)>
+
+    ISO8601::DateTime.new('20140506T10:11:12')  # => ISO8601::Errors::UnknownPattern
+    DateTime.parse('20140506T10:11:12')  # => #<DateTime: 2014-05-06T10:11:12+00:00 ((2456784j,0s,0n),+0s,2299161j)>
+
+
+
 ## Changes since 0.5
 
 * `ISO8601::DateTime#century` no longer exists. Truncated representations were
