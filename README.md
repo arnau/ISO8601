@@ -8,6 +8,11 @@ times) standard.
 
 [![Build Status](https://secure.travis-ci.org/arnau/ISO8601.png?branch=master)](http://travis-ci.org/arnau/ISO8601/)
 
+## Supported versions
+
+* MRI 1.9.3
+* MRI 2.0
+* MRI 2.1
 
 ## Comments
 
@@ -75,6 +80,7 @@ component.
 
 ## Changes since 0.5
 
+* Drop support for Ruby 1.8.7
 * `ISO8601::DateTime#century` no longer exists. Truncated representations were
 removed in ISO 8601:2004.
 * `ISO8601::DateTime#zone` delegates to core `DateTime#zone`.
