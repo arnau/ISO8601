@@ -17,6 +17,8 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('201-0109') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::DateTime.new('2010-05-09T103012+0400') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::DateTime.new('20100509T10:30:12+04:00') }.to raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::DateTime.new('2010-05T10:30:12Z') }.to raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::DateTime.new('2010T10:30:12Z') }.to raise_error(ISO8601::Errors::UnknownPattern)
   end
 
   it "should raise an ArgumentError for a correct pattern but an invalid date" do

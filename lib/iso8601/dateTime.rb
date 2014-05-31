@@ -59,6 +59,7 @@ module ISO8601
         zone_components.pop
       ]
 
+      valid_representation?(date_components, time_components)
       valid_separators?(separators)
 
       components = date_components + time_components
@@ -126,7 +127,15 @@ module ISO8601
         end
       end
     end
+    ##
+    # If time is provided date must use a complete representation
+    def valid_representation?(date, time)
+      year, month, day = date
+      hour, minute, second = time
 
-
+      if !year.nil? && (month.nil? || day.nil?) && !hour.nil?
+        raise ISO8601::Errors::UnknownPattern, @original
+      end
+    end
   end
 end
