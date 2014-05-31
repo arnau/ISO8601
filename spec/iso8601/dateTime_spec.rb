@@ -25,6 +25,7 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('2010-01-32') }.to raise_error(ArgumentError)
     expect { ISO8601::DateTime.new('2010-02-30') }.to raise_error(ArgumentError)
     expect { ISO8601::DateTime.new('2010-13-30') }.to raise_error(ArgumentError)
+    expect { ISO8601::DateTime.new('2010-12-30T25:00:00') }.to raise_error(ArgumentError)
   end
 
   it "should parse any allowed pattern" do
