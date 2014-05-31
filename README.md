@@ -25,13 +25,14 @@ Although, the spec allows three separator types: period (.), comma (,), and
 raised period (·) by now I keep just the period option.
 
 
-## Upgrading to 0.5
+## Changes since 0.5
 
 * `ISO8601::DateTime#century` no longer exists. Truncated representations were
 removed in ISO 8601:2004.
-* `ISO8601::DateTime#zone` delegates to core `DateTime`.
+* `ISO8601::DateTime#zone` delegates to core `DateTime#zone`.
 * `ISO8601::DateTime#timezone` no longer exists. Now it delegates to
 `DateTime#zone`.
+* A date can have sign: `-1000-01-01`, `+2014-05-06T10:11:12Z`.
 
 
 ## TODO
