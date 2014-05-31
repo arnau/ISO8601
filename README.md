@@ -13,6 +13,7 @@ times) standard.
 * MRI 1.9.3
 * MRI 2.0
 * MRI 2.1
+* RBX 2
 
 
 ## Comments
