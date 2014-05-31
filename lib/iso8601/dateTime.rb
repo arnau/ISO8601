@@ -76,9 +76,9 @@ module ISO8601
     # @return [Array<String, nil>]
     def parse_date(date)
       _, year, separator, month, day = /^(?:
-        (\d{4})(-?)(\d{2})\2(\d{2}) |
-        (\d{4})(-)(\d{2}) |
-        (\d{4})
+        ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) |
+        ([+-]?\d{4})(-)(\d{2}) |
+        ([+-]?\d{4})
       )$/x.match(date).to_a.compact
 
       raise ISO8601::Errors::UnknownPattern.new(@original) if year.nil?
