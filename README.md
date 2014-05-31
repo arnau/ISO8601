@@ -24,10 +24,6 @@ sign to be able to represent a negative value:
     (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s  #=> '-PT2S'
     (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
 
-### Separators
-
-Although, the spec allows three separator types: period (.), comma (,), and
-raised period (·) by now I keep just the period option.
 
 
 ## Differences with core Date, Time and DateTime
