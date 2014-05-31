@@ -43,6 +43,7 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('2010-05-09T10:30:12-00:00') }.to_not raise_error
     expect { ISO8601::DateTime.new('-2014-05-31T16:26:00Z') }.to_not raise_error
     expect { ISO8601::DateTime.new('2014-05-31T16:26:10.5Z') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2014-05-31T16:26:10,5Z') }.to_not raise_error
     expect { ISO8601::DateTime.new('T10:30:12Z') }.to_not raise_error
   end
 

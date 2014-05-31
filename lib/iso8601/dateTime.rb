@@ -112,7 +112,7 @@ module ISO8601
     # @return [Array<String, nil>]
     def parse_time(time)
       _, hours, separator, minutes, seconds = /^(?:
-        (\d{2})(:?)(\d{2})\2(\d{2}(?:\.\d+)?) |
+        (\d{2})(:?)(\d{2})\2(\d{2}(?:[.,]\d+)?) |
         (\d{2})(:)(\d{2}) |
         (\d{2})
       )$/x.match(time).to_a.compact
