@@ -75,6 +75,9 @@ module ISO8601
     #
     # @return [Array<String, nil>]
     def parse_date(date)
+      today = Date.today
+      return [today.year, today.month, today.day, :ignore] if date.empty?
+
       _, year, separator, month, day = /^(?:
         ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) |
         ([+-]?\d{4})(-)(\d{2}) |
@@ -115,15 +118,15 @@ module ISO8601
     def valid_separators?(separators)
       separators = separators.compact
 
-      return if separators.length == 1
+      return if separators.length == 1 || separators[0] == :ignore
 
       unless separators.all?(&:empty?)
-        if (separators[0].length == separators[1].length)
+        if (separators[0].length != separators[1].length)
+          raise ISO8601::Errors::UnknownPattern, @original
+        else
           if separators.length == 3 && !(separators[1] == separators[2])
             raise ISO8601::Errors::UnknownPattern, @original
           end
-        else
-          raise ISO8601::Errors::UnknownPattern, @original
         end
       end
     end

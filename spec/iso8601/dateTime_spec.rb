@@ -43,19 +43,31 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('2010-05-09T10:30:12-00:00') }.to_not raise_error
     expect { ISO8601::DateTime.new('-2014-05-31T16:26:00Z') }.to_not raise_error
     expect { ISO8601::DateTime.new('2014-05-31T16:26:10.5Z') }.to_not raise_error
+    expect { ISO8601::DateTime.new('T10:30:12Z') }.to_not raise_error
   end
 
-  it "should parse correctly any allowed reduced pattern" do
-    reduced = ISO8601::DateTime.new('20100509')
-    reduced.year.should == 2010
-    reduced.month.should == 5
-    reduced.day.should == 9
-
-    expect { ISO8601::DateTime.new('20100509T103012') }.to_not raise_error
-    expect { ISO8601::DateTime.new('20100509T103012Z') }.to_not raise_error
-    expect { ISO8601::DateTime.new('20100509T103012+04') }.to_not raise_error
-    expect { ISO8601::DateTime.new('20100509T103012+0400') }.to_not raise_error
-    expect { ISO8601::DateTime.new('20100509T103012-0400') }.to_not raise_error
+  context 'reduced patterns' do
+    it "should parse correctly reduced dates" do
+      reduced_date = ISO8601::DateTime.new('20100509')
+      reduced_date.year.should == 2010
+      reduced_date.month.should == 5
+      reduced_date.day.should == 9
+    end
+    it "should parse correctly reduced times" do
+      reduced_time = ISO8601::DateTime.new('T101112Z')
+      reduced_time.hour.should == 10
+      reduced_time.minute.should == 11
+      reduced_time.second.should == 12
+    end
+    it "should parse correctly reduced date times" do
+      reduced_datetime = ISO8601::DateTime.new('20140531T101112Z')
+      reduced_datetime.year.should == 2014
+      reduced_datetime.month.should == 5
+      reduced_datetime.day.should == 31
+      reduced_datetime.hour.should == 10
+      reduced_datetime.minute.should == 11
+      reduced_datetime.second.should == 12
+    end
   end
 
   it "should return each atomic value" do
