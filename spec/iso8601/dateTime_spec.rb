@@ -42,13 +42,14 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('2010-05-09T10:30:12+0400') }.to_not raise_error
     expect { ISO8601::DateTime.new('2010-05-09T10:30:12-00:00') }.to_not raise_error
     expect { ISO8601::DateTime.new('-2014-05-31T16:26:00Z') }.to_not raise_error
+    expect { ISO8601::DateTime.new('2014-05-31T16:26:10.5Z') }.to_not raise_error
   end
 
   it "should parse correctly any allowed reduced pattern" do
-    expect { ISO8601::DateTime.new('20100509') }.to_not raise_error
-    ISO8601::DateTime.new('20100509').year.should == 2010
-    ISO8601::DateTime.new('20100509').month.should == 5
-    ISO8601::DateTime.new('20100509').day.should == 9
+    reduced = ISO8601::DateTime.new('20100509')
+    reduced.year.should == 2010
+    reduced.month.should == 5
+    reduced.day.should == 9
 
     expect { ISO8601::DateTime.new('20100509T103012') }.to_not raise_error
     expect { ISO8601::DateTime.new('20100509T103012Z') }.to_not raise_error
