@@ -102,4 +102,12 @@ describe ISO8601::DateTime do
       (ISO8601::DateTime.new('2012-07-07T20:20:20Z') - 10).to_time.should == ISO8601::DateTime.new('2012-07-07T20:20:10+00:00').to_time
     end
   end
+
+  describe '#to_a' do
+    it "should return an array of atoms" do
+      dt = ISO8601::DateTime.new('2014-05-31T19:29:39Z').to_a
+      dt.should be_kind_of(Array)
+      dt.should == [2014, 5, 31, 19, 29, 39, '+00:00']
+    end
+  end
 end

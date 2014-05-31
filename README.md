@@ -67,6 +67,11 @@ component.
     DateTime.parse('20140506T10:11:12')  # => #<DateTime: 2014-05-06T10:11:12+00:00 ((2456784j,0s,0n),+0s,2299161j)>
 
 
+`DateTime#to_a` allow decomposing to an array of atoms:
+
+    atoms = ISO8601::DateTime.new('2014-05-31T10:11:12Z').to_a
+    dt = DateTime.new(*atoms)
+
 
 ## Changes since 0.5
 
@@ -76,6 +81,7 @@ removed in ISO 8601:2004.
 * `ISO8601::DateTime#timezone` no longer exists. Now it delegates to
 `DateTime#zone`.
 * A date can have sign: `-1000-01-01`, `+2014-05-06T10:11:12Z`.
+* A date time can be converted to an array of atoms with `#to_a`.
 
 
 ## TODO

@@ -37,6 +37,11 @@ module ISO8601
     def -(seconds)
       ISO8601::DateTime.new((@date_time.to_time - seconds).iso8601)
     end
+    ##
+    # Converts DateTime to an array of atoms.
+    def to_a
+      [year, month, day, hour, minute, second, zone]
+    end
 
     private
     ##
