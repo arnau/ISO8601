@@ -73,6 +73,8 @@ module ISO8601
     #
     # Acceptable patterns: YYYY, YYYY-MM-DD, YYYYMMDD or YYYY-MM but not YYYYMM
     #
+    # @param [String] date
+    #
     # @return [Array<String, nil>]
     def parse_date(date)
       today = Date.today
