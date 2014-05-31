@@ -73,13 +73,9 @@ describe ISO8601::DateTime do
     ISO8601::DateTime.new('+2014-05-31T16:26:00Z').year.should == 2014
   end
 
-  context "delegated methods" do
-    it "should return the string representation" do
-      ISO8601::DateTime.new('2010-05-09').to_s.should == '2010-05-09T00:00:00+00:00'
-    end
-    it "should return a Time instance" do
-      ISO8601::DateTime.new('2010-05-09T12:02:01Z').to_time.should be_an_instance_of(Time)
-    end
+  it "should respond to delegated casting methods" do
+    dt = ISO8601::DateTime.new('2014-12-11T10:09:08Z')
+    dt.should respond_to(:to_s, :to_time, :to_date, :to_datetime)
   end
 
   describe '#+' do
