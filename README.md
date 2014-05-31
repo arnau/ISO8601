@@ -14,6 +14,7 @@ times) standard.
 * MRI 2.0
 * MRI 2.1
 
+
 ## Comments
 
 ### Duration sign
@@ -23,7 +24,6 @@ sign to be able to represent a negative value:
 
     (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s  #=> '-PT2S'
     (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
-
 
 
 ## Differences with core Date, Time and DateTime
