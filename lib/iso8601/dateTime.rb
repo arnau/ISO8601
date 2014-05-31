@@ -85,13 +85,20 @@ module ISO8601
       return [today.year, today.month, today.day, :ignore] if date.empty?
 
       _, year, separator, month, day = /^(?:
-        ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) |
-        ([+-]?\d{4})(-)(\d{2}) |
-        ([+-]?\d{4})
+        ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) | # YYYY-MM-DD
+        ([+-]?\d{4})(-?)(\d{3}) | # YYYY-DDD
+        ([+-]?\d{4})(-)(\d{2}) | # YYYY-MM
+        ([+-]?\d{4}) # YYYY
       )$/x.match(date).to_a.compact
 
       raise ISO8601::Errors::UnknownPattern.new(@original) if year.nil?
 
+      if month && month.length == 3
+        ordinal_day = month
+        d = ::Date.parse([year,ordinal_day].join('-'))
+        month = d.month
+        day = d.day
+      end
       year = year.to_i
       month &&= month.to_i
       day &&= day.to_i

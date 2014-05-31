@@ -74,6 +74,8 @@ component.
     atoms = ISO8601::DateTime.new('2014-05-31T10:11:12Z').to_a # => [2014, 5, 31, 10, 11, 12, '+00:00']
     dt = DateTime.new(*atoms)
 
+Ordinal dates keep the sign. `2014-001` is not the same as `-2014-001`.
+
 
 ## Changes since 0.5
 
@@ -85,12 +87,12 @@ removed in ISO 8601:2004.
 `DateTime#zone`.
 * A date can have sign: `-1000-01-01`, `+2014-05-06T10:11:12Z`.
 * A date time can be converted to an array of atoms with `#to_a`.
+* Ordinal dates supported.
 
 
 ## TODO
 
 * Recurring time intervals
-* Ordinal date pattern (YYYY-DDD)
 * Week date pattern (YYYY-Www-D)
 
 
