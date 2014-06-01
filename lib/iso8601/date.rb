@@ -12,7 +12,9 @@ module ISO8601
     def_delegators(:@date,
       :to_s, :to_time, :to_date, :to_datetime,
       :year, :month, :day)
-
+    ##
+    # The original atoms
+    attr_reader :atoms
     ##
     # The separator used in the original ISO 8601 string.
     attr_reader :separator
@@ -46,11 +48,6 @@ module ISO8601
     # Converts self to an array of atoms.
     def to_a
       [year, month, day]
-    end
-    ##
-    # The original atoms
-    def to_atoms
-      @atoms
     end
 
     private
