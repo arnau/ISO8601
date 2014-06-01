@@ -81,7 +81,7 @@ module ISO8601
     #
     # @return [Array<String, nil>]
     def parse_date(date)
-      today = Date.today
+      today = ::Date.today
       return [today.year, today.month, today.day, :ignore] if date.empty?
 
       _, year, separator, month, day = /^(?:

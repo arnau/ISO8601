@@ -88,6 +88,7 @@ removed in ISO 8601:2004.
 * A date can have sign: `-1000-01-01`, `+2014-05-06T10:11:12Z`.
 * A date time can be converted to an array of atoms with `#to_a`.
 * Ordinal dates supported.
+* A date component is represented by `ISO8601::Date`.
 
 
 ## TODO
