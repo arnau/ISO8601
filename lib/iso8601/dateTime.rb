@@ -26,14 +26,14 @@ module ISO8601
     ##
     # Addition
     #
-    # @param [ISO8601::DateTime] seconds The seconds to add
+    # @param [Numeric] seconds The seconds to add
     def +(seconds)
       ISO8601::DateTime.new((@date_time.to_time + seconds).iso8601)
     end
     ##
     # Substraction
     #
-    # @param [ISO8601::DateTime] seconds The seconds to substract
+    # @param [Numeric] seconds The seconds to substract
     def -(seconds)
       ISO8601::DateTime.new((@date_time.to_time - seconds).iso8601)
     end

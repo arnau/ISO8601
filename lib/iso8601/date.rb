@@ -36,7 +36,7 @@ module ISO8601
     #
     # @param [Numeric] days The days to remove
     #
-    # @return [ISO8601::DateTime] New date resulting of the substraction
+    # @return [ISO8601::Date] New date resulting of the substraction
     def -(days)
       ISO8601::Date.new((@date - days).iso8601)
     end
