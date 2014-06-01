@@ -67,4 +67,12 @@ describe ISO8601::Date do
       dt.should == [2014, 5, 31]
     end
   end
+
+  describe '#to_atom' do
+    it "should return an array of original atoms" do
+      ISO8601::Date.new('2014-05-02').to_atoms.should == [2014, 5, 2]
+      ISO8601::Date.new('2014-05').to_atoms.should == [2014, 5]
+      ISO8601::Date.new('2014').to_atoms.should == [2014]
+    end
+  end
 end

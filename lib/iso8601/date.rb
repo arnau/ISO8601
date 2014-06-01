@@ -20,7 +20,9 @@ module ISO8601
     # @param [String] date The date pattern
     def initialize(date)
       @original = date
-      @date = ::Date.new(*atomize(date))
+
+      @atoms = atomize(date)
+      @date = ::Date.new(*@atoms)
     end
     ##
     # Forwards the date the given amount of days.
@@ -44,6 +46,11 @@ module ISO8601
     # Converts self to an array of atoms.
     def to_a
       [year, month, day]
+    end
+    ##
+    # The original atoms
+    def to_atoms
+      @atoms
     end
 
     private
