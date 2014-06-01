@@ -28,14 +28,14 @@ module ISO8601
     #
     # @param [Numeric] seconds The seconds to add
     def +(seconds)
-      ISO8601::DateTime.new((@date_time.to_time + seconds).iso8601)
+      ISO8601::DateTime.new((@date_time + (seconds / 86400.0)).to_s)
     end
     ##
     # Substraction
     #
     # @param [Numeric] seconds The seconds to substract
     def -(seconds)
-      ISO8601::DateTime.new((@date_time.to_time - seconds).iso8601)
+      ISO8601::DateTime.new((@date_time - (seconds / 86400.0)).to_s)
     end
     ##
     # Converts DateTime to an array of atoms.
@@ -52,25 +52,18 @@ module ISO8601
     #
     # @param [String] date_time The ISO representation
     def parse(date_time)
-      date, time_zone = date_time.split('T')
-      _, time, zone = /^(.+?)(Z|[+-].+)?$/.match(time_zone).to_a
+      date, time = date_time.split('T')
 
       date_components = parse_date(date)
       time_components = Array(time && parse_time(time))
-      zone_components = parse_zone(zone)
-      separators = [
-        date_components.pop,
-        time_components.pop,
-        zone_components.pop
-      ]
+      separators = [date_components.pop, time_components.pop]
 
-      valid_representation?(date_components, time_components)
-      valid_separators?(separators)
+      raise ISO8601::Errors::UnknownPattern, @original unless valid_representation?(date_components, time_components)
+      raise ISO8601::Errors::UnknownPattern, @original unless valid_separators?(separators)
 
       components = date_components + time_components
-      components = (components << zone).compact
 
-      ::DateTime.new(*components)
+      ::DateTime.new(*components.compact)
     end
     ##
     # Validates the date has the right pattern.
@@ -86,53 +79,31 @@ module ISO8601
 
       date = ISO8601::Date.new(input)
 
-      date.to_atoms << date.separator
-    end
-    def parse_zone(zone)
-      _, offset, separator = /^(Z|[+-]\d{2}(.)\d{2})$/.match(zone).to_a.compact
-
-      [offset, separator]
+      date.atoms << date.separator
     end
     ##
-    # Validates the time has the right pattern.
-    #
-    # Acceptable patterns:
-    #
-    # * hh
-    # * hh:mm or hhmm
-    # * hh:mm:ss or hhmmss
-    #
     # @return [Array<String, nil>]
-    def parse_time(time)
-      _, hours, separator, minutes, seconds = /^(?:
-        (\d{2})(:?)(\d{2})\2(\d{2}(?:[.,]\d+)?) |
-        (\d{2})(:)(\d{2}) |
-        (\d{2})
-      )$/x.match(time).to_a.compact
+    def parse_time(input)
+      time = ISO8601::Time.new(input)
 
-      raise ISO8601::Errors::UnknownPattern.new(@original) if hours.nil?
-
-      hours &&= hours.to_i
-      minutes &&= minutes.to_i
-      seconds &&= seconds.to_f
-
-      [hours, minutes, seconds, separator]
+      time.atoms << time.separator
     end
 
     def valid_separators?(separators)
       separators = separators.compact
 
-      return if separators.length == 1 || separators[0] == :ignore
+      # return true if separators.all?(&:empty?)
+      # return true if separators.length == 1 || separators[0] == :ignore
+      # return false if (separators.first.length != separators.last.length)
+
+      return true if separators.length == 1 || separators[0] == :ignore
 
       unless separators.all?(&:empty?)
         if (separators[0].length != separators[1].length)
-          raise ISO8601::Errors::UnknownPattern, @original
-        else
-          if separators.length == 3 && !(separators[1] == separators[2])
-            raise ISO8601::Errors::UnknownPattern, @original
-          end
+          return false
         end
       end
+      return true
     end
     ##
     # If time is provided date must use a complete representation
@@ -140,9 +111,7 @@ module ISO8601
       year, month, day = date
       hour, minute, second = time
 
-      if !year.nil? && (month.nil? || day.nil?) && !hour.nil?
-        raise ISO8601::Errors::UnknownPattern, @original
-      end
+      date.nil? || !(!year.nil? && (month.nil? || day.nil?) && !hour.nil?)
     end
   end
 end

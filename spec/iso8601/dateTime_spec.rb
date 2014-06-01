@@ -39,7 +39,6 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('2010-05-09T10:30:12+04') }.to_not raise_error
     expect { ISO8601::DateTime.new('2010-05-09T10:30:12+04:00') }.to_not raise_error
     expect { ISO8601::DateTime.new('2010-05-09T10:30:12-04:00') }.to_not raise_error
-    expect { ISO8601::DateTime.new('2010-05-09T10:30:12+0400') }.to_not raise_error
     expect { ISO8601::DateTime.new('2010-05-09T10:30:12-00:00') }.to_not raise_error
     expect { ISO8601::DateTime.new('-2014-05-31T16:26:00Z') }.to_not raise_error
     expect { ISO8601::DateTime.new('2014-05-31T16:26:10.5Z') }.to_not raise_error
@@ -48,6 +47,11 @@ describe ISO8601::DateTime do
     expect { ISO8601::DateTime.new('2014-001') }.to_not raise_error
     expect { ISO8601::DateTime.new('2014121') }.to_not raise_error
     expect { ISO8601::DateTime.new('2014-121T10:11:12Z') }.to_not raise_error
+    expect { ISO8601::DateTime.new('20100509T103012+0400') }.to_not raise_error
+    expect { ISO8601::DateTime.new('20100509') }.to_not raise_error
+    expect { ISO8601::DateTime.new('T103012+0400') }.to_not raise_error
+    expect { ISO8601::DateTime.new('T103012+04') }.to_not raise_error
+    expect { ISO8601::DateTime.new('T103012+04') }.to_not raise_error
   end
 
   context 'reduced patterns' do
@@ -97,13 +101,13 @@ describe ISO8601::DateTime do
 
   describe '#+' do
     it "should return the result of the addition" do
-      (ISO8601::DateTime.new('2012-07-07T20:20:20Z') + 10).to_time.should == ISO8601::DateTime.new('2012-07-07T20:20:30Z').to_time
+      (ISO8601::DateTime.new('2012-07-07T20:20:20Z') + 10).to_s.should == '2012-07-07T20:20:30+00:00'
     end
   end
 
   describe '#-' do
     it "should return the result of the substraction" do
-      (ISO8601::DateTime.new('2012-07-07T20:20:20Z') - 10).to_time.should == ISO8601::DateTime.new('2012-07-07T20:20:10+00:00').to_time
+      (ISO8601::DateTime.new('2012-07-07T20:20:20Z') - 10).to_s.should == '2012-07-07T20:20:10+00:00'
     end
   end
 
