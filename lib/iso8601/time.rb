@@ -15,13 +15,15 @@ module ISO8601
     def_delegators(:@time,
       :to_time, :to_date, :to_datetime,
       :hour, :minute, :zone)
-
     ##
     # The separator used in the original ISO 8601 string.
     attr_reader :separator
     ##
     # The second atom
     attr_reader :second
+    ##
+    # The original atoms
+    attr_reader :atoms
     ##
     # @param [String] time The time pattern
     # @param [Date] base The base date to determine the time
@@ -39,7 +41,7 @@ module ISO8601
     #
     # @return [ISO8601::Time] New time resulting of the addition
     def +(seconds)
-      result = (@time.to_time + seconds).iso8601.split('T')
+      result = (@time + (seconds / 86400.0)).to_s.split('T')
       ISO8601::Time.new(result.last, ::Date.parse(result.first))
     end
     ##
@@ -49,7 +51,7 @@ module ISO8601
     #
     # @return [ISO8601::Time] New time resulting of the substraction
     def -(seconds)
-      result = (@time.to_time - seconds).iso8601.split('T')
+      result = (@time - (seconds / 86400.0)).to_s.split('T')
       ISO8601::Time.new(result.last, ::Date.parse(result.first))
     end
     ##
@@ -62,11 +64,6 @@ module ISO8601
     # Converts self to an array of atoms.
     def to_a
       [hour, minute, second, zone]
-    end
-    ##
-    # The original atoms
-    def to_atoms
-      @atoms
     end
 
     private

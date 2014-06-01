@@ -51,19 +51,29 @@ describe ISO8601::Time do
 
   describe '#+' do
     it "should return the result of the addition" do
-      (ISO8601::Time.new('T20:20:20Z') + 10).to_s.should == 'T20:20:30+00:00'
+      (ISO8601::Time.new('T20:20:20+02:00') + 10).to_s.should == 'T20:20:30+02:00'
     end
   end
 
   describe '#-' do
     it "should return the result of the substraction" do
-      (ISO8601::Time.new('T20:20:20Z') - 10).to_s.should == 'T20:20:10+00:00'
+      (ISO8601::Time.new('T20:20:20+01:00') - 10).to_s.should == 'T20:20:10+01:00'
     end
   end
 
   describe '#to_a' do
     it "should return an array of atoms" do
       ISO8601::Time.new('T19:29:39Z').to_a.should == [19, 29, 39, '+00:00']
+    end
+  end
+
+  describe '#atoms' do
+    it "should return an array of atoms" do
+      ISO8601::Time.new('T19:29:39+04:00').atoms.should == [19, 29, 39, '+04:00']
+      ISO8601::Time.new('T19:29:39Z').atoms.should == [19, 29, 39, 'Z']
+      ISO8601::Time.new('T19:29:39').atoms.should == [19, 29, 39]
+      ISO8601::Time.new('T19:29').atoms.should == [19, 29]
+      ISO8601::Time.new('T19').atoms.should == [19]
     end
   end
 end
