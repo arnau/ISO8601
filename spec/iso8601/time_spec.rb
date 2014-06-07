@@ -8,9 +8,9 @@ describe ISO8601::Time do
   end
 
   it "should raise an error for a correct pattern but an invalid date" do
-    expect { ISO8601::Time.new('T25:00:00') }.to raise_error(ArgumentError)
-    expect { ISO8601::Time.new('T00:61:00') }.to raise_error(ArgumentError)
-    expect { ISO8601::Time.new('T00:00:61') }.to raise_error(ArgumentError)
+    expect { ISO8601::Time.new('T25:00:00') }.to raise_error(ISO8601::Errors::RangeError)
+    expect { ISO8601::Time.new('T00:61:00') }.to raise_error(ISO8601::Errors::RangeError)
+    expect { ISO8601::Time.new('T00:00:61') }.to raise_error(ISO8601::Errors::RangeError)
   end
 
   it "should parse any allowed pattern" do

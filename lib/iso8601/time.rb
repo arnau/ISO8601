@@ -33,6 +33,8 @@ module ISO8601
       @atoms = atomize(input)
       @time = ::DateTime.new(*[base.year, base.month, base.day], *@atoms)
       @second = @time.second + @time.second_fraction.to_f
+    rescue ArgumentError => error
+      raise ISO8601::Errors::RangeError, input
     end
     ##
     # Forwards the time the given amount of seconds.

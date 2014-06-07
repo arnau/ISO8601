@@ -20,11 +20,13 @@ module ISO8601
     attr_reader :separator
     ##
     # @param [String] date The date pattern
-    def initialize(date)
-      @original = date
+    def initialize(input)
+      @original = input
 
-      @atoms = atomize(date)
+      @atoms = atomize(input)
       @date = ::Date.new(*@atoms)
+    rescue ArgumentError => error
+      raise ISO8601::Errors::RangeError, input
     end
     ##
     # Forwards the date the given amount of days.

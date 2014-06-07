@@ -16,9 +16,9 @@ describe ISO8601::Date do
   end
 
   it "should raise an error for a correct pattern but an invalid date" do
-    expect { ISO8601::Date.new('2010-01-32') }.to raise_error(ArgumentError)
-    expect { ISO8601::Date.new('2010-02-30') }.to raise_error(ArgumentError)
-    expect { ISO8601::Date.new('2010-13-30') }.to raise_error(ArgumentError)
+    expect { ISO8601::Date.new('2010-01-32') }.to raise_error(ISO8601::Errors::RangeError)
+    expect { ISO8601::Date.new('2010-02-30') }.to raise_error(ISO8601::Errors::RangeError)
+    expect { ISO8601::Date.new('2010-13-30') }.to raise_error(ISO8601::Errors::RangeError)
   end
 
   it "should parse any allowed pattern" do

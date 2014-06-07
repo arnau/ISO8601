@@ -6,9 +6,14 @@ module ISO8601
   module Errors
 
     # Error that is raised when unknown pattern is parsed.
-    class UnknownPattern < ::ArgumentError
+    class UnknownPattern < ::StandardError
       def initialize(pattern)
         super("The pattern “#{pattern}” is not allowed in this implementation of ISO8601.")
+      end
+    end
+    class RangeError < ::StandardError
+      def initialize(pattern)
+        super("“#{pattern}” is out of range")
       end
     end
     class DurationError < ::StandardError
