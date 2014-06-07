@@ -31,7 +31,7 @@ module ISO8601
 
       @atoms = atomize(input)
       @date = ::Date.new(*@atoms)
-    rescue ArgumentError => error
+    rescue ArgumentError
       raise ISO8601::Errors::RangeError, input
     end
     ##

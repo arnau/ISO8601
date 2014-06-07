@@ -33,7 +33,7 @@ module ISO8601
       @atoms = atomize(input)
       @time = ::DateTime.new(*[base.year, base.month, base.day], *@atoms)
       @second = @time.second + @time.second_fraction.to_f
-    rescue ArgumentError => error
+    rescue ArgumentError
       raise ISO8601::Errors::RangeError, input
     end
     ##
