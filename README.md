@@ -76,10 +76,16 @@ component.
 
 Ordinal dates keep the sign. `2014-001` is not the same as `-2014-001`.
 
+Week dates raise an error when two digit days provied instead of return monday:
+
+    ISO8601::DateTime.new('2014-W15-02') # => ISO8601::Errors::UnknownPattern
+    DateTime.new('2014-W15-02')  # => #<Date: 2014-04-07 ((2456755j,0s,0n),+0s,2299161j)>
+
 
 ## Changes since 0.5
 
 * Drop support for Ruby 1.8.7
+* Add support for Rubinius 2
 * `ISO8601::DateTime#century` no longer exists. Truncated representations were
 removed in ISO 8601:2004.
 * `ISO8601::DateTime#zone` delegates to core `DateTime#zone`.
@@ -89,12 +95,12 @@ removed in ISO 8601:2004.
 * A date time can be converted to an array of atoms with `#to_a`.
 * Ordinal dates supported.
 * A date component is represented by `ISO8601::Date`.
+* Week date pattern (YYYY-Wdww, YYYY-Www-D).
 
 
 ## TODO
 
 * Recurring time intervals
-* Week date pattern (YYYY-Www-D)
 
 
 ## Contributors

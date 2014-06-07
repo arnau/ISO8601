@@ -6,12 +6,18 @@ module ISO8601
   #     d = Date.new('2014-05-28')
   #     d.year  # => 2014
   #     d.month # => 5
+  #
+  # @example Week dates
+  #     d = Date.new('2014-W15-2')
+  #     d.day   # => 27
+  #     d.wday  # => 2
+  #     d.week # => 15
   class Date
     extend Forwardable
 
     def_delegators(:@date,
       :to_s, :to_time, :to_date, :to_datetime,
-      :year, :month, :day)
+      :year, :month, :day, :wday)
     ##
     # The original atoms
     attr_reader :atoms
@@ -27,6 +33,11 @@ module ISO8601
       @date = ::Date.new(*@atoms)
     rescue ArgumentError => error
       raise ISO8601::Errors::RangeError, input
+    end
+    ##
+    # The calendar week number (1-53)
+    def week
+      @date.cweek
     end
     ##
     # Forwards the date the given amount of days.
@@ -56,7 +67,13 @@ module ISO8601
     ##
     # Splits the date component into valid atoms.
     #
-    # Acceptable patterns: YYYY, YYYY-MM-DD, YYYYMMDD or YYYY-MM but not YYYYMM.
+    # Acceptable patterns:
+    #
+    # * YYYY
+    # * YYYY-MM but not YYYYMM
+    # * YYYY-MM-DD, YYYYMMDD
+    # * YYYY-Www, YYYYWdd
+    # * YYYY-Www-D, YYYYWddD
     #
     # @param [String] date
     #
@@ -64,16 +81,31 @@ module ISO8601
     def atomize(date)
       _, year, separator, month, day = /^(?:
         ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) | # YYYY-MM-DD
-        ([+-]?\d{4})(-?)(\d{3}) | # YYYY-DDD
-        ([+-]?\d{4})(-)(\d{2}) | # YYYY-MM
-        ([+-]?\d{4}) # YYYY
+        ([+-]?\d{4})(-?)(\d{3}) |          # YYYY-DDD
+        ([+-]?\d{4})(-)(\d{2}) |           # YYYY-MM
+        ([+-]?\d{4})                       # YYYY
       )$/x.match(date).to_a.compact
+
+      if year.nil?
+        # Check if it's a Week date
+        _, year, separator, week, wday = /^(?:
+          ([+-]?\d{4})(-?)(W\d{2})\2(\d) | # YYYY-Www-D
+          ([+-]?\d{4})(-?)(W\d{2})         # YYYY-Www
+        )$/x.match(date).to_a.compact
+
+        unless week.nil?
+          d = ::Date.parse(date)
+          year = d.year
+          month = d.month
+          day = d.day
+        end
+      end
 
       raise ISO8601::Errors::UnknownPattern.new(@original) if year.nil?
 
       @separator = separator
 
-      return atomize_ordinal(year, month) if month && month.length == 3
+      return atomize_ordinal(year, month) if month && month.to_s.length == 3
 
       [year, month, day].compact.map(&:to_i)
     end

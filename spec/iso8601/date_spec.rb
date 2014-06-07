@@ -13,6 +13,7 @@ describe ISO8601::Date do
     expect { ISO8601::Date.new('2010-1-09') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Date.new('201001-09') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Date.new('201-0109') }.to raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::Date.new('2014-W15-02') }.to raise_error(ISO8601::Errors::UnknownPattern)
   end
 
   it "should raise an error for a correct pattern but an invalid date" do
@@ -27,6 +28,10 @@ describe ISO8601::Date do
     expect { ISO8601::Date.new('2010-05-09') }.to_not raise_error
     expect { ISO8601::Date.new('2014-001') }.to_not raise_error
     expect { ISO8601::Date.new('2014121') }.to_not raise_error
+    expect { ISO8601::Date.new('2014-W15') }.to_not raise_error
+    expect { ISO8601::Date.new('2014-W15-2') }.to_not raise_error
+    expect { ISO8601::Date.new('2014W15') }.to_not raise_error
+    expect { ISO8601::Date.new('2014W152') }.to_not raise_error
   end
 
   context 'reduced patterns' do
