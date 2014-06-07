@@ -25,7 +25,7 @@ module ISO8601
     # The separator used in the original ISO 8601 string.
     attr_reader :separator
     ##
-    # @param [String] date The date pattern
+    # @param [String] input The date pattern
     def initialize(input)
       @original = input
 
@@ -75,26 +75,26 @@ module ISO8601
     # * YYYY-Www, YYYYWdd
     # * YYYY-Www-D, YYYYWddD
     #
-    # @param [String] date
+    # @param [String] input
     #
     # @return [Array<Integer>]
-    def atomize(date)
+    def atomize(input)
       _, year, separator, month, day = /^(?:
         ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) | # YYYY-MM-DD
         ([+-]?\d{4})(-?)(\d{3}) |          # YYYY-DDD
         ([+-]?\d{4})(-)(\d{2}) |           # YYYY-MM
         ([+-]?\d{4})                       # YYYY
-      )$/x.match(date).to_a.compact
+      )$/x.match(input).to_a.compact
 
       if year.nil?
         # Check if it's a Week date
         _, year, separator, week, wday = /^(?:
           ([+-]?\d{4})(-?)(W\d{2})\2(\d) | # YYYY-Www-D
           ([+-]?\d{4})(-?)(W\d{2})         # YYYY-Www
-        )$/x.match(date).to_a.compact
+        )$/x.match(input).to_a.compact
 
         unless week.nil?
-          d = ::Date.parse(date)
+          d = ::Date.parse(input)
           year = d.year
           month = d.month
           day = d.day

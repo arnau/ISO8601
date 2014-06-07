@@ -25,7 +25,7 @@ module ISO8601
     # The original atoms
     attr_reader :atoms
     ##
-    # @param [String] time The time pattern
+    # @param [String] input The time pattern
     # @param [Date] base The base date to determine the time
     def initialize(input, base = ::Date.today)
       @original = input
@@ -78,7 +78,7 @@ module ISO8601
     # Acceptable patterns: hh, hh:mm or hhmm and hh:mm:ss or hhmmss. Any form
     # can be prepended by `T`.
     #
-    # @param [String] time
+    # @param [String] input
     #
     # @return [Array<Integer, Float>]
     def atomize(input)
