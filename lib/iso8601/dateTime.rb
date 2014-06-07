@@ -11,7 +11,7 @@ module ISO8601
     extend Forwardable
 
     def_delegators(:@date_time,
-      :to_s, :to_time, :to_date, :to_datetime,
+      :strftime, :to_time, :to_date, :to_datetime,
       :year, :month, :day, :hour, :minute, :zone)
 
     attr_reader :second
@@ -28,14 +28,26 @@ module ISO8601
     #
     # @param [Numeric] seconds The seconds to add
     def +(seconds)
-      ISO8601::DateTime.new((@date_time + (seconds / 86400.0)).to_s)
+      moment = @date_time.to_time.localtime(zone) + seconds
+      format = moment.subsec.zero? ? "%Y-%m-%dT%H:%M:%S%:z" : "%Y-%m-%dT%H:%M:%S.%16N%:z"
+
+      ISO8601::DateTime.new(moment.strftime(format))
     end
     ##
     # Substraction
     #
     # @param [Numeric] seconds The seconds to substract
     def -(seconds)
-      ISO8601::DateTime.new((@date_time - (seconds / 86400.0)).to_s)
+      moment = @date_time.to_time.localtime(zone) - seconds.round(1)
+      format = moment.subsec.zero? ? "%Y-%m-%dT%H:%M:%S%:z" : "%Y-%m-%dT%H:%M:%S.%2N%:z"
+
+      ISO8601::DateTime.new(moment.strftime(format))
+    end
+    ##
+    # Converts DateTime to a formated string
+    def to_s
+      format = @date_time.second_fraction.zero? ? "%Y-%m-%dT%H:%M:%S%:z" : "%Y-%m-%dT%H:%M:%S.%2N%:z"
+      @date_time.strftime(format)
     end
     ##
     # Converts DateTime to an array of atoms.
@@ -92,16 +104,10 @@ module ISO8601
     def valid_separators?(separators)
       separators = separators.compact
 
-      # return true if separators.all?(&:empty?)
-      # return true if separators.length == 1 || separators[0] == :ignore
-      # return false if (separators.first.length != separators.last.length)
-
       return true if separators.length == 1 || separators[0] == :ignore
 
       unless separators.all?(&:empty?)
-        if (separators[0].length != separators[1].length)
-          return false
-        end
+        return false if (separators.first.length != separators.last.length)
       end
       return true
     end

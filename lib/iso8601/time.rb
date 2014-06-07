@@ -41,8 +41,10 @@ module ISO8601
     #
     # @return [ISO8601::Time] New time resulting of the addition
     def +(seconds)
-      result = (@time + (seconds / 86400.0)).to_s.split('T')
-      ISO8601::Time.new(result.last, ::Date.parse(result.first))
+      moment = @time.to_time.localtime(zone) + seconds
+      format = moment.subsec.zero? ? "T%H:%M:%S%:z" : "T%H:%M:%S.%16N%:z"
+
+      ISO8601::Time.new(moment.strftime(format), ::Date.parse(moment.strftime('%Y-%m-%d')))
     end
     ##
     # Backwards the date the given amount of seconds.
@@ -51,13 +53,15 @@ module ISO8601
     #
     # @return [ISO8601::Time] New time resulting of the substraction
     def -(seconds)
-      result = (@time - (seconds / 86400.0)).to_s.split('T')
-      ISO8601::Time.new(result.last, ::Date.parse(result.first))
+      moment = @time.to_time.localtime(zone) - seconds
+      format = moment.subsec.zero? ? "T%H:%M:%S%:z" : "T%H:%M:%S.%16N%:z"
+
+      ISO8601::Time.new(moment.strftime(format), ::Date.parse(moment.strftime('%Y-%m-%d')))
     end
     ##
     # Converts self to a time component representation.
     def to_s
-      strf = @time.second_fraction == 0 ? 'T%H:%M:%S%Z' : 'T%H:%M:%S.%2N%Z'
+      strf = @time.second_fraction == 0 ? 'T%H:%M:%S%:z' : 'T%H:%M:%S.%2N%:z'
       @time.strftime(strf)
     end
     ##

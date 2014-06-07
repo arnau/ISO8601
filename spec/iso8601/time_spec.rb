@@ -52,12 +52,14 @@ describe ISO8601::Time do
   describe '#+' do
     it "should return the result of the addition" do
       (ISO8601::Time.new('T20:20:20+02:00') + 10).to_s.should == 'T20:20:30+02:00'
+      (ISO8601::Time.new('T20:20:20.11+02:00') + 10).to_s.should == 'T20:20:30.11+02:00'
     end
   end
 
   describe '#-' do
     it "should return the result of the substraction" do
       (ISO8601::Time.new('T20:20:20+01:00') - 10).to_s.should == 'T20:20:10+01:00'
+      (ISO8601::Time.new('T20:20:20.11+02:00') - 10).to_s.should == 'T20:20:10.11+02:00'
     end
   end
 

@@ -102,6 +102,8 @@ describe ISO8601::DateTime do
   describe '#+' do
     it "should return the result of the addition" do
       (ISO8601::DateTime.new('2012-07-07T20:20:20Z') + 10).to_s.should == '2012-07-07T20:20:30+00:00'
+      (ISO8601::DateTime.new('2012-07-07T20:20:20.5Z') + 10).to_s.should == '2012-07-07T20:20:30.50+00:00'
+      (ISO8601::DateTime.new('2012-07-07T20:20:20+02:00') + 10).to_s.should == '2012-07-07T20:20:30+02:00'
     end
   end
 
