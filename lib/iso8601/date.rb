@@ -80,24 +80,15 @@ module ISO8601
     #
     # @return [Array<Integer>]
     def atomize(input)
+      week_date = /^([+-]?)\d{4}(-?)W\d{2}(?:\2\d)?$/.match(input)
+      return atomize_week_date(input, week_date[2], week_date[1]) unless week_date.nil?
+
       _, year, separator, month, day = /^(?:
         ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) | # YYYY-MM-DD
         ([+-]?\d{4})(-?)(\d{3}) |          # YYYY-DDD
         ([+-]?\d{4})(-)(\d{2}) |           # YYYY-MM
         ([+-]?\d{4})                       # YYYY
       )$/x.match(input).to_a.compact
-
-      if year.nil?
-        # Check if it's a Week date: YYYY-Www-D, YYYY-Www
-        week_date = /^[+-]?\d{4}(-?)W\d{2}(\1\d)?$/.match(input)
-
-        unless week_date.nil?
-          d = ::Date.parse(input)
-          year = d.year
-          month = d.month
-          day = d.day
-        end
-      end
 
       raise ISO8601::Errors::UnknownPattern.new(@original) if year.nil?
 
@@ -106,6 +97,20 @@ module ISO8601
       return atomize_ordinal(year, month) if month && month.to_s.length == 3
 
       [year, month, day].compact.map(&:to_i)
+    end
+    ##
+    # Parses a week date (YYYY-Www-D, YYYY-Www) and returns its atoms.
+    #
+    # @param [String] input the date string.
+    # @param [String] separator the separator found in the input
+    # @param [String] sign the sign found in the input
+    #
+    # @return [Array<Integer>] date atoms
+    def atomize_week_date(input, separator, sign)
+      date = ::Date.parse(input)
+      sign = "#{sign}1".to_i
+      @separator = separator
+      [sign * date.year, date.month, date.day]
     end
     ##
     # Parses an ordinal date (YYYY-DDD) and returns its atoms.
