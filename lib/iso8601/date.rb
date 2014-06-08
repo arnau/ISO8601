@@ -88,13 +88,10 @@ module ISO8601
       )$/x.match(input).to_a.compact
 
       if year.nil?
-        # Check if it's a Week date
-        _, year, separator, week, wday = /^(?:
-          ([+-]?\d{4})(-?)(W\d{2})\2(\d) | # YYYY-Www-D
-          ([+-]?\d{4})(-?)(W\d{2})         # YYYY-Www
-        )$/x.match(input).to_a.compact
+        # Check if it's a Week date: YYYY-Www-D, YYYY-Www
+        week_date = /^[+-]?\d{4}(-?)W\d{2}(\1\d)?$/.match(input)
 
-        unless week.nil?
+        unless week_date.nil?
           d = ::Date.parse(input)
           year = d.year
           month = d.month
