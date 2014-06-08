@@ -29,12 +29,10 @@ module ISO8601
     # @param [Date] base The base date to determine the time
     def initialize(input, base = ::Date.today)
       @original = input
-
+      @base = base
       @atoms = atomize(input)
-      @time = ::DateTime.new(*[base.year, base.month, base.day], *@atoms)
+      @time = compose(@atoms, @base)
       @second = @time.second + @time.second_fraction.to_f
-    rescue ArgumentError
-      raise ISO8601::Errors::RangeError, input
     end
     ##
     # Forwards the time the given amount of seconds.
@@ -110,6 +108,18 @@ module ISO8601
       invalid_separators = zone.to_s.match(/^[+-]\d{2}:?\d{2}$/) && (@separator != separator)
 
       !(wrong_pattern || invalid_separators)
+    end
+    ##
+    # Wraps ::DateNew.new to play nice with ArgumentError.
+    #
+    # @param [Array<Integer>] atoms The time atoms.
+    # @param [::Date] base The base date to start computing time.
+    #
+    # @return [::DateTime]
+    def compose(atoms, base)
+      ::DateTime.new(*[base.year, base.month, base.day], *atoms)
+    rescue ArgumentError
+      raise ISO8601::Errors::RangeError, @original
     end
   end
 end

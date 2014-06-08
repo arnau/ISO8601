@@ -28,14 +28,13 @@ module ISO8601
     # @param [String] input The date pattern
     def initialize(input)
       @original = input
-
       @atoms = atomize(input)
-      @date = ::Date.new(*@atoms)
-    rescue ArgumentError
-      raise ISO8601::Errors::RangeError, input
+      @date = compose(@atoms)
     end
     ##
     # The calendar week number (1-53)
+    #
+    # @return [Integer]
     def week
       @date.cweek
     end
@@ -111,7 +110,7 @@ module ISO8601
     #
     # @return [Array<Integer>] date atoms.
     def atomize_week_date(input, separator, sign)
-      date = ::Date.parse(input)
+      date = parse(input)
       sign = "#{sign}1".to_i
       @separator = separator
 
@@ -127,11 +126,33 @@ module ISO8601
     #
     # @return [Array<Integer>] date atoms.
     def atomize_ordinal(year, day, separator, sign)
-      date = ::Date.parse([year, day].join('-'))
+      date = parse([year, day].join('-'))
       sign = "#{sign}1".to_i
       @separator = separator
 
       [sign * date.year, date.month, date.day]
+    end
+    ##
+    # Wraps ::Date.parse to play nice with ArgumentError.
+    #
+    # @param [String] string The formatted date.
+    #
+    # @return [::Date]
+    def parse(string)
+      ::Date.parse(string)
+    rescue ArgumentError
+      raise ISO8601::Errors::RangeError, @original
+    end
+    ##
+    # Wraps ::Date.new to play nice with ArgumentError.
+    #
+    # @param [Array<Integer>] atoms The date atoms.
+    #
+    # @return [::Date]
+    def compose(atoms)
+      ::Date.new(*atoms)
+    rescue ArgumentError
+      raise ISO8601::Errors::RangeError, @original
     end
   end
 end
