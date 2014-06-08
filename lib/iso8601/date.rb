@@ -83,9 +83,11 @@ module ISO8601
       week_date = /^([+-]?)\d{4}(-?)W\d{2}(?:\2\d)?$/.match(input)
       return atomize_week_date(input, week_date[2], week_date[1]) unless week_date.nil?
 
+      _, sign, year, separator, day = /^([+-]?)(\d{4})(-?)(\d{3})$/.match(input).to_a.compact
+      return atomize_ordinal(year, day, separator, sign) unless year.nil?
+
       _, year, separator, month, day = /^(?:
         ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) | # YYYY-MM-DD
-        ([+-]?\d{4})(-?)(\d{3}) |          # YYYY-DDD
         ([+-]?\d{4})(-)(\d{2}) |           # YYYY-MM
         ([+-]?\d{4})                       # YYYY
       )$/x.match(input).to_a.compact
@@ -94,22 +96,21 @@ module ISO8601
 
       @separator = separator
 
-      return atomize_ordinal(year, month) if month && month.to_s.length == 3
-
       [year, month, day].compact.map(&:to_i)
     end
     ##
     # Parses a week date (YYYY-Www-D, YYYY-Www) and returns its atoms.
     #
     # @param [String] input the date string.
-    # @param [String] separator the separator found in the input
-    # @param [String] sign the sign found in the input
+    # @param [String] separator the separator found in the input.
+    # @param [String] sign the sign found in the input.
     #
-    # @return [Array<Integer>] date atoms
+    # @return [Array<Integer>] date atoms.
     def atomize_week_date(input, separator, sign)
       date = ::Date.parse(input)
       sign = "#{sign}1".to_i
       @separator = separator
+
       [sign * date.year, date.month, date.day]
     end
     ##
@@ -117,12 +118,16 @@ module ISO8601
     #
     # @param [String] year in YYYY form.
     # @param [String] day in DDD form.
+    # @param [String] separator the separator found in the input.
+    # @param [String] sign the sign found in the input.
     #
-    # @return [Array<Integer>] date atoms
-    def atomize_ordinal(year, day)
+    # @return [Array<Integer>] date atoms.
+    def atomize_ordinal(year, day, separator, sign)
       date = ::Date.parse([year, day].join('-'))
+      sign = "#{sign}1".to_i
+      @separator = separator
 
-      [date.year, date.month, date.day]
+      [sign * date.year, date.month, date.day]
     end
   end
 end
