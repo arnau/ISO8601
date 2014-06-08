@@ -86,11 +86,15 @@ module ISO8601
       _, sign, year, separator, day = /^([+-]?)(\d{4})(-?)(\d{3})$/.match(input).to_a.compact
       return atomize_ordinal(year, day, separator, sign) unless year.nil?
 
-      _, year, separator, month, day = /^(?:
-        ([+-]?\d{4})(-?)(\d{2})\2(\d{2}) | # YYYY-MM-DD
-        ([+-]?\d{4})(-)(\d{2}) |           # YYYY-MM
-        ([+-]?\d{4})                       # YYYY
-      )$/x.match(input).to_a.compact
+      _, year, separator, month, day = /^
+        ([+-]?\d{4})   # YYYY
+        (?:
+          (-?)(\d{2})  # YYYY-MM
+          (?:
+            \2(\d{2})  # YYYY-MM-DD
+          )?
+        )?
+      $/x.match(input).to_a.compact
 
       raise ISO8601::Errors::UnknownPattern.new(@original) if year.nil?
 
