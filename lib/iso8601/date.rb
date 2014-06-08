@@ -74,6 +74,7 @@ module ISO8601
     # * YYYY-MM-DD, YYYYMMDD
     # * YYYY-Www, YYYYWdd
     # * YYYY-Www-D, YYYYWddD
+    # * YYYY-DDD, YYYYDDD
     #
     # @param [String] input
     #
