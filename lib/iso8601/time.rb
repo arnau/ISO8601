@@ -24,6 +24,10 @@ module ISO8601
     ##
     # The original atoms
     attr_reader :atoms
+
+    FORMAT = 'T%H:%M:%S%:z'
+    FORMAT_WITH_FRACTION = 'T%H:%M:%S.%2N%:z'
+
     ##
     # @param [String] input The time pattern
     # @param [Date] base The base date to determine the time
@@ -42,7 +46,7 @@ module ISO8601
     # @return [ISO8601::Time] New time resulting of the addition
     def +(seconds)
       moment = @time.to_time.localtime(zone) + seconds
-      format = moment.subsec.zero? ? "T%H:%M:%S%:z" : "T%H:%M:%S.%16N%:z"
+      format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
 
       ISO8601::Time.new(moment.strftime(format), ::Date.parse(moment.strftime('%Y-%m-%d')))
     end
@@ -54,15 +58,15 @@ module ISO8601
     # @return [ISO8601::Time] New time resulting of the substraction
     def -(seconds)
       moment = @time.to_time.localtime(zone) - seconds
-      format = moment.subsec.zero? ? "T%H:%M:%S%:z" : "T%H:%M:%S.%16N%:z"
+      format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
 
       ISO8601::Time.new(moment.strftime(format), ::Date.parse(moment.strftime('%Y-%m-%d')))
     end
     ##
     # Converts self to a time component representation.
     def to_s
-      strf = @time.second_fraction == 0 ? 'T%H:%M:%S%:z' : 'T%H:%M:%S.%2N%:z'
-      @time.strftime(strf)
+      format = @time.second_fraction.zero? ? FORMAT : FORMAT_WITH_FRACTION
+      @time.strftime(format)
     end
     ##
     # Converts self to an array of atoms.

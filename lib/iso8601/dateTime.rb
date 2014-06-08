@@ -16,6 +16,9 @@ module ISO8601
 
     attr_reader :second
 
+    FORMAT = '%Y-%m-%dT%H:%M:%S%:z'
+    FORMAT_WITH_FRACTION = '%Y-%m-%dT%H:%M:%S.%2N%:z'
+
     ##
     # @param [String] date_time The datetime pattern
     def initialize(date_time)
@@ -29,7 +32,7 @@ module ISO8601
     # @param [Numeric] seconds The seconds to add
     def +(seconds)
       moment = @date_time.to_time.localtime(zone) + seconds
-      format = moment.subsec.zero? ? "%Y-%m-%dT%H:%M:%S%:z" : "%Y-%m-%dT%H:%M:%S.%16N%:z"
+      format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
 
       ISO8601::DateTime.new(moment.strftime(format))
     end
@@ -38,15 +41,15 @@ module ISO8601
     #
     # @param [Numeric] seconds The seconds to substract
     def -(seconds)
-      moment = @date_time.to_time.localtime(zone) - seconds.round(1)
-      format = moment.subsec.zero? ? "%Y-%m-%dT%H:%M:%S%:z" : "%Y-%m-%dT%H:%M:%S.%2N%:z"
+      moment = @date_time.to_time.localtime(zone) - seconds
+      format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
 
       ISO8601::DateTime.new(moment.strftime(format))
     end
     ##
     # Converts DateTime to a formated string
     def to_s
-      format = @date_time.second_fraction.zero? ? "%Y-%m-%dT%H:%M:%S%:z" : "%Y-%m-%dT%H:%M:%S.%2N%:z"
+      format = @date_time.second_fraction.zero? ? FORMAT : FORMAT_WITH_FRACTION
       @date_time.strftime(format)
     end
     ##
