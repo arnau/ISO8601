@@ -85,18 +85,22 @@ module ISO8601
         year = @base.year + ((@base.month) / 12).to_i
         (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month))
       else
-        month = (@base.month + @atom <= 12) ? (@base.month + @atom) : ((@base.month + @atom) % 12)
+        if @base.month + @atom <= 0
+          month = @base.month + @atom
 
-        if month % 12 == 0
-          year = @base.year + (month / 12) - 1
-          month = 12
-        elsif month < 0
-          year = @base.year + (month / 12).floor
-          month = (12 + month > 0) ? (12 + month) : (12 + (month % -12))
+          if month % 12 == 0
+            year = @base.year + (month / 12) - 1
+            month = 12
+          else
+            year = @base.year + (month / 12).floor
+            month = (12 + month > 0) ? (12 + month) : (12 + (month % -12))
+          end
         else
+          month = (@base.month + @atom <= 12) ? (@base.month + @atom) : ((@base.month + @atom) % 12)
+          month = 12 if month == 0
           year = @base.year + ((@base.month + @atom) / 12).to_i
         end
-
+        
         (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month)) / @atom
       end
     end

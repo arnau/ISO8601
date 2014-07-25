@@ -100,6 +100,7 @@ describe ISO8601::Duration do
       it "should return the seconds of a P[n]M duration in a common year" do
         ISO8601::Duration.new('P1M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 2) - Time.utc(2012, 1))
         ISO8601::Duration.new('P2M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2012, 3) - Time.utc(2012, 1))
+        ISO8601::Duration.new('P19M', ISO8601::DateTime.new('2012-05-01')).to_seconds.should == (Time.utc(2014, 12) - Time.utc(2012, 5))
         ISO8601::Duration.new('P14M', ISO8601::DateTime.new('2012-01-01')).to_seconds.should == (Time.utc(2013, 3) - Time.utc(2012, 1))
       end
       it "should return the seconds of a P[n]M duration in a leap year" do
