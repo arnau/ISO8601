@@ -79,30 +79,45 @@ module ISO8601
     # years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
     def factor
       if @base.nil?
-        (((365 * 303 + 366 * 97) / 400) * 86400) / 12
+        nobase_calculation
       elsif @atom == 0
-        month = (@base.month <= 12) ? (@base.month) : ((@base.month) % 12)
-        year = @base.year + ((@base.month) / 12).to_i
-        (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month))
+        zero_calculation
       else
-        if @base.month + @atom <= 0
-          month = @base.month + @atom
-
-          if month % 12 == 0
-            year = @base.year + (month / 12) - 1
-            month = 12
-          else
-            year = @base.year + (month / 12).floor
-            month = (12 + month > 0) ? (12 + month) : (12 + (month % -12))
-          end
-        else
-          month = (@base.month + @atom <= 12) ? (@base.month + @atom) : ((@base.month + @atom) % 12)
-          month = 12 if month == 0
-          year = @base.year + ((@base.month + @atom) / 12).to_i
-        end
-        
-        (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month)) / @atom
+        calculation
       end
+    end
+
+    private
+
+    def nobase_calculation
+      (((365 * 303 + 366 * 97) / 400) * 86400) / 12
+    end
+
+    def zero_calculation
+      month = (@base.month <= 12) ? (@base.month) : ((@base.month) % 12)
+      year = @base.year + ((@base.month) / 12).to_i
+
+      (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month))
+    end
+
+    def calculation
+      if @base.month + @atom <= 0
+        month = @base.month + @atom
+
+        if month % 12 == 0
+          year = @base.year + (month / 12) - 1
+          month = 12
+        else
+          year = @base.year + (month / 12).floor
+          month = (12 + month > 0) ? (12 + month) : (12 + (month % -12))
+        end
+      else
+        month = (@base.month + @atom <= 12) ? (@base.month + @atom) : ((@base.month + @atom) % 12)
+        month = 12 if month == 0
+        year = @base.year + ((@base.month + @atom) / 12).to_i
+      end
+
+      (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month)) / @atom
     end
   end
   ##
