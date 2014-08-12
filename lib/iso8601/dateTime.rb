@@ -67,6 +67,8 @@ module ISO8601
     #
     # @param [String] date_time The ISO representation
     def parse(date_time)
+      raise ISO8601::Errors::UnknownPattern, date_time if date_time.empty?
+
       date, time = date_time.split('T')
 
       date_components = parse_date(date)

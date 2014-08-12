@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe ISO8601::Time do
   it "should raise an error for any unknown pattern" do
+    expect { ISO8601::Time.new('') }.to raise_error(ISO8601::Errors::UnknownPattern)
+    expect { ISO8601::Time.new('T') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Time.new('T10:3012+0400') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Time.new('T10:30:12+0400') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Time.new('T10:30:12+040') }.to raise_error(ISO8601::Errors::UnknownPattern)

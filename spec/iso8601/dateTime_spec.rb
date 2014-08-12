@@ -4,6 +4,7 @@ require 'spec_helper'
 
 describe ISO8601::DateTime do
   it "should raise a ISO8601::Errors::UnknownPattern for any unknown pattern" do
+    expect { ISO8601::DateTime.new('') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::DateTime.new('2') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::DateTime.new('20') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::DateTime.new('201') }.to raise_error(ISO8601::Errors::UnknownPattern)
