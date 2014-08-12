@@ -16,7 +16,7 @@ times) standard.
 * RBX 2
 
 
-## Comments
+## Comments about this implementation
 
 ### Duration sign
 
@@ -96,6 +96,9 @@ removed in ISO 8601:2004.
 * Ordinal dates supported.
 * A date component is represented by `ISO8601::Date`.
 * Week date pattern (YYYY-Wdww, YYYY-Www-D).
+
+Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md)
+for a more complete list.
 
 
 ## TODO
