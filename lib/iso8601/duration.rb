@@ -201,8 +201,10 @@ module ISO8601
     end
 
     def valid_fractions?
-      if @atoms.values.select { |a| (a % 1) != 0 }.size > 1
-        raise ISO8601::Errors::UnknownPattern.new(@duration)
+      values = @atoms.values.reject(&:zero?)
+      fractions = values.select { |a| (a % 1) != 0 }
+      if fractions.size > 1 || (fractions.size == 1 && fractions.last != values.last)
+        raise ISO8601::Errors::InvalidFractions.new(@duration)
       end
     end
   end

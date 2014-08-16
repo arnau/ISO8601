@@ -1,3 +1,7 @@
+## Changes for 0.7.0
+
+* Add fractions for any component in a duration.
+* Add a catch all `ISO8601::Errors::StandardError`.
 
 ## Changes for 0.6.0
 
