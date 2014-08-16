@@ -15,6 +15,8 @@ times) standard.
 * MRI 2.1
 * RBX 2
 
+Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md) if you are upgrading from an older version.
+
 
 ## Comments about this implementation
 
@@ -82,24 +84,6 @@ Week dates raise an error when two digit days provied instead of return monday:
     DateTime.new('2014-W15-02')  # => #<Date: 2014-04-07 ((2456755j,0s,0n),+0s,2299161j)>
 
 
-## Changes since 0.5
-
-* Drop support for Ruby 1.8.7
-* Add support for Rubinius 2
-* `ISO8601::DateTime#century` no longer exists. Truncated representations were
-removed in ISO 8601:2004.
-* `ISO8601::DateTime#zone` delegates to core `DateTime#zone`.
-* `ISO8601::DateTime#timezone` no longer exists. Now it delegates to
-`DateTime#zone`.
-* A date can have sign: `-1000-01-01`, `+2014-05-06T10:11:12Z`.
-* A date time can be converted to an array of atoms with `#to_a`.
-* Ordinal dates supported.
-* A date component is represented by `ISO8601::Date`.
-* Week date pattern (YYYY-Wdww, YYYY-Www-D).
-
-Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md)
-for a more complete list.
-
 
 ## TODO
 
@@ -108,11 +92,8 @@ for a more complete list.
 
 ## Contributors
 
-* [Nick Lynch](https://github.com/njlynch)
-* [Pelle Braendgaard](https://github.com/pelle)
-* [Takahiro Noda](https://github.com/tnoda)
-* [Porras](https://github.com/porras)
-* [Kenichi Kamiya](https://github.com/kachick)
+[Contributors](https://github.com/arnau/ISO8601/graphs/contributors)
+
 
 ## License
 

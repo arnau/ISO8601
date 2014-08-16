@@ -1,4 +1,8 @@
 
+## Changes for 0.6.0
+
+* Add `#hash` to `Duration`, `Date`, `Time` and `DateTime`.
+
 ## Changes for 0.5.2
 
 * Fix `DateTime` when handling empty strings.
