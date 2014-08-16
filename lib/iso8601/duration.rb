@@ -148,6 +148,10 @@ module ISO8601
       (self.to_seconds == duration.to_seconds)
     end
 
+    def hash
+      [self.class, iso8601].hash
+    end
+
     private
     ##
     # @param [Numeric] duration The seconds to promote
