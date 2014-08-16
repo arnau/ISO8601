@@ -18,16 +18,16 @@ module ISO8601
       @duration = /^(\+|-)? # Sign
                    P(
                       (
-                        (\d+Y)? # Years
-                        (\d+M)? # Months
-                        (\d+D)? # Days
+                        (\d+(?:[,.]\d+)?Y)? # Years
+                        (\d+(?:[.,]\d+)?M)? # Months
+                        (\d+(?:[.,]\d+)?D)? # Days
                         (T
-                          (\d+H)? # Hours
-                          (\d+M)? # Minutes
-                          (\d+(?:\.\d+)?S)? # Seconds
+                          (\d+(?:[.,]\d+)?H)? # Hours
+                          (\d+(?:[.,]\d+)?M)? # Minutes
+                          (\d+(?:[.,]\d+)?S)? # Seconds
                         )? # Time
                       )
-                      |(\d+W) # Weeks
+                      |(\d+(?:[.,]\d+)?W) # Weeks
                     ) # Duration
                   $/x.match(pattern) or raise ISO8601::Errors::UnknownPattern.new(pattern)
 
@@ -43,6 +43,7 @@ module ISO8601
         :minutes => @duration[9].nil? ? 0 : @duration[9].chop.to_f * sign,
         :seconds => @duration[10].nil? ? 0 : @duration[10].chop.to_f * sign
       }
+      valid_fractions?
     end
     ##
     # Assigns a new base datetime
@@ -195,6 +196,12 @@ module ISO8601
          (@duration[4].nil? and @duration[5].nil? and @duration[6].nil? and @duration[7].nil? and @duration[11].nil?) or
          (!@duration[7].nil? and @duration[8].nil? and @duration[9].nil? and @duration[10].nil? and @duration[11].nil?)
 
+        raise ISO8601::Errors::UnknownPattern.new(@duration)
+      end
+    end
+
+    def valid_fractions?
+      if @atoms.values.select { |a| (a % 1) != 0 }.size > 1
         raise ISO8601::Errors::UnknownPattern.new(@duration)
       end
     end
