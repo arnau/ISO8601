@@ -122,4 +122,15 @@ describe ISO8601::DateTime do
       dt.should == [2014, 5, 31, 19, 29, 39, '+00:00']
     end
   end
+
+  describe '#hash' do
+    it "should return the datetime hash" do
+      subject = ISO8601::DateTime.new('2014-08-16T20:11:10Z')
+      contrast = ::DateTime.new(2014, 8, 16, 20, 11, 10, 'Z')
+
+      expect(subject).to respond_to(:hash)
+      expect(subject.hash).to eq(contrast.hash)
+    end
+  end
+
 end
