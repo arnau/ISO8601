@@ -81,4 +81,14 @@ describe ISO8601::Date do
       ISO8601::Date.new('2014').atoms.should == [2014]
     end
   end
+
+  describe '#hash' do
+    it "should return the date hash" do
+      subject = ISO8601::Date.new('2014-08-16')
+      contrast = ::Date.new(2014, 8, 16)
+
+      expect(subject).to respond_to(:hash)
+      expect(subject.hash).to eq(contrast.hash)
+    end
+  end
 end

@@ -17,7 +17,7 @@ module ISO8601
 
     def_delegators(:@date,
       :to_s, :to_time, :to_date, :to_datetime,
-      :year, :month, :day, :wday)
+      :year, :month, :day, :wday, :hash)
     ##
     # The original atoms
     attr_reader :atoms

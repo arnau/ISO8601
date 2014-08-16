@@ -14,7 +14,7 @@ module ISO8601
 
     def_delegators(:@time,
       :to_time, :to_date, :to_datetime,
-      :hour, :minute, :zone)
+      :hour, :minute, :zone, :hash)
     ##
     # The separator used in the original ISO 8601 string.
     attr_reader :separator

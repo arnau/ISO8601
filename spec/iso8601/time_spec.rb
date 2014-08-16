@@ -80,4 +80,13 @@ describe ISO8601::Time do
       ISO8601::Time.new('T19').atoms.should == [19]
     end
   end
+
+  describe '#hash' do
+    it "should return the time hash" do
+      subject = ISO8601::Time.new('T20:11:10Z')
+
+      expect(subject).to respond_to(:hash)
+    end
+  end
+
 end

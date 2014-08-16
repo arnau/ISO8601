@@ -147,6 +147,12 @@ module ISO8601
       raise ISO8601::Errors::DurationBaseError.new(duration) if @base.to_s != duration.base.to_s
       (self.to_seconds == duration.to_seconds)
     end
+    ##
+    # @return [Fixnum]
+    def hash
+      @atoms.hash
+    end
+
 
     private
     ##

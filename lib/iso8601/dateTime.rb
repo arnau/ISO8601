@@ -12,7 +12,7 @@ module ISO8601
 
     def_delegators(:@date_time,
       :strftime, :to_time, :to_date, :to_datetime,
-      :year, :month, :day, :hour, :minute, :zone)
+      :year, :month, :day, :hour, :minute, :zone, :hash)
 
     attr_reader :second
 

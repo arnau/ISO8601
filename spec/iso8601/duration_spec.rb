@@ -217,4 +217,11 @@ describe ISO8601::Duration do
     end
   end
 
+  describe '#hash' do
+    it "should return the duration hash" do
+      subject = ISO8601::Duration.new('PT1H')
+
+      expect(subject).to respond_to(:hash)
+    end
+  end
 end
