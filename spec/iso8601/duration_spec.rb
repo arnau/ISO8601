@@ -13,14 +13,30 @@ describe ISO8601::Duration do
     expect { ISO8601::Duration.new('~P1Y') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Duration.new('.P1Y') }.to raise_error(ISO8601::Errors::UnknownPattern)
   end
+  it "should raise a ISO8601::Errors::InvalidFraction for any invalid patterns" do
+    expect { ISO8601::Duration.new('P1.5Y0.5M') }.to raise_error(ISO8601::Errors::InvalidFractions)
+    expect { ISO8601::Duration.new('P1.5Y1M') }.to raise_error(ISO8601::Errors::InvalidFractions)
+    expect { ISO8601::Duration.new('P1.5MT10.5S') }.to raise_error(ISO8601::Errors::InvalidFractions)
+  end
   it "should parse any allowed pattern" do
     expect { ISO8601::Duration.new('P1Y') }.to_not raise_error
+    expect { ISO8601::Duration.new('P0.5Y') }.to_not raise_error
+    expect { ISO8601::Duration.new('P0,5Y') }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y0.5M') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y0,5M') }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M1D') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M0.5D') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M0,5D') }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M1DT1H') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT0.5H') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT0,5H') }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT1H0.5M') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT1H0,5M') }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S') }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1.0S') }.to_not raise_error
+    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1,0S') }.to_not raise_error
     expect { ISO8601::Duration.new('P1W') }.to_not raise_error
     expect { ISO8601::Duration.new('+P1Y') }.to_not raise_error
     expect { ISO8601::Duration.new('-P1Y') }.to_not raise_error

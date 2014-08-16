@@ -1,3 +1,8 @@
+## Changes for 0.7.0
+
+* Add decimal fractions for any component in a duration.
+* Add a catch all `ISO8601::Errors::StandardError`.
+* Add support for comma (`,`) as a separator for duration decimal fractions.
 
 ## Changes for 0.6.0
 
