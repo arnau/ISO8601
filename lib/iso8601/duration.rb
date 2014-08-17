@@ -151,9 +151,15 @@ module ISO8601
     def ==(duration)
       compare_bases(duration)
 
+      (to_seconds == duration.to_seconds)
+    end
+    ##
+    # @param [ISO8601::Duration] duration The duration to compare
+    #
+    # @return [Boolean]
+    def eql?(duration)
       (hash == duration.hash)
     end
-    alias_method :eql?, :==
     ##
     # @return [Fixnum]
     def hash

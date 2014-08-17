@@ -235,11 +235,9 @@ RSpec.describe ISO8601::Duration do
   end
 
   describe '#==' do
-    it "should raise an ISO8601::Errors::DurationBaseError" do
-      expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) == ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
-    end
-    it "should return True" do
+    it "should equal by computed value" do
       expect(ISO8601::Duration.new('PT1H') == ISO8601::Duration.new('PT1H')).to be_truthy
+      expect(ISO8601::Duration.new('PT1H') == ISO8601::Duration.new('PT60M')).to be_truthy
     end
   end
 
@@ -248,6 +246,11 @@ RSpec.describe ISO8601::Duration do
       subject = ISO8601::Duration.new('PT1H')
       expect(subject).to respond_to(:eql?)
     end
+    it "should equal by hash identity" do
+      expect(ISO8601::Duration.new('PT1H').eql?  ISO8601::Duration.new('PT1H')).to be_truthy
+      expect(ISO8601::Duration.new('PT1H').eql? ISO8601::Duration.new('PT60M')).to be_falsy
+    end
+
   end
 
   describe '#hash' do
