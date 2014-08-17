@@ -43,12 +43,12 @@ RSpec.describe ISO8601::Duration do
   end
   it "should raise a TypeError when the base is not a ISO8601::DateTime" do
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', ISO8601::DateTime.new('2010-01-01')) }.to_not raise_error
-    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', '2010-01-01') }.to raise_error(TypeError)
-    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', 2010) }.to raise_error(TypeError)
+    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', '2010-01-01') }.to raise_error(ISO8601::Errors::TypeError)
+    expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', 2010) }.to raise_error(ISO8601::Errors::TypeError)
     expect {
       d = ISO8601::Duration.new('P1Y1M1DT1H1M1S', ISO8601::DateTime.new('2010-01-01'))
       d.base = 2012
-    }.to raise_error(TypeError)
+    }.to raise_error(ISO8601::Errors::TypeError)
   end
 
   it "should return a Duration instance from a Numeric input" do

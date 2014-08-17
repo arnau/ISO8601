@@ -37,8 +37,7 @@ module ISO8601
       @original = input
       @pattern = to_pattern
       @atoms = atomize(@pattern)
-      @base = base
-      valid_base?
+      @base = validate_base(base)
     end
     ##
     # Raw atoms result of parsing the given pattern.
@@ -55,8 +54,7 @@ module ISO8601
     #
     # @return [ISO8601::DateTime, nil]
     def base=(value)
-      @base = value
-      valid_base?
+      @base = validate_base(value)
       @base
     end
     ##
@@ -254,10 +252,10 @@ module ISO8601
       return ISO8601::Duration.new(date_time)
     end
 
-    def valid_base?
-      if !(base.nil? or base.kind_of? ISO8601::DateTime)
-        raise TypeError
-      end
+    def validate_base(input)
+      raise ISO8601::Errors::TypeError if !(input.nil? or input.kind_of? ISO8601::DateTime)
+
+      input
     end
     def valid_pattern?(components)
       date = [components[:years], components[:months], components[:days]].compact
