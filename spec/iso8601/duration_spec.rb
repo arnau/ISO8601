@@ -229,19 +229,20 @@ describe ISO8601::Duration do
     end
   end
 
-  describe '#to_abs' do
+  describe '#abs' do
+    let(:positive) { ISO8601::Duration.new('PT1H') }
+    let(:negative) { ISO8601::Duration.new('-PT1H') }
+
     it "should return a kind of duration" do
-      ISO8601::Duration.new('-PT1H').abs.should be_an_instance_of ISO8601::Duration
+      expect(negative.abs).to be_instance_of(ISO8601::Duration)
     end
     it "should return the absolute value of the duration" do
-      ISO8601::Duration.new('-PT1H').abs.should == ISO8601::Duration.new('PT1H')
-      (ISO8601::Duration.new('PT1H') - ISO8601::Duration.new('PT2H')).abs.should == ISO8601::Duration.new('PT1H')
-      (ISO8601::Duration.new('PT1H') - ISO8601::Duration.new('-PT2H')).abs.should == ISO8601::Duration.new('PT3H')
+      expect(negative.abs).to eq(positive)
     end
   end
 
   describe '#hash' do
-    it "should return the duration hash" do
+    it "should respond to #hash" do
       subject = ISO8601::Duration.new('PT1H')
 
       expect(subject).to respond_to(:hash)

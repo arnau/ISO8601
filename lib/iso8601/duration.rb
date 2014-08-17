@@ -105,15 +105,12 @@ module ISO8601
     ##
     # @return [Numeric] The duration in seconds
     def to_seconds
-      # years, months, weeks, days, hours, minutes, seconds = self.years.to_seconds, self.months.to_seconds, self.weeks.to_seconds, self.days.to_seconds, self.hours.to_seconds, self.minutes.to_seconds, self.seconds.to_seconds
-      # return years + months + weeks + days + hours + minutes + seconds
       [years, months, weeks, days, hours, minutes, seconds].map(&:to_seconds).reduce(&:+)
     end
     ##
     # @return [ISO8601::Duration] The absolute representation of the duration
     def abs
-      absolute = self.to_s.sub(/^[-+]/, '')
-      return ISO8601::Duration.new(absolute)
+      self.class.new(pattern.sub(/^[-+]/, ''), base)
     end
     ##
     # Addition
