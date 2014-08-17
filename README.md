@@ -84,15 +84,15 @@ Week dates raise an error when two digit days provied instead of return monday:
     DateTime.new('2014-W15-02')  # => #<Date: 2014-04-07 ((2456755j,0s,0n),+0s,2299161j)>
 
 
-
-## TODO
-
-* Recurring time intervals
-
-
-## Contributors
+## Contributing
 
 [Contributors](https://github.com/arnau/ISO8601/graphs/contributors)
+
+1. Fork it (http://github.com/arnau/ISO8601/fork)
+2. Create your feature branch (git checkout -b features/xyz)
+3. Commit your changes (git commit -am 'Add XYZ')
+4. Push to the branch (git push origin features/xyz)
+5. Create new Pull Request
 
 
 ## License
