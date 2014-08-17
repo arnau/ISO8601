@@ -151,7 +151,7 @@ module ISO8601
     def ==(duration)
       compare_bases(duration)
 
-      (to_seconds == duration.to_seconds)
+      (hash == duration.hash)
     end
     alias_method :eql?, :==
     ##
