@@ -220,15 +220,6 @@ describe ISO8601::Duration do
     end
   end
 
-  describe '#==' do
-    it "should raise an ISO8601::Errors::DurationBaseError" do
-      expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) == ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
-    end
-    it "should return True" do
-      ISO8601::Duration.new('PT1H').should == ISO8601::Duration.new('PT1H')
-    end
-  end
-
   describe '#abs' do
     let(:positive) { ISO8601::Duration.new('PT1H') }
     let(:negative) { ISO8601::Duration.new('-PT1H') }
@@ -241,11 +232,33 @@ describe ISO8601::Duration do
     end
   end
 
+  describe '#==' do
+    it "should raise an ISO8601::Errors::DurationBaseError" do
+      expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) == ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
+    end
+    it "should return True" do
+      ISO8601::Duration.new('PT1H').should == ISO8601::Duration.new('PT1H')
+    end
+  end
+
+  describe '#eql?' do
+    it "should respond to #eql?" do
+      subject = ISO8601::Duration.new('PT1H')
+      expect(subject).to respond_to(:eql?)
+    end
+  end
+
   describe '#hash' do
     it "should respond to #hash" do
       subject = ISO8601::Duration.new('PT1H')
 
       expect(subject).to respond_to(:hash)
+    end
+    it "should build hash identity by value" do
+      subject = ISO8601::Duration.new('PT1H')
+      contrast = ISO8601::Duration.new('PT1H')
+
+      expect(subject.hash == contrast.hash).to be_truthy
     end
   end
 end
