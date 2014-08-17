@@ -123,7 +123,8 @@ module ISO8601
       raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
       d1 = to_seconds
       d2 = duration.to_seconds
-      return seconds_to_iso(d1 + d2)
+
+      seconds_to_iso(d1 + d2)
     end
     ##
     # Substraction
@@ -136,12 +137,11 @@ module ISO8601
       raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
       d1 = to_seconds
       d2 = duration.to_seconds
-      duration = d1 - d2
-      if duration == 0
-        return ISO8601::Duration.new('PT0S')
-      else
-        return seconds_to_iso(duration)
-      end
+      result = d1 - d2
+
+      return ISO8601::Duration.new('PT0S') if result == 0
+
+      seconds_to_iso(result)
     end
     ##
     # @param [ISO8601::Duration] duration The duration to compare
