@@ -38,9 +38,7 @@ module ISO8601
       @pattern = to_pattern
       @atoms = atomize(@pattern)
       @base = base
-      valid_pattern?
       valid_base?
-      valid_fractions?
     end
     ##
     # Raw atoms result of parsing the given pattern.
@@ -192,32 +190,35 @@ module ISO8601
     #
     # @return [Hash<Float>]
     def atomize(input)
-      @duration = /^(\+|-)? # Sign
-                   P(
-                      (
-                        (\d+(?:[,.]\d+)?Y)? # Years
-                        (\d+(?:[.,]\d+)?M)? # Months
-                        (\d+(?:[.,]\d+)?D)? # Days
-                        (T
-                          (\d+(?:[.,]\d+)?H)? # Hours
-                          (\d+(?:[.,]\d+)?M)? # Minutes
-                          (\d+(?:[.,]\d+)?S)? # Seconds
-                        )? # Time
-                      )
-                      |(\d+(?:[.,]\d+)?W) # Weeks
-                    ) # Duration
-                  $/x.match(input) or raise ISO8601::Errors::UnknownPattern.new(input)
-      @sign = (@duration[1].nil? or @duration[1] == "+") ? 1 : -1
+      duration = input.match(/^
+        (?<sign>\+|-)?
+        P(?:
+          (?:
+            (?:(?<years>\d+(?:[,.]\d+)?)Y)?
+            (?:(?<months>\d+(?:[.,]\d+)?)M)?
+            (?:(?<days>\d+(?:[.,]\d+)?)D)?
+            (?<time>T
+              (?:(?<hours>\d+(?:[.,]\d+)?)H)?
+              (?:(?<minutes>\d+(?:[.,]\d+)?)M)?
+              (?:(?<seconds>\d+(?:[.,]\d+)?)S)?
+            )?
+          ) |
+          (?<weeks>\d+(?:[.,]\d+)?W)
+        ) # Duration
+      $/x) or raise ISO8601::Errors::UnknownPattern.new(input)
 
-      atoms = {
-        :years => @duration[4].nil? ? 0 : @duration[4].chop.to_f * sign,
-        :months => @duration[5].nil? ? 0 : @duration[5].chop.to_f * sign,
-        :weeks => @duration[11].nil? ? 0 : @duration[11].chop.to_f * sign,
-        :days => @duration[6].nil? ? 0 : @duration[6].chop.to_f * sign,
-        :hours => @duration[8].nil? ? 0 : @duration[8].chop.to_f * sign,
-        :minutes => @duration[9].nil? ? 0 : @duration[9].chop.to_f * sign,
-        :seconds => @duration[10].nil? ? 0 : @duration[10].chop.to_f * sign
-      }
+      valid_pattern?(duration)
+
+      @sign = (duration[:sign].nil? || duration[:sign] == '+') ? 1 : -1
+
+      keys = duration.names.map(&:to_sym)
+      values = duration.captures.map { |v| v.to_f * sign }
+      components = keys.zip(values).to_h
+      components.delete(:time) # clean time capture
+
+      valid_fractions?(components.values)
+
+      components
     end
     ##
     # @param [Numeric] duration The seconds to promote
@@ -251,20 +252,22 @@ module ISO8601
         raise TypeError
       end
     end
-    def valid_pattern?
-      if @duration.nil? or
-         (@duration[4].nil? and @duration[5].nil? and @duration[6].nil? and @duration[7].nil? and @duration[11].nil?) or
-         (!@duration[7].nil? and @duration[8].nil? and @duration[9].nil? and @duration[10].nil? and @duration[11].nil?)
+    def valid_pattern?(components)
+      date = [components[:years], components[:months], components[:days]].compact
+      time = [components[:hours], components[:minutes], components[:seconds]].compact
+      weeks = components[:weeks]
+      all = [date, time, weeks].flatten.compact
 
-        raise ISO8601::Errors::UnknownPattern.new(@duration)
+      if all.empty? || (!components[:time].nil? && time.empty? && weeks.nil?)
+        raise ISO8601::Errors::UnknownPattern.new(@pattern)
       end
     end
 
-    def valid_fractions?
-      values = atoms.values.reject(&:zero?)
+    def valid_fractions?(values)
+      values = values.reject(&:zero?)
       fractions = values.select { |a| (a % 1) != 0 }
       if fractions.size > 1 || (fractions.size == 1 && fractions.last != values.last)
-        raise ISO8601::Errors::InvalidFractions.new(@duration)
+        raise ISO8601::Errors::InvalidFractions.new(@pattern)
       end
     end
 
