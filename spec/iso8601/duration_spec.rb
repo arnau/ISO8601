@@ -237,7 +237,7 @@ describe ISO8601::Duration do
       expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) == ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
     end
     it "should return True" do
-      ISO8601::Duration.new('PT1H').should == ISO8601::Duration.new('PT1H')
+      expect(ISO8601::Duration.new('PT1H') == ISO8601::Duration.new('PT1H')).to be_truthy
     end
   end
 
