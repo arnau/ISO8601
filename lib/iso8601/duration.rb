@@ -153,10 +153,11 @@ module ISO8601
 
       (to_seconds == duration.to_seconds)
     end
+    alias_method :eql?, :==
     ##
     # @return [Fixnum]
     def hash
-      atoms.hash
+      [atoms.values, self.class].hash
     end
     ##
     # Converts original input into  a valid ISO 8601 duration pattern.
