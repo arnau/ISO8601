@@ -3,9 +3,6 @@
 module ISO8601
   ##
   # Represents a duration in ISO 8601 format
-  #
-  # @todo Support fraction values for years, months, days, weeks, hours
-  #   and minutes
   class Duration
     attr_reader :base, :atoms
     ##
