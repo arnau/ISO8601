@@ -67,6 +67,13 @@ describe ISO8601::Duration do
     end
   end
 
+  describe '#pattern' do
+    it "should return the duration pattern" do
+      ISO8601::Duration.new('P1Y1M1DT1H1M1S').pattern.should == 'P1Y1M1DT1H1M1S'
+      ISO8601::Duration.new(60).pattern.should == 'PT60S'
+    end
+  end
+
   describe '#to_s' do
     it "should return the duration as a string" do
       ISO8601::Duration.new('P1Y1M1DT1H1M1S').to_s.should == 'P1Y1M1DT1H1M1S'

@@ -29,14 +29,14 @@ module ISO8601
   #     di == ds # => true
   #
   class Duration
-    attr_reader :base, :atoms
     ##
-    # @param [String, Numeric] pattern The duration pattern
+    # @param [String, Numeric] input The duration pattern
     # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
-    #   calculate the duration properly
-    def initialize(pattern, base = nil)
+    #   calculate the duration against an specific point in time.
+    def initialize(input, base = nil)
+      @original = input
       # we got seconds instead of an ISO8601 duration
-      pattern = "PT#{pattern}S" if (pattern.kind_of? Numeric)
+      @pattern = (input.kind_of? Numeric) ? "PT#{input}S" : input
       @duration = /^(\+|-)? # Sign
                    P(
                       (
@@ -51,7 +51,7 @@ module ISO8601
                       )
                       |(\d+(?:[.,]\d+)?W) # Weeks
                     ) # Duration
-                  $/x.match(pattern) or raise ISO8601::Errors::UnknownPattern.new(pattern)
+                  $/x.match(@pattern) or raise ISO8601::Errors::UnknownPattern.new(@pattern)
 
       @base = base
       valid_pattern?
@@ -68,6 +68,16 @@ module ISO8601
       valid_fractions?
     end
     ##
+    # Raw atoms result of parsing the given pattern.
+    #
+    # @return [Hash<Float>]
+    attr_reader :atoms
+    ##
+    # Datetime base.
+    #
+    # @return [ISO8601::DateTime, nil]
+    attr_reader :base
+    ##
     # Assigns a new base datetime
     #
     # @return [ISO8601::DateTime, nil]
@@ -78,8 +88,11 @@ module ISO8601
     end
     ##
     # @return [String] The string representation of the duration
+    attr_reader :pattern
+    ##
+    # @return [String] The string representation of the duration
     def to_s
-      @duration[0]
+      pattern.to_s
     end
     ##
     # @return [ISO8601::Years] The years of the duration
