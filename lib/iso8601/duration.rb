@@ -35,36 +35,11 @@ module ISO8601
     #   calculate the duration against an specific point in time.
     def initialize(input, base = nil)
       @original = input
-      # we got seconds instead of an ISO8601 duration
-      @pattern = (input.kind_of? Numeric) ? "PT#{input}S" : input
-      @duration = /^(\+|-)? # Sign
-                   P(
-                      (
-                        (\d+(?:[,.]\d+)?Y)? # Years
-                        (\d+(?:[.,]\d+)?M)? # Months
-                        (\d+(?:[.,]\d+)?D)? # Days
-                        (T
-                          (\d+(?:[.,]\d+)?H)? # Hours
-                          (\d+(?:[.,]\d+)?M)? # Minutes
-                          (\d+(?:[.,]\d+)?S)? # Seconds
-                        )? # Time
-                      )
-                      |(\d+(?:[.,]\d+)?W) # Weeks
-                    ) # Duration
-                  $/x.match(@pattern) or raise ISO8601::Errors::UnknownPattern.new(@pattern)
-
+      @pattern = to_pattern
+      @atoms = atomize(@pattern)
       @base = base
       valid_pattern?
       valid_base?
-      @atoms = {
-        :years => @duration[4].nil? ? 0 : @duration[4].chop.to_f * sign,
-        :months => @duration[5].nil? ? 0 : @duration[5].chop.to_f * sign,
-        :weeks => @duration[11].nil? ? 0 : @duration[11].chop.to_f * sign,
-        :days => @duration[6].nil? ? 0 : @duration[6].chop.to_f * sign,
-        :hours => @duration[8].nil? ? 0 : @duration[8].chop.to_f * sign,
-        :minutes => @duration[9].nil? ? 0 : @duration[9].chop.to_f * sign,
-        :seconds => @duration[10].nil? ? 0 : @duration[10].chop.to_f * sign
-      }
       valid_fractions?
     end
     ##
@@ -84,16 +59,12 @@ module ISO8601
     def base=(value)
       @base = value
       valid_base?
-      return @base
+      @base
     end
     ##
     # @return [String] The string representation of the duration
     attr_reader :pattern
-    ##
-    # @return [String] The string representation of the duration
-    def to_s
-      pattern.to_s
-    end
+    alias_method :to_s, :pattern
     ##
     # @return [ISO8601::Years] The years of the duration
     def years
@@ -188,9 +159,60 @@ module ISO8601
     def hash
       @atoms.hash
     end
+    ##
+    # Converts original input into  a valid ISO 8601 duration pattern.
+    #
+    # @return [String]
+    def to_pattern
+      (@original.kind_of? Numeric) ? "PT#{@original}S" : @original
+    end
 
 
     private
+    ##
+    # Splits a duration pattern into valid atoms.
+    #
+    # Acceptable patterns:
+    #
+    # * PnYnMnD
+    # * PTnHnMnS
+    # * PnYnMnDTnHnMnS
+    # * PnW
+    #
+    # Where `n` is any number. If it contains a decimal fraction, a dot (`.`) or
+    # comma (`,`) can be used.
+    #
+    # @param [String] input
+    #
+    # @return [Hash<Float>]
+    def atomize(input)
+      @duration = /^(\+|-)? # Sign
+                   P(
+                      (
+                        (\d+(?:[,.]\d+)?Y)? # Years
+                        (\d+(?:[.,]\d+)?M)? # Months
+                        (\d+(?:[.,]\d+)?D)? # Days
+                        (T
+                          (\d+(?:[.,]\d+)?H)? # Hours
+                          (\d+(?:[.,]\d+)?M)? # Minutes
+                          (\d+(?:[.,]\d+)?S)? # Seconds
+                        )? # Time
+                      )
+                      |(\d+(?:[.,]\d+)?W) # Weeks
+                    ) # Duration
+                  $/x.match(input) or raise ISO8601::Errors::UnknownPattern.new(input)
+
+      atoms = {
+        :years => @duration[4].nil? ? 0 : @duration[4].chop.to_f * sign,
+        :months => @duration[5].nil? ? 0 : @duration[5].chop.to_f * sign,
+        :weeks => @duration[11].nil? ? 0 : @duration[11].chop.to_f * sign,
+        :days => @duration[6].nil? ? 0 : @duration[6].chop.to_f * sign,
+        :hours => @duration[8].nil? ? 0 : @duration[8].chop.to_f * sign,
+        :minutes => @duration[9].nil? ? 0 : @duration[9].chop.to_f * sign,
+        :seconds => @duration[10].nil? ? 0 : @duration[10].chop.to_f * sign
+      }
+    end
+
     ##
     # @param [Numeric] duration The seconds to promote
     #
