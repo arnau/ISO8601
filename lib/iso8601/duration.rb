@@ -2,7 +2,32 @@
 
 module ISO8601
   ##
-  # Represents a duration in ISO 8601 format
+  # A duration representation. When no base is provided, all atoms use an
+  # average factor which affects the result of any computation like `#to_seconds`.
+  #
+  # @example
+  #     d = ISO8601::Duration.new('P2Y1MT2H')
+  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0, @base=nil>
+  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0, @base=nil>
+  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0, @base=nil>
+  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0, @base=nil>
+  #     d.to_seconds # => 65707200.0
+  #
+  # @example Explicit base date time
+  #     d = ISO8601::Duration.new('P2Y1MT2H', ISO8601::DateTime.new('2014-08017'))
+  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0, @base=#<ISO8601::DateTime...>>
+  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0, @base=#<ISO8601::DateTime...>>
+  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0, @base=#<ISO8601::DateTime...>>
+  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0, @base=#<ISO8601::DateTime...>>
+  #     d.to_seconds # => 65757600.0
+  #
+  # @example Number of seconds versus patterns
+  #     di = ISO8601::Duration.new(65707200)
+  #     dp = ISO8601::Duration.new('P2Y1MT2H')
+  #     ds = ISO8601::Duration.new('P65707200S')
+  #     di == dp # => true
+  #     di == ds # => true
+  #
   class Duration
     attr_reader :base, :atoms
     ##

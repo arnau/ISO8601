@@ -1,14 +1,14 @@
 module ISO8601
   ##
-  # A Date representation
+  # A Date representation.
   #
   # @example
-  #     d = Date.new('2014-05-28')
+  #     d = ISO8601::Date.new('2014-05-28')
   #     d.year  # => 2014
   #     d.month # => 5
   #
   # @example Week dates
-  #     d = Date.new('2014-W15-2')
+  #     d = ISO8601::Date.new('2014-W15-2')
   #     d.day   # => 27
   #     d.wday  # => 2
   #     d.week # => 15
