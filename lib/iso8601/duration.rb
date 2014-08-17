@@ -135,11 +135,8 @@ module ISO8601
 
       d1 = to_seconds
       d2 = duration.to_seconds
-      result = d1 - d2
 
-      return self.class.new('PT0S') if result == 0
-
-      seconds_to_iso(result)
+      seconds_to_iso(d1 - d2)
     end
     ##
     # @param [ISO8601::Duration] duration The duration to compare
@@ -226,30 +223,34 @@ module ISO8601
       components
     end
     ##
-    # @param [Numeric] duration The seconds to promote
+    # @param [Numeric] seconds The seconds to promote
     #
     # @return [ISO8601::Duration]
-    def seconds_to_iso(duration)
-      sign = '-' if (duration < 0)
-      duration = duration.abs
-      years, y_mod = (duration / self.years.factor).to_i, (duration % self.years.factor)
-      months, m_mod = (y_mod / self.months.factor).to_i, (y_mod % self.months.factor)
-      days, d_mod = (m_mod / self.days.factor).to_i, (m_mod % self.days.factor)
-      hours, h_mod = (d_mod / self.hours.factor).to_i, (d_mod % self.hours.factor)
-      minutes, mi_mod = (h_mod / self.minutes.factor).to_i, (h_mod % self.minutes.factor)
-      seconds = mi_mod.div(1) == mi_mod ? mi_mod.to_i : mi_mod.to_f # Coerce to Integer when needed (`PT1S` instead of `PT1.0S`)
+    def seconds_to_iso(seconds)
+      return self.class.new('PT0S') if seconds == 0
 
-      seconds = (seconds != 0 or (years == 0 and months == 0 and days == 0 and hours == 0 and minutes == 0)) ? "#{seconds}S" : ""
-      minutes = (minutes != 0) ? "#{minutes}M" : ""
-      hours = (hours != 0) ? "#{hours}H" : ""
-      days = (days != 0) ? "#{days}D" : ""
-      months = (months != 0) ? "#{months}M" : ""
-      years = (years != 0) ? "#{years}Y" : ""
+      sign_str = '-' if (seconds < 0)
+      seconds = seconds.abs
 
-      date = %[#{sign}P#{years}#{months}#{days}]
-      time = (hours != "" or minutes != "" or seconds != "") ? %[T#{hours}#{minutes}#{seconds}] : ""
-      date_time = date + time
-      return ISO8601::Duration.new(date_time)
+      y, y_mod = (seconds / years.factor).to_i, (seconds % years.factor)
+      m, m_mod = (y_mod / months.factor).to_i, (y_mod % months.factor)
+      d, d_mod = (m_mod / days.factor).to_i, (m_mod % days.factor)
+      h, h_mod = (d_mod / hours.factor).to_i, (d_mod % hours.factor)
+      mi, mi_mod = (h_mod / minutes.factor).to_i, (h_mod % minutes.factor)
+      s = mi_mod.div(1) == mi_mod ? mi_mod.to_i : mi_mod.to_f # Coerce to Integer when needed (`PT1S` instead of `PT1.0S`)
+
+      years_str = (y != 0) ? "#{y}Y" : ""
+      months_str = (m != 0) ? "#{m}M" : ""
+      days_str = (d != 0) ? "#{d}D" : ""
+      hours_str = (h != 0) ? "#{h}H" : ""
+      minutes_str = (mi != 0) ? "#{mi}M" : ""
+      seconds_str = (s != 0 || ([y, m, d, h, mi].reduce(&:+) == 0)) ? "#{s}S" : ""
+
+      date = %[#{sign_str}P#{years_str}#{months_str}#{days_str}]
+      time = ([h, mi, s].reduce(&:+) > 0) ? %[T#{hours_str}#{minutes_str}#{seconds_str}] : ""
+      duration_str = date + time
+
+      ISO8601::Duration.new(duration_str)
     end
 
     def validate_base(input)
