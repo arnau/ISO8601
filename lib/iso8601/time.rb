@@ -38,6 +38,14 @@ module ISO8601
       @time = compose(@atoms, @base)
       @second = @time.second + @time.second_fraction.to_f
     end
+
+    def ==(duration)
+      @time.to_datetime == duration.to_datetime
+    end
+
+    def eql?(duration)
+      @time.to_datetime.eql?(duration.to_datetime)
+    end
     ##
     # Forwards the time the given amount of seconds.
     #
