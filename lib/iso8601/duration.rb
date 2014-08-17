@@ -68,39 +68,39 @@ module ISO8601
     ##
     # @return [ISO8601::Years] The years of the duration
     def years
-      ISO8601::Years.new(@atoms[:years], @base)
+      ISO8601::Years.new(atoms[:years], base)
     end
     ##
     # @return [ISO8601::Months] The months of the duration
     def months
       # Changes the base to compute the months for the right base year
-      base = @base.nil? ? nil : @base + self.years.to_seconds
-      ISO8601::Months.new(@atoms[:months], base)
+      month_base = base.nil? ? nil : base + years.to_seconds
+      ISO8601::Months.new(atoms[:months], month_base)
     end
     ##
     # @return [ISO8601::Weeks] The weeks of the duration
     def weeks
-      ISO8601::Weeks.new(@atoms[:weeks], @base)
+      ISO8601::Weeks.new(atoms[:weeks], base)
     end
     ##
     # @return [ISO8601::Days] The days of the duration
     def days
-      ISO8601::Days.new(@atoms[:days], @base)
+      ISO8601::Days.new(atoms[:days], base)
     end
     ##
     # @return [ISO8601::Hours] The hours of the duration
     def hours
-      ISO8601::Hours.new(@atoms[:hours], @base)
+      ISO8601::Hours.new(atoms[:hours], base)
     end
     ##
     # @return [ISO8601::Minutes] The minutes of the duration
     def minutes
-      ISO8601::Minutes.new(@atoms[:minutes], @base)
+      ISO8601::Minutes.new(atoms[:minutes], base)
     end
     ##
     # @return [ISO8601::Seconds] The seconds of the duration
     def seconds
-      ISO8601::Seconds.new(@atoms[:seconds], @base)
+      ISO8601::Seconds.new(atoms[:seconds], base)
     end
     ##
     # @return [Numeric] The duration in seconds
@@ -122,7 +122,7 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def +(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if @base.to_s != duration.base.to_s
+      raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
       d1 = to_seconds
       d2 = duration.to_seconds
       return seconds_to_iso(d1 + d2)
@@ -135,7 +135,7 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def -(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if @base.to_s != duration.base.to_s
+      raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
       d1 = to_seconds
       d2 = duration.to_seconds
       duration = d1 - d2
@@ -151,13 +151,13 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
     def ==(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if @base.to_s != duration.base.to_s
+      raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
       (self.to_seconds == duration.to_seconds)
     end
     ##
     # @return [Fixnum]
     def hash
-      @atoms.hash
+      atoms.hash
     end
     ##
     # Converts original input into  a valid ISO 8601 duration pattern.
@@ -244,7 +244,7 @@ module ISO8601
       (@duration[1].nil? or @duration[1] == "+") ? 1 : -1
     end
     def valid_base?
-      if !(@base.nil? or @base.kind_of? ISO8601::DateTime)
+      if !(base.nil? or base.kind_of? ISO8601::DateTime)
         raise TypeError
       end
     end
@@ -258,7 +258,7 @@ module ISO8601
     end
 
     def valid_fractions?
-      values = @atoms.values.reject(&:zero?)
+      values = atoms.values.reject(&:zero?)
       fractions = values.select { |a| (a % 1) != 0 }
       if fractions.size > 1 || (fractions.size == 1 && fractions.last != values.last)
         raise ISO8601::Errors::InvalidFractions.new(@duration)
