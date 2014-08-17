@@ -92,7 +92,7 @@ describe ISO8601::Duration do
   end
 
   describe '#-' do
-    it "should raise an ISO8601::Errors::DurationBaseError" do
+    it "should raise an ISO8601::Errors::DurationBaseError when bases mismatch" do
       expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) - ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
     end
 

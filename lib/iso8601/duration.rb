@@ -120,7 +120,8 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def +(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
+      compare_bases(duration)
+
       d1 = to_seconds
       d2 = duration.to_seconds
 
@@ -134,12 +135,13 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def -(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
+      compare_bases(duration)
+
       d1 = to_seconds
       d2 = duration.to_seconds
       result = d1 - d2
 
-      return ISO8601::Duration.new('PT0S') if result == 0
+      return self.class.new('PT0S') if result == 0
 
       seconds_to_iso(result)
     end
@@ -149,8 +151,9 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
     def ==(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
-      (self.to_seconds == duration.to_seconds)
+      compare_bases(duration)
+
+      (to_seconds == duration.to_seconds)
     end
     ##
     # @return [Fixnum]
@@ -261,6 +264,10 @@ module ISO8601
       if fractions.size > 1 || (fractions.size == 1 && fractions.last != values.last)
         raise ISO8601::Errors::InvalidFractions.new(@duration)
       end
+    end
+
+    def compare_bases(duration)
+      raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
     end
   end
 end
