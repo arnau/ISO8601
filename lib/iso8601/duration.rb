@@ -103,10 +103,10 @@ module ISO8601
       ISO8601::Seconds.new(atoms[:seconds], base)
     end
     ##
-    # @return [Numeric] The duration in seconds
-    def to_seconds
-      [years, months, weeks, days, hours, minutes, seconds].map(&:to_seconds).reduce(&:+)
-    end
+    # The Integer representation of the duration sign.
+    #
+    # @return [Integer]
+    attr_reader :sign
     ##
     # @return [ISO8601::Duration] The absolute representation of the duration
     def abs
@@ -167,6 +167,11 @@ module ISO8601
     def to_pattern
       (@original.kind_of? Numeric) ? "PT#{@original}S" : @original
     end
+    ##
+    # @return [Numeric] The duration in seconds
+    def to_seconds
+      [years, months, weeks, days, hours, minutes, seconds].map(&:to_seconds).reduce(&:+)
+    end
 
 
     private
@@ -202,6 +207,7 @@ module ISO8601
                       |(\d+(?:[.,]\d+)?W) # Weeks
                     ) # Duration
                   $/x.match(input) or raise ISO8601::Errors::UnknownPattern.new(input)
+      @sign = (@duration[1].nil? or @duration[1] == "+") ? 1 : -1
 
       atoms = {
         :years => @duration[4].nil? ? 0 : @duration[4].chop.to_f * sign,
@@ -213,7 +219,6 @@ module ISO8601
         :seconds => @duration[10].nil? ? 0 : @duration[10].chop.to_f * sign
       }
     end
-
     ##
     # @param [Numeric] duration The seconds to promote
     #
@@ -241,9 +246,6 @@ module ISO8601
       return ISO8601::Duration.new(date_time)
     end
 
-    def sign
-      (@duration[1].nil? or @duration[1] == "+") ? 1 : -1
-    end
     def valid_base?
       if !(base.nil? or base.kind_of? ISO8601::DateTime)
         raise TypeError
