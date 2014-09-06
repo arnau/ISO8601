@@ -14,7 +14,7 @@ module ISO8601
 
     def_delegators(:@time,
       :to_time, :to_date, :to_datetime,
-      :hour, :minute, :zone, :hash)
+      :hour, :minute, :zone)
     ##
     # The separator used in the original ISO 8601 string.
     attr_reader :separator
@@ -38,13 +38,24 @@ module ISO8601
       @time = compose(@atoms, @base)
       @second = @time.second + @time.second_fraction.to_f
     end
-
-    def ==(duration)
-      @time.to_datetime == duration.to_datetime
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def ==(contrast)
+      (hash == contrast.hash)
     end
-
-    def eql?(duration)
-      @time.to_datetime.eql?(duration.to_datetime)
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def eql?(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @return [Fixnum]
+    def hash
+      [atoms, self.class].hash
     end
     ##
     # Forwards the time the given amount of seconds.

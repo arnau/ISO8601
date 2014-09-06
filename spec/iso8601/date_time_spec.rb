@@ -59,78 +59,77 @@ describe ISO8601::DateTime do
   context 'reduced patterns' do
     it "should parse correctly reduced dates" do
       reduced_date = ISO8601::DateTime.new('20100509')
-      reduced_date.year.should == 2010
-      reduced_date.month.should == 5
-      reduced_date.day.should == 9
+      expect(reduced_date.year).to eq(2010)
+      expect(reduced_date.month).to eq(5)
+      expect(reduced_date.day).to eq(9)
     end
     it "should parse correctly reduced times" do
       reduced_time = ISO8601::DateTime.new('T101112Z')
-      reduced_time.hour.should == 10
-      reduced_time.minute.should == 11
-      reduced_time.second.should == 12
+      expect(reduced_time.hour).to eq(10)
+      expect(reduced_time.minute).to eq(11)
+      expect(reduced_time.second).to eq(12)
     end
     it "should parse correctly reduced date times" do
       reduced_datetime = ISO8601::DateTime.new('20140531T101112Z')
-      reduced_datetime.year.should == 2014
-      reduced_datetime.month.should == 5
-      reduced_datetime.day.should == 31
-      reduced_datetime.hour.should == 10
-      reduced_datetime.minute.should == 11
-      reduced_datetime.second.should == 12
+      expect(reduced_datetime.year).to eq(2014)
+      expect(reduced_datetime.month).to eq(5)
+      expect(reduced_datetime.day).to eq(31)
+      expect(reduced_datetime.hour).to eq(10)
+      expect(reduced_datetime.minute).to eq(11)
+      expect(reduced_datetime.second).to eq(12)
     end
   end
 
   it "should return each atomic value" do
     dt = ISO8601::DateTime.new('2010-05-09T12:02:01+04:00')
-    dt.year.should == 2010
-    dt.month.should == 5
-    dt.day.should == 9
-    dt.hour.should == 12
-    dt.minute.should == 2
-    dt.second.should == 1
-    dt.zone.should == '+04:00'
+    expect(dt.year).to eq(2010)
+    expect(dt.month).to eq(5)
+    expect(dt.day).to eq(9)
+    expect(dt.hour).to eq(12)
+    expect(dt.minute).to eq(2)
+    expect(dt.second).to eq(1)
+    expect(dt.zone).to eq('+04:00')
   end
 
   it "should return the right sign for the given year" do
-    ISO8601::DateTime.new('-2014-05-31T16:26:00Z').year.should == -2014
-    ISO8601::DateTime.new('+2014-05-31T16:26:00Z').year.should == 2014
+    expect(ISO8601::DateTime.new('-2014-05-31T16:26:00Z').year).to eq(-2014)
+    expect(ISO8601::DateTime.new('+2014-05-31T16:26:00Z').year).to eq(2014)
   end
 
   it "should respond to delegated casting methods" do
     dt = ISO8601::DateTime.new('2014-12-11T10:09:08Z')
-    dt.should respond_to(:to_s, :to_time, :to_date, :to_datetime)
+    expect(dt).to respond_to(:to_s, :to_time, :to_date, :to_datetime)
   end
 
   describe '#+' do
     it "should return the result of the addition" do
-      (ISO8601::DateTime.new('2012-07-07T20:20:20Z') + 10).to_s.should == '2012-07-07T20:20:30+00:00'
-      (ISO8601::DateTime.new('2012-07-07T20:20:20.5Z') + 10).to_s.should == '2012-07-07T20:20:30.50+00:00'
-      (ISO8601::DateTime.new('2012-07-07T20:20:20+02:00') + 10).to_s.should == '2012-07-07T20:20:30+02:00'
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20Z') + 10).to_s).to eq('2012-07-07T20:20:30+00:00')
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20.5Z') + 10).to_s).to eq('2012-07-07T20:20:30.50+00:00')
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20+02:00') + 10).to_s).to eq('2012-07-07T20:20:30+02:00')
     end
   end
 
   describe '#-' do
     it "should return the result of the substraction" do
-      (ISO8601::DateTime.new('2012-07-07T20:20:20Z') - 10).to_s.should == '2012-07-07T20:20:10+00:00'
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20Z') - 10).to_s).to eq('2012-07-07T20:20:10+00:00')
     end
   end
 
   describe '#to_a' do
     it "should return an array of atoms" do
       dt = ISO8601::DateTime.new('2014-05-31T19:29:39Z').to_a
-      dt.should be_kind_of(Array)
-      dt.should == [2014, 5, 31, 19, 29, 39, '+00:00']
+      expect(dt).to be_kind_of(Array)
+      expect(dt).to eq([2014, 5, 31, 19, 29, 39, '+00:00'])
     end
   end
 
   describe '#hash' do
     it "should return the datetime hash" do
       subject = ISO8601::DateTime.new('2014-08-16T20:11:10Z')
-      contrast = ::DateTime.new(2014, 8, 16, 20, 11, 10, 'Z')
+      contrast = ISO8601::DateTime.new('2014-08-16T20:11:10Z')
 
-      expect(subject).to respond_to(:hash)
+      expect(subject.hash == contrast.hash).to be_truthy
       expect(subject.hash).to eq(contrast.hash)
     end
   end
-
 end

@@ -8,28 +8,75 @@ module ISO8601
   class Atom
     ##
     # @param [Numeric] atom The atom value
-    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
-    #   compute the atom factor.
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
+    #   the atom factor.
     def initialize(atom, base=nil)
-      raise TypeError, "The atom argument for #{self.inspect} should be a Numeric value." unless atom.kind_of? Numeric
-      raise TypeError, "The base argument for #{self.inspect} should be a ISO8601::DateTime instance or nil." unless base.kind_of? ISO8601::DateTime or base.nil?
+      raise TypeError, "The atom argument for #{self.inspect} should be a Numeric value." unless atom.kind_of?(Numeric)
+      raise TypeError, "The base argument for #{self.inspect} should be a ISO8601::DateTime instance or nil." unless base.kind_of?(ISO8601::DateTime) || base.nil?
       @atom = atom
       @base = base
     end
+    attr_reader :atom
+    attr_reader :base
     ##
-    # The integer representation of the atom
+    # The integer representation
+    #
+    # @return [Integer]
     def to_i
-      @atom.to_i
+      atom.to_i
     end
     ##
-    # The amount of seconds of the atom
+    # The float representation
+    #
+    # @return [Float]
+    def to_f
+      atom.to_f
+    end
+    ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (value.zero?) ? '' : "#{value}#{symbol}"
+    end
+    ##
+    # The simplest numeric representation. If modulo equals 0 returns an
+    # integer else a float.
+    #
+    # @return [Numeric]
+    def value
+      (atom % 1).zero? ? atom.to_i : atom
+    end
+    ##
+    # The amount of seconds
+    #
+    # @return [Numeric]
     def to_seconds
-      @atom * self.factor
+      atom * factor
+    end
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def ==(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def eql?(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @return [Fixnum]
+    def hash
+      [atom, self.class].hash
     end
     ##
     # The atom factor to compute the amount of seconds for the atom
     def factor
-      raise NotImplementedError, "The #factor method should be implemented for each subclass"
+      raise NotImplementedError, "The #factor method should be implemented by each subclass"
     end
   end
   ##
@@ -49,16 +96,25 @@ module ISO8601
     # The “duration year” average is calculated through time intervals of 400
     # “duration years”. Each cycle of 400 “duration years” has 303 “common
     # years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
+    #
+    # @return [Integer]
     def factor
-      if @base.nil?
+      if base.nil?
         ((365 * 303 + 366 * 97) / 400) * 86400
-      elsif @atom == 0
-        year = (@base.year).to_i
-        (::Time.utc(year) - ::Time.utc(@base.year))
+      elsif atom.zero?
+        year = (base.year).to_i
+        (::Time.utc(year) - ::Time.utc(base.year))
       else
-        year = (@base.year + @atom).to_i
-        (::Time.utc(year) - ::Time.utc(@base.year)) / @atom
+        year = (base.year + atom).to_i
+        (::Time.utc(year) - ::Time.utc(base.year)) / atom
       end
+    end
+    ##
+    # The atom symbol.
+    #
+    # @return [Symbol]
+    def symbol
+      :Y
     end
   end
   ##
@@ -78,13 +134,20 @@ module ISO8601
     # “duration years”. Each cycle of 400 “duration years” has 303 “common
     # years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
     def factor
-      if @base.nil?
+      if base.nil?
         nobase_calculation
-      elsif @atom == 0
+      elsif atom.zero?
         zero_calculation
       else
         calculation
       end
+    end
+    ##
+    # The atom symbol.
+    #
+    # @return [Symbol]
+    def symbol
+      :M
     end
 
     private
@@ -94,30 +157,30 @@ module ISO8601
     end
 
     def zero_calculation
-      month = (@base.month <= 12) ? (@base.month) : ((@base.month) % 12)
-      year = @base.year + ((@base.month) / 12).to_i
+      month = (base.month <= 12) ? (base.month) : ((base.month) % 12)
+      year = base.year + ((base.month) / 12).to_i
 
-      (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month))
+      (::Time.utc(year, month) - ::Time.utc(base.year, base.month))
     end
 
     def calculation
-      if @base.month + @atom <= 0
-        month = @base.month + @atom
+      if base.month + atom <= 0
+        month = base.month + atom
 
         if month % 12 == 0
-          year = @base.year + (month / 12) - 1
+          year = base.year + (month / 12) - 1
           month = 12
         else
-          year = @base.year + (month / 12).floor
+          year = base.year + (month / 12).floor
           month = (12 + month > 0) ? (12 + month) : (12 + (month % -12))
         end
       else
-        month = (@base.month + @atom <= 12) ? (@base.month + @atom) : ((@base.month + @atom) % 12)
-        month = 12 if month == 0
-        year = @base.year + ((@base.month + @atom) / 12).to_i
+        month = (base.month + atom <= 12) ? (base.month + atom) : ((base.month + atom) % 12)
+        month = 12 if month.zero?
+        year = base.year + ((base.month + atom) / 12).to_i
       end
 
-      (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month)) / @atom
+      (::Time.utc(year, month) - ::Time.utc(base.year, base.month)) / atom
     end
   end
   ##
@@ -127,6 +190,13 @@ module ISO8601
     # The Week factor
     def factor
       604800
+    end
+    ##
+    # The atom symbol.
+    #
+    # @return [Symbol]
+    def symbol
+      :W
     end
   end
   ##
@@ -141,6 +211,13 @@ module ISO8601
     def factor
       86400
     end
+    ##
+    # The atom symbol.
+    #
+    # @return [Symbol]
+    def symbol
+      :D
+    end
   end
   ##
   # The Hours atom in a {ISO8601::Duration}
@@ -150,6 +227,13 @@ module ISO8601
     def factor
       3600
     end
+    ##
+    # The atom symbol.
+    #
+    # @return [Symbol]
+    def symbol
+      :H
+    end
   end
   ##
   # The Minutes atom in a {ISO8601::Duration}
@@ -158,6 +242,13 @@ module ISO8601
     # The Minute factor
     def factor
       60
+    end
+    ##
+    # The atom symbol.
+    #
+    # @return [Symbol]
+    def symbol
+      :M
     end
   end
   ##
@@ -171,6 +262,13 @@ module ISO8601
     # The Second factor
     def factor
       1
+    end
+    ##
+    # The atom symbol.
+    #
+    # @return [Symbol]
+    def symbol
+      :S
     end
   end
 end

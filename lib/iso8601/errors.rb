@@ -29,6 +29,10 @@ module ISO8601
       end
     end
     ##
+    # Raised when the type is unexpected
+    class TypeError < StandardError
+    end
+    ##
     # Raise when the base is not suitable.
     class DurationBaseError < StandardError
       def initialize(duration)
