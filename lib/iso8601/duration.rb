@@ -229,7 +229,7 @@ module ISO8601
     def seconds_to_iso(value)
       return self.class.new('PT0S') if value.zero?
 
-      sign_str = '-' if (value < 0)
+      sign_str = (value < 0) ? '-' : ''
       value = value.abs
 
       y, y_mod = Years.new((value / years.factor).to_i), (value % years.factor)
