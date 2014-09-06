@@ -56,6 +56,8 @@ module ISO8601
     # The “duration year” average is calculated through time intervals of 400
     # “duration years”. Each cycle of 400 “duration years” has 303 “common
     # years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
+    #
+    # @return [Integer]
     def factor
       if base.nil?
         ((365 * 303 + 366 * 97) / 400) * 86400
