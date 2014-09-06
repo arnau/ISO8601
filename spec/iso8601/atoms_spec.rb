@@ -1,8 +1,6 @@
-# encoding: utf-8
-
 require 'spec_helper'
 
-describe ISO8601::Atom do
+RSpec.describe ISO8601::Atom do
   it "should raise a TypeError when receives anything but a Numeric value" do
     expect { ISO8601::Atom.new('1') }.to raise_error
     expect { ISO8601::Atom.new(true) }.to raise_error

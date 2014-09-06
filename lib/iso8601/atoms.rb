@@ -8,11 +8,11 @@ module ISO8601
   class Atom
     ##
     # @param [Numeric] atom The atom value
-    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
-    #   compute the atom factor.
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
+    #   the atom factor.
     def initialize(atom, base=nil)
-      raise TypeError, "The atom argument for #{self.inspect} should be a Numeric value." unless atom.kind_of? Numeric
-      raise TypeError, "The base argument for #{self.inspect} should be a ISO8601::DateTime instance or nil." unless base.kind_of? ISO8601::DateTime or base.nil?
+      raise TypeError, "The atom argument for #{self.inspect} should be a Numeric value." unless atom.kind_of?(Numeric)
+      raise TypeError, "The base argument for #{self.inspect} should be a ISO8601::DateTime instance or nil." unless base.kind_of?(ISO8601::DateTime) || base.nil?
       @atom = atom
       @base = base
     end
@@ -36,7 +36,7 @@ module ISO8601
     ##
     # The atom factor to compute the amount of seconds for the atom
     def factor
-      raise NotImplementedError, "The #factor method should be implemented for each subclass"
+      raise NotImplementedError, "The #factor method should be implemented by each subclass"
     end
   end
   ##
