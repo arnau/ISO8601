@@ -16,15 +16,22 @@ module ISO8601
       @atom = atom
       @base = base
     end
+    attr_reader :atom
+    attr_reader :base
     ##
     # The integer representation of the atom
     def to_i
       @atom.to_i
     end
     ##
+    # The float representation of the atom
+    def to_f
+      @atom.to_f
+    end
+    ##
     # The amount of seconds of the atom
     def to_seconds
-      @atom * self.factor
+      @atom * factor
     end
     ##
     # The atom factor to compute the amount of seconds for the atom
@@ -60,6 +67,13 @@ module ISO8601
         (::Time.utc(year) - ::Time.utc(@base.year)) / @atom
       end
     end
+    ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (atom.zero?) ? '' : "#{atom}Y"
+    end
   end
   ##
   # A Months atom in a {ISO8601::Duration}
@@ -85,6 +99,13 @@ module ISO8601
       else
         calculation
       end
+    end
+    ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (atom.zero?) ? '' : "#{atom}M"
     end
 
     private
@@ -128,6 +149,13 @@ module ISO8601
     def factor
       604800
     end
+    ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (atom.zero?) ? '' : "#{atom}W"
+    end
   end
   ##
   # The Days atom in a {ISO8601::Duration}
@@ -141,6 +169,13 @@ module ISO8601
     def factor
       86400
     end
+    ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (atom.zero?) ? '' : "#{atom}D"
+    end
   end
   ##
   # The Hours atom in a {ISO8601::Duration}
@@ -150,6 +185,13 @@ module ISO8601
     def factor
       3600
     end
+    ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (atom.zero?) ? '' : "#{atom}H"
+    end
   end
   ##
   # The Minutes atom in a {ISO8601::Duration}
@@ -158,6 +200,13 @@ module ISO8601
     # The Minute factor
     def factor
       60
+    end
+    ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (atom.zero?) ? '' : "#{atom}M"
     end
   end
   ##
@@ -171,6 +220,13 @@ module ISO8601
     # The Second factor
     def factor
       1
+    end
+    ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (atom.zero?) ? '' : "#{atom}S"
     end
   end
 end
