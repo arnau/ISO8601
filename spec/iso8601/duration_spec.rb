@@ -4,6 +4,7 @@ require 'spec_helper'
 
 RSpec.describe ISO8601::Duration do
   it "should raise a ISO8601::Errors::UnknownPattern for any unknown pattern" do
+    expect { ISO8601::Duration.new('') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Duration.new('P') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Duration.new('PT') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Duration.new('P1YT') }.to raise_error(ISO8601::Errors::UnknownPattern)
