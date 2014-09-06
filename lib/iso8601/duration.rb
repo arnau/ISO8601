@@ -249,7 +249,7 @@ module ISO8601
       date = to_date_s(sign_str, y, m, d)
       time = to_time_s(h, mi, s)
 
-      ISO8601::Duration.new(date + time)
+      self.class.new(date + time)
     end
 
     def to_date_s(sign, *args)
