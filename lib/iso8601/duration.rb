@@ -232,24 +232,21 @@ module ISO8601
       sign_str = (value < 0) ? '-' : ''
       value = value.abs
 
-      y, y_mod = Years.new((value / years.factor).to_i), (value % years.factor)
-      m, m_mod = Months.new((y_mod / months.factor).to_i), (y_mod % months.factor)
-      d, d_mod = Days.new((m_mod / days.factor).to_i), (m_mod % days.factor)
-      h, h_mod = Hours.new((d_mod / hours.factor).to_i), (d_mod % hours.factor)
-      mi, mi_mod = Minutes.new((h_mod / minutes.factor).to_i), (h_mod % minutes.factor)
+      y, y_mod = decompose_atom(value, years)
+      m, m_mod = decompose_atom(y_mod, months)
+      d, d_mod = decompose_atom(m_mod, days)
+      h, h_mod = decompose_atom(d_mod, hours)
+      mi, mi_mod = decompose_atom(h_mod, minutes)
       s = Seconds.new(mi_mod)
-
-      years_str = y.to_s
-      months_str = m.to_s
-      days_str = d.to_s
-      hours_str = h.to_s
-      minutes_str = mi.to_s
-      seconds_str = s.to_s
 
       date = to_date_s(sign_str, y, m, d)
       time = to_time_s(h, mi, s)
 
       self.class.new(date + time)
+    end
+
+    def decompose_atom(value, atom)
+      [atom.class.new((value / atom.factor).to_i), (value % atom.factor)]
     end
 
     def to_date_s(sign, *args)
