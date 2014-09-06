@@ -82,7 +82,7 @@ describe ISO8601::Date do
   describe '#hash' do
     it "should return the date hash" do
       subject = ISO8601::Date.new('2014-08-16')
-      contrast = ::Date.new(2014, 8, 16)
+      contrast = ISO8601::Date.new('2014-08-16')
 
       expect(subject).to respond_to(:hash)
       expect(subject.hash).to eq(contrast.hash)

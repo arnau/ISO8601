@@ -88,9 +88,9 @@ describe ISO8601::Time do
     end
     it "should return the same hash" do
       subject = ISO8601::Time.new('T20:11:10Z')
+      contrast = ISO8601::Time.new('T20:11:10Z')
 
-      expect(subject.to_time.hash).to eq(ISO8601::Time.new('T20:11:10Z').to_time.hash)
-      expect(subject.hash).to eq(ISO8601::Time.new('T20:11:10Z').hash)
+      expect(subject.hash).to eq(contrast.hash)
     end
   end
 end

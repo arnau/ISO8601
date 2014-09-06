@@ -12,7 +12,7 @@ module ISO8601
 
     def_delegators(:@date_time,
       :strftime, :to_time, :to_date, :to_datetime,
-      :year, :month, :day, :hour, :minute, :zone, :hash)
+      :year, :month, :day, :hour, :minute, :zone)
 
     attr_reader :second
 
@@ -57,6 +57,26 @@ module ISO8601
     def to_a
       [year, month, day, hour, minute, second, zone]
     end
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def ==(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def eql?(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @return [Fixnum]
+    def hash
+      [second, self.class].hash
+    end
+
 
     private
     ##

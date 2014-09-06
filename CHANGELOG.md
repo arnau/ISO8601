@@ -1,8 +1,12 @@
 ## 0.7.1
 
-* Atoms have hash identity by value.
-* Atoms have `#value` to get either an integer or a float.
-* Atoms have `#to_s` formatting to a valid ISO8601 subpattern.
+* `DateTime` has hash identity by value.
+* `Time` has hash identity by value.
+* `Date` has hash identity by value.
+* `Duration` has hash identity by value.
+* `Atom` has hash identity by value.
+* `Atom#value` returns either an integer or a float.
+* `Atom#to_s` returns a valid ISO8601 subpattern.
 
 ## 0.7.0
 

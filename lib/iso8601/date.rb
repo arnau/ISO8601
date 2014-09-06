@@ -17,7 +17,7 @@ module ISO8601
 
     def_delegators(:@date,
       :to_s, :to_time, :to_date, :to_datetime,
-      :year, :month, :day, :wday, :hash)
+      :year, :month, :day, :wday)
     ##
     # The original atoms
     attr_reader :atoms
@@ -60,6 +60,25 @@ module ISO8601
     # Converts self to an array of atoms.
     def to_a
       [year, month, day]
+    end
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def ==(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def eql?(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @return [Fixnum]
+    def hash
+      [atoms, self.class].hash
     end
 
     private
