@@ -57,14 +57,14 @@ module ISO8601
     # “duration years”. Each cycle of 400 “duration years” has 303 “common
     # years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
     def factor
-      if @base.nil?
+      if base.nil?
         ((365 * 303 + 366 * 97) / 400) * 86400
-      elsif @atom == 0
-        year = (@base.year).to_i
-        (::Time.utc(year) - ::Time.utc(@base.year))
+      elsif atom.zero?
+        year = (base.year).to_i
+        (::Time.utc(year) - ::Time.utc(base.year))
       else
-        year = (@base.year + @atom).to_i
-        (::Time.utc(year) - ::Time.utc(@base.year)) / @atom
+        year = (base.year + atom).to_i
+        (::Time.utc(year) - ::Time.utc(base.year)) / atom
       end
     end
     ##
