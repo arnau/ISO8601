@@ -42,13 +42,36 @@ module ISO8601
     ##
     # The simplest numeric representation. If modulo equals 0 returns an
     # integer else a float.
+    #
+    # @return [Numeric]
     def value
       (atom % 1).zero? ? atom.to_i : atom
     end
     ##
     # The amount of seconds
+    #
+    # @return [Numeric]
     def to_seconds
       atom * factor
+    end
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def ==(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @param [#hash] contrast The contrast to compare against
+    #
+    # @return [Boolean]
+    def eql?(contrast)
+      (hash == contrast.hash)
+    end
+    ##
+    # @return [Fixnum]
+    def hash
+      [atom, self.class].hash
     end
     ##
     # The atom factor to compute the amount of seconds for the atom

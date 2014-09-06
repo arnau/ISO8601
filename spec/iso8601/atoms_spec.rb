@@ -87,6 +87,18 @@ describe ISO8601::Years do
       expect(ISO8601::Years.new(1).symbol).to eq(:Y)
     end
   end
+
+  describe '#hash' do
+    let(:subject) { ISO8601::Years.new(3) }
+    it "should respond to #hash" do
+      expect(subject).to respond_to(:hash)
+    end
+    it "should build hash identity by value" do
+      contrast = ISO8601::Years.new(3)
+
+      expect(subject.hash == contrast.hash).to be_truthy
+    end
+  end
 end
 
 describe ISO8601::Months do
@@ -133,6 +145,18 @@ describe ISO8601::Months do
       expect(ISO8601::Months.new(1).symbol).to eq(:M)
     end
   end
+
+  describe '#hash' do
+    let(:subject) { ISO8601::Months.new(3) }
+    it "should respond to #hash" do
+      expect(subject).to respond_to(:hash)
+    end
+    it "should build hash identity by value" do
+      contrast = ISO8601::Months.new(3)
+
+      expect(subject.hash == contrast.hash).to be_truthy
+    end
+  end
 end
 
 describe ISO8601::Weeks do
@@ -153,6 +177,18 @@ describe ISO8601::Weeks do
       expect(ISO8601::Weeks.new(1).symbol).to eq(:W)
     end
   end
+
+  describe '#hash' do
+    let(:subject) { ISO8601::Weeks.new(3) }
+    it "should respond to #hash" do
+      expect(subject).to respond_to(:hash)
+    end
+    it "should build hash identity by value" do
+      contrast = ISO8601::Weeks.new(3)
+
+      expect(subject.hash == contrast.hash).to be_truthy
+    end
+  end
 end
 
 describe ISO8601::Days do
@@ -169,6 +205,18 @@ describe ISO8601::Days do
     it "should return the ISO symbol" do
       expect(ISO8601::Days.new(1)).to respond_to(:symbol)
       expect(ISO8601::Days.new(1).symbol).to eq(:D)
+    end
+  end
+
+  describe '#hash' do
+    let(:subject) { ISO8601::Days.new(3) }
+    it "should respond to #hash" do
+      expect(subject).to respond_to(:hash)
+    end
+    it "should build hash identity by value" do
+      contrast = ISO8601::Days.new(3)
+
+      expect(subject.hash == contrast.hash).to be_truthy
     end
   end
 end
@@ -189,6 +237,18 @@ describe ISO8601::Hours do
       expect(ISO8601::Hours.new(1).symbol).to eq(:H)
     end
   end
+
+  describe '#hash' do
+    let(:subject) { ISO8601::Hours.new(3) }
+    it "should respond to #hash" do
+      expect(subject).to respond_to(:hash)
+    end
+    it "should build hash identity by value" do
+      contrast = ISO8601::Hours.new(3)
+
+      expect(subject.hash == contrast.hash).to be_truthy
+    end
+  end
 end
 
 describe ISO8601::Minutes do
@@ -207,6 +267,18 @@ describe ISO8601::Minutes do
       expect(ISO8601::Minutes.new(1).symbol).to eq(:M)
     end
   end
+
+  describe '#hash' do
+    let(:subject) { ISO8601::Minutes.new(3) }
+    it "should respond to #hash" do
+      expect(subject).to respond_to(:hash)
+    end
+    it "should build hash identity by value" do
+      contrast = ISO8601::Minutes.new(3)
+
+      expect(subject.hash == contrast.hash).to be_truthy
+    end
+  end
 end
 
 describe ISO8601::Seconds do
@@ -223,6 +295,18 @@ describe ISO8601::Seconds do
     it "should return the ISO symbol" do
       expect(ISO8601::Seconds.new(1)).to respond_to(:symbol)
       expect(ISO8601::Seconds.new(1).symbol).to eq(:S)
+    end
+  end
+
+  describe '#hash' do
+    let(:subject) { ISO8601::Seconds.new(3) }
+    it "should respond to #hash" do
+      expect(subject).to respond_to(:hash)
+    end
+    it "should build hash identity by value" do
+      contrast = ISO8601::Seconds.new(3)
+
+      expect(subject.hash == contrast.hash).to be_truthy
     end
   end
 end
