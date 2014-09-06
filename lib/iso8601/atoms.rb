@@ -134,9 +134,9 @@ module ISO8601
     # “duration years”. Each cycle of 400 “duration years” has 303 “common
     # years” of 365 “calendar days” and 97 “leap years” of 366 “calendar days”.
     def factor
-      if @base.nil?
+      if base.nil?
         nobase_calculation
-      elsif @atom == 0
+      elsif atom.zero?
         zero_calculation
       else
         calculation
@@ -157,30 +157,30 @@ module ISO8601
     end
 
     def zero_calculation
-      month = (@base.month <= 12) ? (@base.month) : ((@base.month) % 12)
-      year = @base.year + ((@base.month) / 12).to_i
+      month = (base.month <= 12) ? (base.month) : ((base.month) % 12)
+      year = base.year + ((base.month) / 12).to_i
 
-      (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month))
+      (::Time.utc(year, month) - ::Time.utc(base.year, base.month))
     end
 
     def calculation
-      if @base.month + @atom <= 0
-        month = @base.month + @atom
+      if base.month + atom <= 0
+        month = base.month + atom
 
         if month % 12 == 0
-          year = @base.year + (month / 12) - 1
+          year = base.year + (month / 12) - 1
           month = 12
         else
-          year = @base.year + (month / 12).floor
+          year = base.year + (month / 12).floor
           month = (12 + month > 0) ? (12 + month) : (12 + (month % -12))
         end
       else
-        month = (@base.month + @atom <= 12) ? (@base.month + @atom) : ((@base.month + @atom) % 12)
-        month = 12 if month == 0
-        year = @base.year + ((@base.month + @atom) / 12).to_i
+        month = (base.month + atom <= 12) ? (base.month + atom) : ((base.month + atom) % 12)
+        month = 12 if month.zero?
+        year = base.year + ((base.month + atom) / 12).to_i
       end
 
-      (::Time.utc(year, month) - ::Time.utc(@base.year, @base.month)) / @atom
+      (::Time.utc(year, month) - ::Time.utc(base.year, base.month)) / atom
     end
   end
   ##

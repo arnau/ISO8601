@@ -1,4 +1,4 @@
-## 0.7.1
+## 0.8.0
 
 * `DateTime` has hash identity by value.
 * `Time` has hash identity by value.
