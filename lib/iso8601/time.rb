@@ -12,9 +12,11 @@ module ISO8601
   class Time
     extend Forwardable
 
-    def_delegators(:@time,
+    def_delegators(
+      :@time,
       :to_time, :to_date, :to_datetime,
-      :hour, :minute, :zone)
+      :hour, :minute, :zone
+    )
     ##
     # The separator used in the original ISO 8601 string.
     attr_reader :separator
@@ -39,18 +41,18 @@ module ISO8601
       @second = @time.second + @time.second_fraction.to_f
     end
     ##
-    # @param [#hash] contrast The contrast to compare against
+    # @param [#hash] other The contrast to compare against
     #
     # @return [Boolean]
-    def ==(contrast)
-      (hash == contrast.hash)
+    def ==(other)
+      (hash == other.hash)
     end
     ##
-    # @param [#hash] contrast The contrast to compare against
+    # @param [#hash] other The contrast to compare against
     #
     # @return [Boolean]
-    def eql?(contrast)
-      (hash == contrast.hash)
+    def eql?(other)
+      (hash == other.hash)
     end
     ##
     # @return [Fixnum]
@@ -60,26 +62,28 @@ module ISO8601
     ##
     # Forwards the time the given amount of seconds.
     #
-    # @param [Numeric] seconds The seconds to add
+    # @param [Numeric] other The seconds to add
     #
     # @return [ISO8601::Time] New time resulting of the addition
-    def +(seconds)
-      moment = @time.to_time.localtime(zone) + seconds
+    def +(other)
+      moment = @time.to_time.localtime(zone) + other
       format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
+      base = ::Date.parse(moment.strftime('%Y-%m-%d'))
 
-      ISO8601::Time.new(moment.strftime(format), ::Date.parse(moment.strftime('%Y-%m-%d')))
+      ISO8601::Time.new(moment.strftime(format), base)
     end
     ##
     # Backwards the date the given amount of seconds.
     #
-    # @param [Numeric] seconds The seconds to remove
+    # @param [Numeric] other The seconds to remove
     #
     # @return [ISO8601::Time] New time resulting of the substraction
-    def -(seconds)
-      moment = @time.to_time.localtime(zone) - seconds
+    def -(other)
+      moment = @time.to_time.localtime(zone) - other
       format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
+      base = ::Date.parse(moment.strftime('%Y-%m-%d'))
 
-      ISO8601::Time.new(moment.strftime(format), ::Date.parse(moment.strftime('%Y-%m-%d')))
+      ISO8601::Time.new(moment.strftime(format), base)
     end
     ##
     # Converts self to a time component representation.
@@ -94,6 +98,7 @@ module ISO8601
     end
 
     private
+
     ##
     # Splits the time component into valid atoms.
     # Acceptable patterns: hh, hh:mm or hhmm and hh:mm:ss or hhmmss. Any form
@@ -111,7 +116,7 @@ module ISO8601
         (\d{2})
       )$/x.match(time).to_a.compact
 
-      raise ISO8601::Errors::UnknownPattern.new(@original) if hour.nil?
+      fail ISO8601::Errors::UnknownPattern, @original if hour.nil?
 
       @separator = separator
 
@@ -119,13 +124,14 @@ module ISO8601
       minute &&= minute.to_i
       second &&= second.to_f
 
-      raise ISO8601::Errors::UnknownPattern.new(@original) unless valid_zone?(zone)
+      fail ISO8601::Errors::UnknownPattern, @original unless valid_zone?(zone)
 
       [hour, minute, second, zone].compact
     end
 
     def valid_zone?(zone)
-      _, offset, separator = /^(Z|[+-]\d{2}(?:(:?)\d{2})?)$/.match(zone).to_a.compact
+      zone_regexp = /^(Z|[+-]\d{2}(?:(:?)\d{2})?)$/
+      _, offset, separator = zone_regexp.match(zone).to_a.compact
 
       wrong_pattern = !zone.nil? && offset.nil?
       invalid_separators = zone.to_s.match(/^[+-]\d{2}:?\d{2}$/) && (@separator != separator)

@@ -10,9 +10,11 @@ module ISO8601
   class DateTime
     extend Forwardable
 
-    def_delegators(:@date_time,
+    def_delegators(
+      :@date_time,
       :strftime, :to_time, :to_date, :to_datetime,
-      :year, :month, :day, :hour, :minute, :zone)
+      :year, :month, :day, :hour, :minute, :zone
+    )
 
     attr_reader :second
 
@@ -29,9 +31,9 @@ module ISO8601
     ##
     # Addition
     #
-    # @param [Numeric] seconds The seconds to add
-    def +(seconds)
-      moment = @date_time.to_time.localtime(zone) + seconds
+    # @param [Numeric] other The seconds to add
+    def +(other)
+      moment = @date_time.to_time.localtime(zone) + other
       format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
 
       ISO8601::DateTime.new(moment.strftime(format))
@@ -39,9 +41,9 @@ module ISO8601
     ##
     # Substraction
     #
-    # @param [Numeric] seconds The seconds to substract
-    def -(seconds)
-      moment = @date_time.to_time.localtime(zone) - seconds
+    # @param [Numeric] other The seconds to substract
+    def -(other)
+      moment = @date_time.to_time.localtime(zone) - other
       format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
 
       ISO8601::DateTime.new(moment.strftime(format))
@@ -58,18 +60,18 @@ module ISO8601
       [year, month, day, hour, minute, second, zone]
     end
     ##
-    # @param [#hash] contrast The contrast to compare against
+    # @param [#hash] other The contrast to compare against
     #
     # @return [Boolean]
-    def ==(contrast)
-      (hash == contrast.hash)
+    def ==(other)
+      (hash == other.hash)
     end
     ##
-    # @param [#hash] contrast The contrast to compare against
+    # @param [#hash] other The contrast to compare against
     #
     # @return [Boolean]
-    def eql?(contrast)
-      (hash == contrast.hash)
+    def eql?(other)
+      (hash == other.hash)
     end
     ##
     # @return [Fixnum]
@@ -77,8 +79,8 @@ module ISO8601
       [second, self.class].hash
     end
 
-
     private
+
     ##
     # Parses an ISO date time, where the date and the time components are
     # optional.
@@ -87,20 +89,20 @@ module ISO8601
     #
     # @param [String] date_time The ISO representation
     def parse(date_time)
-      raise ISO8601::Errors::UnknownPattern, date_time if date_time.empty?
+      fail ISO8601::Errors::UnknownPattern, date_time if date_time.empty?
 
       date, time = date_time.split('T')
 
-      date_components = parse_date(date)
-      time_components = Array(time && parse_time(time))
-      separators = [date_components.pop, time_components.pop]
+      date_atoms = parse_date(date)
+      time_atoms = Array(time && parse_time(time))
+      separators = [date_atoms.pop, time_atoms.pop]
 
-      raise ISO8601::Errors::UnknownPattern, @original unless valid_representation?(date_components, time_components)
-      raise ISO8601::Errors::UnknownPattern, @original unless valid_separators?(separators)
+      fail ISO8601::Errors::UnknownPattern,
+           @original unless valid_representation?(date_atoms, time_atoms)
+      fail ISO8601::Errors::UnknownPattern,
+           @original unless valid_separators?(separators)
 
-      components = date_components + time_components
-
-      ::DateTime.new(*components.compact)
+      ::DateTime.new(*(date_atoms + time_atoms).compact)
     end
     ##
     # Validates the date has the right pattern.
@@ -134,13 +136,14 @@ module ISO8601
       unless separators.all?(&:empty?)
         return false if (separators.first.length != separators.last.length)
       end
-      return true
+
+      true
     end
     ##
     # If time is provided date must use a complete representation
     def valid_representation?(date, time)
       year, month, day = date
-      hour, minute, second = time
+      hour, _ = time
 
       date.nil? || !(!year.nil? && (month.nil? || day.nil?) && !hour.nil?)
     end

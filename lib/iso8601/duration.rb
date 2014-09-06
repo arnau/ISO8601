@@ -3,7 +3,8 @@
 module ISO8601
   ##
   # A duration representation. When no base is provided, all atoms use an
-  # average factor which affects the result of any computation like `#to_seconds`.
+  # average factor which affects the result of any computation like
+  # `#to_seconds`.
   #
   # @example
   #     d = ISO8601::Duration.new('P2Y1MT2H')
@@ -14,11 +15,16 @@ module ISO8601
   #     d.to_seconds # => 65707200.0
   #
   # @example Explicit base date time
-  #     d = ISO8601::Duration.new('P2Y1MT2H', ISO8601::DateTime.new('2014-08017'))
-  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0, @base=#<ISO8601::DateTime...>>
-  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0, @base=#<ISO8601::DateTime...>>
-  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0, @base=#<ISO8601::DateTime...>>
-  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0, @base=#<ISO8601::DateTime...>>
+  #     base = ISO8601::DateTime.new('2014-08017')
+  #     d = ISO8601::Duration.new('P2Y1MT2H', base)
+  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0,
+  #                     @base=#<ISO8601::DateTime...>>
+  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0,
+  #                     @base=#<ISO8601::DateTime...>>
+  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0,
+  #                     @base=#<ISO8601::DateTime...>>
+  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0,
+  #                     @base=#<ISO8601::DateTime...>>
   #     d.to_seconds # => 65757600.0
   #
   # @example Number of seconds versus patterns
@@ -111,49 +117,40 @@ module ISO8601
     ##
     # Addition
     #
-    # @param [ISO8601::Duration] duration The duration to add
+    # @param [ISO8601::Duration] other The duration to add
     #
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
-    def +(duration)
-      compare_bases(duration)
-
-      d1 = to_seconds
-      d2 = duration.to_seconds
-
-      seconds_to_iso(d1 + d2)
+    def +(other)
+      compare_bases(other)
+      seconds_to_iso(to_seconds + other.to_seconds)
     end
     ##
     # Substraction
     #
-    # @param [ISO8601::Duration] duration The duration to substract
+    # @param [ISO8601::Duration] other The duration to substract
     #
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
-    def -(duration)
-      compare_bases(duration)
-
-      d1 = to_seconds
-      d2 = duration.to_seconds
-
-      seconds_to_iso(d1 - d2)
+    def -(other)
+      compare_bases(other)
+      seconds_to_iso(to_seconds - other.to_seconds)
     end
     ##
-    # @param [ISO8601::Duration] duration The duration to compare
+    # @param [ISO8601::Duration] other The duration to compare
     #
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
-    def ==(duration)
-      compare_bases(duration)
-
-      (to_seconds == duration.to_seconds)
+    def ==(other)
+      compare_bases(other)
+      (to_seconds == other.to_seconds)
     end
     ##
-    # @param [ISO8601::Duration] duration The duration to compare
+    # @param [ISO8601::Duration] other The duration to compare
     #
     # @return [Boolean]
-    def eql?(duration)
-      (hash == duration.hash)
+    def eql?(other)
+      (hash == other.hash)
     end
     ##
     # @return [Fixnum]
@@ -165,16 +162,17 @@ module ISO8601
     #
     # @return [String]
     def to_pattern
-      (@original.kind_of? Numeric) ? "PT#{@original}S" : @original
+      (@original.is_a? Numeric) ? "PT#{@original}S" : @original
     end
     ##
     # @return [Numeric] The duration in seconds
     def to_seconds
-      [years, months, weeks, days, hours, minutes, seconds].map(&:to_seconds).reduce(&:+)
+      atoms = [years, months, weeks, days, hours, minutes, seconds]
+      atoms.map(&:to_seconds).reduce(&:+)
     end
 
-
     private
+
     ##
     # Splits a duration pattern into valid atoms.
     #
@@ -207,7 +205,7 @@ module ISO8601
           ) |
           (?<weeks>\d+(?:[.,]\d+)?W)
         ) # Duration
-      $/x) or raise ISO8601::Errors::UnknownPattern.new(input)
+      $/x) || fail(ISO8601::Errors::UnknownPattern, input)
 
       valid_pattern?(duration)
 
@@ -258,31 +256,36 @@ module ISO8601
     end
 
     def validate_base(input)
-      raise ISO8601::Errors::TypeError if !(input.nil? or input.kind_of? ISO8601::DateTime)
+      fail ISO8601::Errors::TypeError unless input.nil? || input.is_a?(ISO8601::DateTime)
 
       input
     end
+
     def valid_pattern?(components)
-      date = [components[:years], components[:months], components[:days]].compact
-      time = [components[:hours], components[:minutes], components[:seconds]].compact
+      date = [
+        components[:years], components[:months], components[:days]
+      ]
+      time = [
+        components[:hours], components[:minutes], components[:seconds]
+      ].compact
       weeks = components[:weeks]
       all = [date, time, weeks].flatten.compact
 
-      if all.empty? || (!components[:time].nil? && time.empty? && weeks.nil?)
-        raise ISO8601::Errors::UnknownPattern.new(@pattern)
-      end
+      missing_time = (!components[:time].nil? && time.empty? && weeks.nil?)
+      empty = all.empty? || missing_time
+      fail ISO8601::Errors::UnknownPattern, @pattern if empty
     end
 
     def valid_fractions?(values)
       values = values.reject(&:zero?)
       fractions = values.select { |a| (a % 1) != 0 }
-      if fractions.size > 1 || (fractions.size == 1 && fractions.last != values.last)
-        raise ISO8601::Errors::InvalidFractions.new(@pattern)
-      end
+      consistent = (fractions.size == 1 && fractions.last != values.last)
+
+      fail ISO8601::Errors::InvalidFractions if fractions.size > 1 || consistent
     end
 
-    def compare_bases(duration)
-      raise ISO8601::Errors::DurationBaseError.new(duration) if base.to_s != duration.base.to_s
+    def compare_bases(other)
+      fail ISO8601::Errors::DurationBaseError, other if base != other.base
     end
   end
 end

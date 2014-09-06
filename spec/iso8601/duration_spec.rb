@@ -250,7 +250,7 @@ RSpec.describe ISO8601::Duration do
       expect(subject).to respond_to(:eql?)
     end
     it "should equal by hash identity" do
-      expect(ISO8601::Duration.new('PT1H').eql?  ISO8601::Duration.new('PT1H')).to be_truthy
+      expect(ISO8601::Duration.new('PT1H').eql? ISO8601::Duration.new('PT1H')).to be_truthy
       expect(ISO8601::Duration.new('PT1H').eql? ISO8601::Duration.new('PT60M')).to be_falsy
     end
 

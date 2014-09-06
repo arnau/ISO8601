@@ -15,9 +15,11 @@ module ISO8601
   class Date
     extend Forwardable
 
-    def_delegators(:@date,
+    def_delegators(
+      :@date,
       :to_s, :to_time, :to_date, :to_datetime,
-      :year, :month, :day, :wday)
+      :year, :month, :day, :wday
+    )
     ##
     # The original atoms
     attr_reader :atoms
@@ -41,20 +43,20 @@ module ISO8601
     ##
     # Forwards the date the given amount of days.
     #
-    # @param [Numeric] days The days to add
+    # @param [Numeric] other The days to add
     #
     # @return [ISO8601::Date] New date resulting of the addition
-    def +(days)
-      ISO8601::Date.new((@date + days).iso8601)
+    def +(other)
+      ISO8601::Date.new((@date + other).iso8601)
     end
     ##
     # Backwards the date the given amount of days.
     #
-    # @param [Numeric] days The days to remove
+    # @param [Numeric] other The days to remove
     #
     # @return [ISO8601::Date] New date resulting of the substraction
-    def -(days)
-      ISO8601::Date.new((@date - days).iso8601)
+    def -(other)
+      ISO8601::Date.new((@date - other).iso8601)
     end
     ##
     # Converts self to an array of atoms.
@@ -62,18 +64,18 @@ module ISO8601
       [year, month, day]
     end
     ##
-    # @param [#hash] contrast The contrast to compare against
+    # @param [#hash] other The contrast to compare against
     #
     # @return [Boolean]
-    def ==(contrast)
-      (hash == contrast.hash)
+    def ==(other)
+      (hash == other.hash)
     end
     ##
-    # @param [#hash] contrast The contrast to compare against
+    # @param [#hash] other The contrast to compare against
     #
     # @return [Boolean]
-    def eql?(contrast)
-      (hash == contrast.hash)
+    def eql?(other)
+      (hash == other.hash)
     end
     ##
     # @return [Fixnum]
@@ -82,6 +84,7 @@ module ISO8601
     end
 
     private
+
     ##
     # Splits the date component into valid atoms.
     #
@@ -101,7 +104,8 @@ module ISO8601
       week_date = /^([+-]?)\d{4}(-?)W\d{2}(?:\2\d)?$/.match(input)
       return atomize_week_date(input, week_date[2], week_date[1]) unless week_date.nil?
 
-      _, sign, year, separator, day = /^([+-]?)(\d{4})(-?)(\d{3})$/.match(input).to_a.compact
+      ordinal_regexp = /^([+-]?)(\d{4})(-?)(\d{3})$/
+      _, sign, year, separator, day = ordinal_regexp.match(input).to_a.compact
       return atomize_ordinal(year, day, separator, sign) unless year.nil?
 
       _, year, separator, month, day = /^
@@ -114,7 +118,7 @@ module ISO8601
         )?
       $/x.match(input).to_a.compact
 
-      raise ISO8601::Errors::UnknownPattern.new(@original) if year.nil?
+      fail ISO8601::Errors::UnknownPattern, @original if year.nil?
 
       @separator = separator
 

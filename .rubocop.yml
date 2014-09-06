@@ -1,0 +1,38 @@
+Documentation:
+  Enabled: false
+
+Lint/UselessComparison:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 150
+
+# Work in progress
+Metrics/LineLength:
+  Max: 183
+
+# Work in progress
+Metrics/MethodLength:
+  Max: 24
+
+# Work in progress
+Metrics/PerceivedComplexity:
+  Max: 8
+
+Style/Blocks:
+  Enabled: false
+
+Style/NumericLiterals:
+  MinDigits: 10
+
+Style/RegexpLiteral:
+  MaxSlashes: 0
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/Encoding:
+  EnforcedStyle: when_needed
+
+Style/BracesAroundHashParameters:
+  EnforcedStyle: braces

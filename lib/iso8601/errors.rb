@@ -1,23 +1,20 @@
-# encoding: utf-8
-
 module ISO8601
   ##
   # Contains all ISO8601-specific errors.
   module Errors
-
     class StandardError < ::StandardError
     end
     ##
     # Raised when the given pattern doesn't fit as ISO 8601 parser.
     class UnknownPattern < StandardError
       def initialize(pattern)
-        super("The pattern “#{pattern}” is not allowed in this implementation of ISO8601.")
+        super("Unknown pattern “#{pattern}”")
       end
     end
     ##
     # Raised when the given pattern contains an invalid fraction.
     class InvalidFractions < StandardError
-      def initialize(pattern)
+      def initialize
         super("Fractions are only allowed in the last component")
       end
     end
