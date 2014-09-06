@@ -102,6 +102,7 @@ RSpec.describe ISO8601::Duration do
     it "should return the result of the substraction" do
       expect(ISO8601::Duration.new('P1Y1M1DT1H1M1S') - ISO8601::Duration.new('PT10S')).to be_an_instance_of(ISO8601::Duration)
       expect((ISO8601::Duration.new('P1Y1M1DT1H1M11S') - ISO8601::Duration.new('PT10S')).to_s).to eq('P1Y1M1DT1H1M1S')
+      expect((ISO8601::Duration.new('P1Y1M1DT1H1M11S') - ISO8601::Duration.new('P1Y1M1DT1H1M11S')).to_s).to eq('PT0S')
       expect((ISO8601::Duration.new('PT12S') - ISO8601::Duration.new('PT12S')).to_s).to eq('PT0S')
       expect((ISO8601::Duration.new('PT12S') - ISO8601::Duration.new('PT1S')).to_s).to eq('PT11S')
       expect((ISO8601::Duration.new('PT1S') - ISO8601::Duration.new('PT12S')).to_s).to eq('-PT11S')
