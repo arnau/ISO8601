@@ -19,19 +19,29 @@ module ISO8601
     attr_reader :atom
     attr_reader :base
     ##
-    # The integer representation of the atom
+    # The integer representation
+    #
+    # @return [Integer]
     def to_i
-      @atom.to_i
+      atom.to_i
     end
     ##
-    # The float representation of the atom
+    # The float representation
+    #
+    # @return [Float]
     def to_f
-      @atom.to_f
+      atom.to_f
     end
     ##
-    # The amount of seconds of the atom
+    # The simplest numeric representation. If modulo equals 0 returns an
+    # integer else a float.
+    def value
+      (atom % 1).zero? ? atom.to_i : atom
+    end
+    ##
+    # The amount of seconds
     def to_seconds
-      @atom * factor
+      atom * factor
     end
     ##
     # The atom factor to compute the amount of seconds for the atom
@@ -74,7 +84,7 @@ module ISO8601
     #
     # @return [String]
     def to_s
-      (atom.zero?) ? '' : "#{atom}Y"
+      (value.zero?) ? '' : "#{value}Y"
     end
   end
   ##

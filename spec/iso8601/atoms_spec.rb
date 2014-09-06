@@ -30,6 +30,19 @@ RSpec.describe ISO8601::Atom do
       ISO8601::Atom.new(n).to_i.should == n.to_i
     end
   end
+  describe '#to_f' do
+    it "should return a float" do
+      ISO8601::Atom.new(1).to_f.should be_a_kind_of(Float)
+      ISO8601::Atom.new(1.0).to_f.should be_a_kind_of(Float)
+    end
+  end
+  describe '#value' do
+    it "should return the simplest value representation" do
+      ISO8601::Atom.new(1).value.should eq(1)
+      ISO8601::Atom.new(1.0).value.should eq(1)
+      ISO8601::Atom.new(1.1).value.should eq(1.1)
+    end
+  end
   describe '#factor' do
     it "should raise a NotImplementedError" do
       expect { ISO8601::Atom.new(1).factor }.to raise_error(NotImplementedError)

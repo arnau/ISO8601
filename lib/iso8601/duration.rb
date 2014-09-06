@@ -239,9 +239,9 @@ module ISO8601
       mi, mi_mod = (h_mod / minutes.factor).to_i, (h_mod % minutes.factor)
       s = mi_mod.div(1) == mi_mod ? mi_mod.to_i : mi_mod.to_f # Coerce to Integer when needed (`PT1S` instead of `PT1.0S`)
 
-      yeaars_str = years.to_s
+      years_str = years.to_s
       # delegate to Atoms
-      years_str = (y != 0) ? "#{y}Y" : ""
+      # years_str = (y != 0) ? "#{y}Y" : ""
       months_str = (m != 0) ? "#{m}M" : ""
       days_str = (d != 0) ? "#{d}D" : ""
       hours_str = (h != 0) ? "#{h}H" : ""
