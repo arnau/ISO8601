@@ -88,6 +88,7 @@ RSpec.describe ISO8601::Duration do
     end
 
     it "should return the result of the addition" do
+      expect((ISO8601::Duration.new('P11Y1M1DT1H1M1S') + ISO8601::Duration.new('P1Y1M1DT1H1M1S')).to_s).to eq('P12Y2M2DT2H2M2S')
       expect((ISO8601::Duration.new('P1Y1M1DT1H1M1S') + ISO8601::Duration.new('PT10S')).to_s).to eq('P1Y1M1DT1H1M11S')
       expect(ISO8601::Duration.new('P1Y1M1DT1H1M1S') + ISO8601::Duration.new('PT10S')).to be_an_instance_of(ISO8601::Duration)
     end

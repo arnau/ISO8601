@@ -33,6 +33,13 @@ module ISO8601
       atom.to_f
     end
     ##
+    # Returns the ISO 8601 representation for the atom
+    #
+    # @return [String]
+    def to_s
+      (value.zero?) ? '' : "#{value}#{symbol}"
+    end
+    ##
     # The simplest numeric representation. If modulo equals 0 returns an
     # integer else a float.
     def value
@@ -80,11 +87,11 @@ module ISO8601
       end
     end
     ##
-    # Returns the ISO 8601 representation for the atom
+    # The atom symbol.
     #
-    # @return [String]
-    def to_s
-      (value.zero?) ? '' : "#{value}Y"
+    # @return [Symbol]
+    def symbol
+      :Y
     end
   end
   ##
@@ -113,11 +120,11 @@ module ISO8601
       end
     end
     ##
-    # Returns the ISO 8601 representation for the atom
+    # The atom symbol.
     #
-    # @return [String]
-    def to_s
-      (atom.zero?) ? '' : "#{atom}M"
+    # @return [Symbol]
+    def symbol
+      :M
     end
 
     private
@@ -162,11 +169,11 @@ module ISO8601
       604800
     end
     ##
-    # Returns the ISO 8601 representation for the atom
+    # The atom symbol.
     #
-    # @return [String]
-    def to_s
-      (atom.zero?) ? '' : "#{atom}W"
+    # @return [Symbol]
+    def symbol
+      :W
     end
   end
   ##
@@ -182,11 +189,11 @@ module ISO8601
       86400
     end
     ##
-    # Returns the ISO 8601 representation for the atom
+    # The atom symbol.
     #
-    # @return [String]
-    def to_s
-      (atom.zero?) ? '' : "#{atom}D"
+    # @return [Symbol]
+    def symbol
+      :D
     end
   end
   ##
@@ -198,11 +205,11 @@ module ISO8601
       3600
     end
     ##
-    # Returns the ISO 8601 representation for the atom
+    # The atom symbol.
     #
-    # @return [String]
-    def to_s
-      (atom.zero?) ? '' : "#{atom}H"
+    # @return [Symbol]
+    def symbol
+      :H
     end
   end
   ##
@@ -214,11 +221,11 @@ module ISO8601
       60
     end
     ##
-    # Returns the ISO 8601 representation for the atom
+    # The atom symbol.
     #
-    # @return [String]
-    def to_s
-      (atom.zero?) ? '' : "#{atom}M"
+    # @return [Symbol]
+    def symbol
+      :M
     end
   end
   ##
@@ -234,11 +241,11 @@ module ISO8601
       1
     end
     ##
-    # Returns the ISO 8601 representation for the atom
+    # The atom symbol.
     #
-    # @return [String]
-    def to_s
-      (atom.zero?) ? '' : "#{atom}S"
+    # @return [Symbol]
+    def symbol
+      :S
     end
   end
 end

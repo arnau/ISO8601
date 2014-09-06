@@ -223,36 +223,41 @@ module ISO8601
       components
     end
     ##
-    # @param [Numeric] seconds The seconds to promote
+    # @param [Numeric] value The seconds to promote
     #
     # @return [ISO8601::Duration]
-    def seconds_to_iso(seconds)
-      return self.class.new('PT0S') if seconds == 0
+    def seconds_to_iso(value)
+      return self.class.new('PT0S') if value.zero?
 
-      sign_str = '-' if (seconds < 0)
-      seconds = seconds.abs
+      sign_str = '-' if (value < 0)
+      value = value.abs
 
-      y, y_mod = (seconds / years.factor).to_i, (seconds % years.factor)
-      m, m_mod = (y_mod / months.factor).to_i, (y_mod % months.factor)
-      d, d_mod = (m_mod / days.factor).to_i, (m_mod % days.factor)
-      h, h_mod = (d_mod / hours.factor).to_i, (d_mod % hours.factor)
-      mi, mi_mod = (h_mod / minutes.factor).to_i, (h_mod % minutes.factor)
-      s = mi_mod.div(1) == mi_mod ? mi_mod.to_i : mi_mod.to_f # Coerce to Integer when needed (`PT1S` instead of `PT1.0S`)
+      y, y_mod = Years.new((value / years.factor).to_i), (value % years.factor)
+      m, m_mod = Months.new((y_mod / months.factor).to_i), (y_mod % months.factor)
+      d, d_mod = Days.new((m_mod / days.factor).to_i), (m_mod % days.factor)
+      h, h_mod = Hours.new((d_mod / hours.factor).to_i), (d_mod % hours.factor)
+      mi, mi_mod = Minutes.new((h_mod / minutes.factor).to_i), (h_mod % minutes.factor)
+      s = Seconds.new(mi_mod)
 
-      years_str = years.to_s
-      # delegate to Atoms
-      # years_str = (y != 0) ? "#{y}Y" : ""
-      months_str = (m != 0) ? "#{m}M" : ""
-      days_str = (d != 0) ? "#{d}D" : ""
-      hours_str = (h != 0) ? "#{h}H" : ""
-      minutes_str = (mi != 0) ? "#{mi}M" : ""
-      seconds_str = (s != 0 || ([y, m, d, h, mi].reduce(&:+) == 0)) ? "#{s}S" : ""
+      years_str = y.to_s
+      months_str = m.to_s
+      days_str = d.to_s
+      hours_str = h.to_s
+      minutes_str = mi.to_s
+      seconds_str = s.to_s
 
-      date = %[#{sign_str}P#{years_str}#{months_str}#{days_str}]
-      time = ([h, mi, s].reduce(&:+) > 0) ? %[T#{hours_str}#{minutes_str}#{seconds_str}] : ""
-      duration_str = date + time
+      date = to_date_s(sign_str, y, m, d)
+      time = to_time_s(h, mi, s)
 
-      ISO8601::Duration.new(duration_str)
+      ISO8601::Duration.new(date + time)
+    end
+
+    def to_date_s(sign, *args)
+      "#{sign}P#{args.map(&:to_s).join('')}"
+    end
+
+    def to_time_s(*args)
+      (args.map(&:value).reduce(&:+) > 0) ? "T#{args.map(&:to_s).join('')}" : ''
     end
 
     def validate_base(input)

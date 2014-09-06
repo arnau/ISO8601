@@ -81,6 +81,13 @@ describe ISO8601::Years do
       ISO8601::Years.new(15, base).to_seconds.should == 473385600
     end
   end
+
+  describe '#symbol' do
+    it "should return the ISO symbol" do
+      expect(ISO8601::Years.new(1)).to respond_to(:symbol)
+      expect(ISO8601::Years.new(1).symbol).to eq(:Y)
+    end
+  end
 end
 
 describe ISO8601::Months do
@@ -121,6 +128,12 @@ describe ISO8601::Months do
       ISO8601::Months.new(12, ISO8601::DateTime.new('2000-02-01')).to_seconds.should == ISO8601::Years.new(1, ISO8601::DateTime.new("2000-02-01")).to_seconds
     end
   end
+  describe '#symbol' do
+    it "should return the ISO symbol" do
+      expect(ISO8601::Months.new(1)).to respond_to(:symbol)
+      expect(ISO8601::Months.new(1).symbol).to eq(:M)
+    end
+  end
 end
 
 describe ISO8601::Weeks do
@@ -135,6 +148,12 @@ describe ISO8601::Weeks do
       ISO8601::Weeks.new(-2).to_seconds.should == -1209600
     end
   end
+  describe '#symbol' do
+    it "should return the ISO symbol" do
+      expect(ISO8601::Weeks.new(1)).to respond_to(:symbol)
+      expect(ISO8601::Weeks.new(1).symbol).to eq(:W)
+    end
+  end
 end
 
 describe ISO8601::Days do
@@ -145,6 +164,12 @@ describe ISO8601::Days do
     it "should return the amount of seconds" do
       ISO8601::Days.new(2).to_seconds.should == 172800
       ISO8601::Days.new(-2).to_seconds.should == -172800
+    end
+  end
+  describe '#symbol' do
+    it "should return the ISO symbol" do
+      expect(ISO8601::Days.new(1)).to respond_to(:symbol)
+      expect(ISO8601::Days.new(1).symbol).to eq(:D)
     end
   end
 end
@@ -159,6 +184,12 @@ describe ISO8601::Hours do
       ISO8601::Hours.new(-2).to_seconds.should == -7200
     end
   end
+  describe '#symbol' do
+    it "should return the ISO symbol" do
+      expect(ISO8601::Hours.new(1)).to respond_to(:symbol)
+      expect(ISO8601::Hours.new(1).symbol).to eq(:H)
+    end
+  end
 end
 
 describe ISO8601::Minutes do
@@ -171,6 +202,12 @@ describe ISO8601::Minutes do
       ISO8601::Minutes.new(-2).to_seconds.should == -120
     end
   end
+  describe '#symbol' do
+    it "should return the ISO symbol" do
+      expect(ISO8601::Minutes.new(1)).to respond_to(:symbol)
+      expect(ISO8601::Minutes.new(1).symbol).to eq(:M)
+    end
+  end
 end
 
 describe ISO8601::Seconds do
@@ -181,6 +218,12 @@ describe ISO8601::Seconds do
     it "should return the amount of seconds" do
       ISO8601::Seconds.new(2).to_seconds.should == 2
       ISO8601::Seconds.new(-2).to_seconds.should == -2
+    end
+  end
+  describe '#symbol' do
+    it "should return the ISO symbol" do
+      expect(ISO8601::Seconds.new(1)).to respond_to(:symbol)
+      expect(ISO8601::Seconds.new(1).symbol).to eq(:S)
     end
   end
 end

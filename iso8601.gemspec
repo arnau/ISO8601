@@ -25,6 +25,6 @@ Gem::Specification.new do |s|
 
   s.has_rdoc = 'yard'
 
-  s.add_development_dependency 'rspec', '~> 2.14'
+  s.add_development_dependency 'rspec', '~> 3.1'
   s.add_development_dependency 'rerun', '~> 0'
 end
