@@ -8,7 +8,7 @@ module ISO8601
     # Raised when the given pattern doesn't fit as ISO 8601 parser.
     class UnknownPattern < StandardError
       def initialize(pattern)
-        super("Unknown pattern “#{pattern}”")
+        super("Unknown pattern #{pattern}")
       end
     end
     ##
@@ -22,7 +22,7 @@ module ISO8601
     # Raised when the given date is valid but out of range.
     class RangeError < StandardError
       def initialize(pattern)
-        super("“#{pattern}” is out of range")
+        super("#{pattern} is out of range")
       end
     end
     ##
