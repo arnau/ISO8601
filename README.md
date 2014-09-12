@@ -22,8 +22,8 @@ Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md)
 
 ### Duration sign
 
-Because Durations and DateTime has a substraction method, Durations has
-sign to be able to represent a negative value:
+Because `Durations` and `DateTime` have a substraction method, `Durations` has
+sign to be able to represent negative values:
 
     (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s  #=> '-PT2S'
     (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
