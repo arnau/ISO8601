@@ -271,8 +271,8 @@ module ISO8601
       weeks = components[:weeks]
       all = [date, time, weeks].flatten.compact
 
-      missing_time = (!components[:time].nil? && time.empty? && weeks.nil?)
-      empty = all.empty? || missing_time
+      missing_time = (weeks.nil? && !components[:time].nil? && time.empty?)
+      empty = missing_time || all.empty?
       fail ISO8601::Errors::UnknownPattern, @pattern if empty
     end
 
