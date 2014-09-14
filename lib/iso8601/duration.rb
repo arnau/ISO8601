@@ -211,9 +211,11 @@ module ISO8601
 
       @sign = (duration[:sign] == '-') ? -1 : 1
 
-      keys = duration.names.map(&:to_sym)
-      values = duration.captures.map { |v| v.to_f * sign }
-      components = Hash[keys.zip(values)]
+      components = duration.names.zip(duration.captures).map! do |k, v|
+        value = v.nil? ? v : v.tr(',', '.')
+        [k.to_sym, sign * value.to_f]
+      end
+      components = Hash[components]
       components.delete(:time) # clean time capture
 
       valid_fractions?(components.values)

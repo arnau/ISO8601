@@ -221,6 +221,7 @@ RSpec.describe ISO8601::Duration do
       it "should return the seconds of a -PT[n]H[n]M duration" do
         expect(ISO8601::Duration.new('-PT10S', ISO8601::DateTime.new('2012-01-01T00:00:00')).to_seconds).to eq(Time.utc(2011, 12, 31, 23, 59, 50) - Time.utc(2012, 1))
         expect(ISO8601::Duration.new('-PT10.4S', ISO8601::DateTime.new('2012-01-01')).to_seconds).to eq(-10.4)
+        expect(ISO8601::Duration.new('-PT10,4S', ISO8601::DateTime.new('2012-01-01')).to_seconds).to eq(-10.4)
       end
     end
   end
