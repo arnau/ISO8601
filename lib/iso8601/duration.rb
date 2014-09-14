@@ -209,7 +209,7 @@ module ISO8601
 
       valid_pattern?(duration)
 
-      @sign = (duration[:sign].nil? || duration[:sign] == '+') ? 1 : -1
+      @sign = (duration[:sign] == '-') ? -1 : 1
 
       keys = duration.names.map(&:to_sym)
       values = duration.captures.map { |v| v.to_f * sign }
