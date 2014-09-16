@@ -36,7 +36,7 @@ module ISO8601
       moment = @date_time.to_time.localtime(zone) + other
       format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
 
-      ISO8601::DateTime.new(moment.strftime(format))
+      self.class.new(moment.strftime(format))
     end
     ##
     # Substraction
@@ -46,7 +46,7 @@ module ISO8601
       moment = @date_time.to_time.localtime(zone) - other
       format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
 
-      ISO8601::DateTime.new(moment.strftime(format))
+      self.class.new(moment.strftime(format))
     end
     ##
     # Converts DateTime to a formated string
