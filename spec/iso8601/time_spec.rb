@@ -46,6 +46,10 @@ describe ISO8601::Time do
     expect(t.zone).to eq('+04:00')
   end
 
+  it "should keep the correct fraction when using commma separators" do
+    expect(ISO8601::Time.new('T16:26:10,5Z').second).to eq(10.5)
+  end
+
   it "should respond to delegated casting methods" do
     expect(ISO8601::Time.new('T10:09:08Z')).to respond_to(:to_s, :to_time, :to_date, :to_datetime)
   end

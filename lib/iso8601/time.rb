@@ -122,7 +122,7 @@ module ISO8601
 
       hour = hour.to_i
       minute &&= minute.to_i
-      second &&= second.to_f
+      second &&= second.tr(',', '.').to_f
 
       fail ISO8601::Errors::UnknownPattern, @original unless valid_zone?(zone)
 
