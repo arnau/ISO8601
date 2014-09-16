@@ -9,8 +9,8 @@ times) standard.
 ## Build status
 
 [![Build Status](https://secure.travis-ci.org/arnau/ISO8601.png?branch=master)](http://travis-ci.org/arnau/ISO8601/)
-
 [![Dependency Status](https://gemnasium.com/arnau/ISO8601.svg)](https://gemnasium.com/arnau/ISO8601)
+[![Gem Version](https://badge.fury.io/rb/iso8601.svg)](http://badge.fury.io/rb/iso8601)
 
 ## Supported versions
 
