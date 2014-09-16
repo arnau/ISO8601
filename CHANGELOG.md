@@ -1,3 +1,7 @@
+## 0.8.2
+
+* Fix time components using comma (,) as a decimal separator.
+
 ## 0.8.1
 
 * Fix durations using comma (,) as a decimal separator.
