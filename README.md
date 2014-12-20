@@ -1,5 +1,7 @@
 # ISO8601
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/arnau/ISO8601?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ISO8601 is a simple implementation of the ISO 8601 (Data elements and
 interchange formats — Information interchange — Representation of dates and
 times) standard.
