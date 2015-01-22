@@ -146,7 +146,6 @@ module ISO8601
     #
     # @return [::DateTime]
     def compose(atoms, base)
-      puts atoms.inspect
       ::DateTime.new(*[base.year, base.month, base.day], *atoms)
     rescue ArgumentError
       raise ISO8601::Errors::RangeError, @original

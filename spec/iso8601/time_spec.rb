@@ -82,6 +82,7 @@ describe ISO8601::Time do
       expect(ISO8601::Time.new('T19:29:39').atoms).to eq([19, 29, 39])
       expect(ISO8601::Time.new('T19:29').atoms).to eq([19, 29, 0.0])
       expect(ISO8601::Time.new('T19:29Z').atoms).to eq([19, 29, 0.0, 'Z'])
+      expect(ISO8601::Time.new('T19Z').atoms).to eq([19, 0, 0.0, 'Z'])
     end
   end
 
