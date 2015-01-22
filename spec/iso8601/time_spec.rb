@@ -18,6 +18,7 @@ describe ISO8601::Time do
   it "should parse any allowed pattern" do
     expect { ISO8601::Time.new('T10') }.to_not raise_error
     expect { ISO8601::Time.new('T10:30') }.to_not raise_error
+    expect { ISO8601::Time.new('T10:30Z') }.to_not raise_error
     expect { ISO8601::Time.new('T10:30:12') }.to_not raise_error
     expect { ISO8601::Time.new('T10:30:12Z') }.to_not raise_error
     expect { ISO8601::Time.new('T10:30:12+04') }.to_not raise_error
@@ -79,8 +80,8 @@ describe ISO8601::Time do
       expect(ISO8601::Time.new('T19:29:39+04:00').atoms).to eq([19, 29, 39, '+04:00'])
       expect(ISO8601::Time.new('T19:29:39Z').atoms).to eq([19, 29, 39, 'Z'])
       expect(ISO8601::Time.new('T19:29:39').atoms).to eq([19, 29, 39])
-      expect(ISO8601::Time.new('T19:29').atoms).to eq([19, 29])
-      expect(ISO8601::Time.new('T19').atoms).to eq([19])
+      expect(ISO8601::Time.new('T19:29').atoms).to eq([19, 29, 0.0])
+      expect(ISO8601::Time.new('T19:29Z').atoms).to eq([19, 29, 0.0, 'Z'])
     end
   end
 

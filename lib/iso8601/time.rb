@@ -121,8 +121,8 @@ module ISO8601
       @separator = separator
 
       hour = hour.to_i
-      minute &&= minute.to_i
-      second &&= second.tr(',', '.').to_f
+      minute = minute.to_i
+      second = second.nil? ? 0.0 : second.tr(',', '.').to_f
 
       fail ISO8601::Errors::UnknownPattern, @original unless valid_zone?(zone)
 
@@ -146,6 +146,7 @@ module ISO8601
     #
     # @return [::DateTime]
     def compose(atoms, base)
+      puts atoms.inspect
       ::DateTime.new(*[base.year, base.month, base.day], *atoms)
     rescue ArgumentError
       raise ISO8601::Errors::RangeError, @original
