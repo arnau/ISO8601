@@ -1,3 +1,7 @@
+## 0.8.3
+
+* Fix partial time patterns with timezone: `PThh:mmZ`, `PThhZ`.
+
 ## 0.8.2
 
 * Fix time components using comma (,) as a decimal separator.
