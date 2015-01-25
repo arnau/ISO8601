@@ -2,6 +2,10 @@
 .DS_Store
 .*.swp
 
+# development side effects
+.vagrant
+sandbox
+
 # files created by running the specs
 tmp
 

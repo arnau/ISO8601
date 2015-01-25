@@ -88,6 +88,32 @@ Week dates raise an error when two digit days provied instead of return monday:
     DateTime.new('2014-W15-02')  # => #<Date: 2014-04-07 ((2456755j,0s,0n),+0s,2299161j)>
 
 
+## Testing
+
+### Raw
+
+    # Install a Ruby flavour;
+    $ bundle install
+    $ bundle exec rspec
+
+### Docker (experimental)
+
+This way is in an early stage so for now it's only possible to test one Ruby
+version (currently Ruby 2.2.)
+
+    # Install Docker
+    $ make build
+    $ make run
+
+### Vagrant (experimental)
+
+This way is in an early stage so for now it's only possible to test one Ruby
+version (currently Ruby 2.2.)
+
+    # Install Vagrant and Virtualbox
+    $ vagrant up mri-2.2
+
+
 ## Contributing
 
 [Contributors](https://github.com/arnau/ISO8601/graphs/contributors)
