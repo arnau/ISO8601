@@ -14,9 +14,7 @@ times) standard.
 
 ## Supported versions
 
-* MRI 1.9.3
-* MRI 2.0
-* MRI 2.1
+* MRI 1.9.3, 2.0, 2.1, 2.2
 * RBX 2
 
 Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md) if you are upgrading from an older version.
@@ -92,7 +90,7 @@ Week dates raise an error when two digit days provied instead of return monday:
 
 ### Raw
 
-    # Install a Ruby flavour;
+    # Install a Ruby flavour
     $ bundle install
     $ bundle exec rspec
 
