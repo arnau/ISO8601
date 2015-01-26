@@ -7,7 +7,7 @@ build :
 	docker build -t $(IMAGE) .
 
 rmo :
-	docker rmo $(ORPHAN_IMAGES)
+	docker rmi $(ORPHAN_IMAGES)
 
 rmi :
 	docker rmi $(IMAGE)
