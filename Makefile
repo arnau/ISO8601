@@ -13,4 +13,4 @@ rmi :
 	docker rmi $(IMAGE)
 
 run :
-	docker run --rm -v $$(pwd):/usr/src/iso8601 $(IMAGE)
+	docker run -t --rm -v $$(pwd):/usr/src/iso8601 $(IMAGE)
