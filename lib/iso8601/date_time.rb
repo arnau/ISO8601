@@ -76,7 +76,7 @@ module ISO8601
     ##
     # @return [Fixnum]
     def hash
-      [second, self.class].hash
+      (to_a << self.class).hash
     end
 
     private
