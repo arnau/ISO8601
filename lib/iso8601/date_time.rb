@@ -60,6 +60,11 @@ module ISO8601
       [year, month, day, hour, minute, second, zone]
     end
     ##
+    # Converts DateTime to a floating point number of seconds since the Epoch.
+    def to_f
+      to_time.to_f
+    end
+    ##
     # @param [#hash] other The contrast to compare against
     #
     # @return [Boolean]
@@ -76,7 +81,7 @@ module ISO8601
     ##
     # @return [Fixnum]
     def hash
-      (to_a << self.class).hash
+      [to_f, self.class].hash
     end
 
     private

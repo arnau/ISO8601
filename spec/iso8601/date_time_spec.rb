@@ -144,5 +144,10 @@ describe ISO8601::DateTime do
       expect(ISO8601::DateTime.new('2014-10-11T12:13:10') == ISO8601::DateTime.new('2014-10-11T12:13:10.0')).to be_truthy
       expect(ISO8601::DateTime.new('2014-10-11T12:13:10.1') == ISO8601::DateTime.new('2014-10-11T12:13:10.2')).to be_falsy
     end
+
+    it "should identify as the same when two dates with different timezones are the same timestamp" do
+      expect(ISO8601::DateTime.new('2014-10-11T12:13:14Z') == ISO8601::DateTime.new('2014-10-11T13:13:14+01:00')).to be_truthy
+
+    end
   end
 end
