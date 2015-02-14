@@ -135,9 +135,6 @@ describe ISO8601::DateTime do
 
   describe '#==' do
     it "should identify loose precision datetimes" do
-      subject = ISO8601::DateTime.new('2014')
-      contrast = ISO8601::DateTime.new('2014')
-
       expect(ISO8601::DateTime.new('2014') == ISO8601::DateTime.new('2014')).to be_truthy
       expect(ISO8601::DateTime.new('2014') == ISO8601::DateTime.new('2015')).to be_falsy
       expect(ISO8601::DateTime.new('2014-10') == ISO8601::DateTime.new('2014-11')).to be_falsy
