@@ -1,3 +1,7 @@
+## 0.8.5
+
+* Fix `DateTime#hash`
+
 ## 0.8.4
 
 * Remove unwanted log.

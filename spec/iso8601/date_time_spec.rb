@@ -132,4 +132,17 @@ describe ISO8601::DateTime do
       expect(subject.hash).to eq(contrast.hash)
     end
   end
+
+  describe '#==' do
+    it "should identify loose precision datetimes" do
+      expect(ISO8601::DateTime.new('2014') == ISO8601::DateTime.new('2014')).to be_truthy
+      expect(ISO8601::DateTime.new('2014') == ISO8601::DateTime.new('2015')).to be_falsy
+      expect(ISO8601::DateTime.new('2014-10') == ISO8601::DateTime.new('2014-11')).to be_falsy
+      expect(ISO8601::DateTime.new('2014-10') == ISO8601::DateTime.new('2014-11')).to be_falsy
+      expect(ISO8601::DateTime.new('2014-10-11T12') == ISO8601::DateTime.new('2014-10-11T13')).to be_falsy
+      expect(ISO8601::DateTime.new('2014-10-11T12:13') == ISO8601::DateTime.new('2014-10-11T12:14')).to be_falsy
+      expect(ISO8601::DateTime.new('2014-10-11T12:13:10') == ISO8601::DateTime.new('2014-10-11T12:13:10.0')).to be_truthy
+      expect(ISO8601::DateTime.new('2014-10-11T12:13:10.1') == ISO8601::DateTime.new('2014-10-11T12:13:10.2')).to be_falsy
+    end
+  end
 end
