@@ -1,6 +1,8 @@
 ## 0.8.5
 
 * Fix `DateTime#hash`
+* Fix `DateTime#second` and `Time#second` precision.  Now it's rounded to the
+first decimal.
 
 ## 0.8.4
 
