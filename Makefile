@@ -14,3 +14,7 @@ rmi :
 
 run :
 	docker run -t --rm -v $$(pwd):/usr/src/iso8601 $(IMAGE)
+
+shell :
+	docker run -it --rm -v $$(pwd):/usr/src/iso8601 $(IMAGE) \
+    pry -r ./lib/iso8601

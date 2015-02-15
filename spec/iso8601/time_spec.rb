@@ -57,15 +57,21 @@ describe ISO8601::Time do
 
   describe '#+' do
     it "should return the result of the addition" do
-      expect((ISO8601::Time.new('T20:20:20+02:00') + 10).to_s).to eq('T20:20:30+02:00')
-      expect((ISO8601::Time.new('T20:20:20.11+02:00') + 10).to_s).to eq('T20:20:30.11+02:00')
+      expect((ISO8601::Time.new('T20:20:20Z') + 10).to_s).to eq('T20:20:30+00:00')
+      expect((ISO8601::Time.new('T20:20:20.5Z') + 10).to_s).to eq('T20:20:30.5+00:00')
+      expect((ISO8601::Time.new('T20:20:20+02:00') + 10.09).to_s).to eq('T20:20:30.1+02:00')
+      expect((ISO8601::Time.new('T20:20:20+02:00') + 10.1).to_s).to eq('T20:20:30.1+02:00')
+      expect((ISO8601::Time.new('T20:20:20+02:00') + 10).second).to eq(30)
+      expect((ISO8601::Time.new('T20:20:20.5Z') + 10).second).to eq(30.5)
+      expect((ISO8601::Time.new('T20:20:20+02:00') + 10.09).second).to eq(30.1)
     end
+
   end
 
   describe '#-' do
     it "should return the result of the substraction" do
       expect((ISO8601::Time.new('T20:20:20+01:00') - 10).to_s).to eq('T20:20:10+01:00')
-      expect((ISO8601::Time.new('T20:20:20.11+02:00') - 10).to_s).to eq('T20:20:10.11+02:00')
+      expect((ISO8601::Time.new('T20:20:20.11+02:00') - 10).to_s).to eq('T20:20:10.1+02:00')
     end
   end
 

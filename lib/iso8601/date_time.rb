@@ -18,47 +18,44 @@ module ISO8601
 
     attr_reader :second
 
-    FORMAT = '%Y-%m-%dT%H:%M:%S%:z'
-    FORMAT_WITH_FRACTION = '%Y-%m-%dT%H:%M:%S.%2N%:z'
-
     ##
     # @param [String] date_time The datetime pattern
     def initialize(date_time)
       @original = date_time
       @date_time = parse(date_time)
-      @second = @date_time.second + @date_time.second_fraction.to_f
+      @second = @date_time.second + @date_time.second_fraction.to_f.round(1)
     end
     ##
     # Addition
     #
     # @param [Numeric] other The seconds to add
     def +(other)
-      moment = @date_time.to_time.localtime(zone) + other
-      format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
+      moment = @date_time.to_time.localtime(zone) + other.round(1)
 
-      self.class.new(moment.strftime(format))
+      self.class.new(moment.strftime('%Y-%m-%dT%H:%M:%S.%N%:z'))
     end
     ##
     # Substraction
     #
     # @param [Numeric] other The seconds to substract
     def -(other)
-      moment = @date_time.to_time.localtime(zone) - other
-      format = moment.subsec.zero? ? FORMAT : FORMAT_WITH_FRACTION
+      moment = @date_time.to_time.localtime(zone) - other.round(1)
 
-      self.class.new(moment.strftime(format))
+      self.class.new(moment.strftime('%Y-%m-%dT%H:%M:%S.%N%:z'))
     end
     ##
     # Converts DateTime to a formated string
     def to_s
-      format = @date_time.second_fraction.zero? ? FORMAT : FORMAT_WITH_FRACTION
-      @date_time.strftime(format)
+      second_format = (second % 1).zero? ? '%02d' % second : '%04.1f' % second
+
+      "%04d-%02d-%02dT%02d:%02d:#{second_format}#{zone}" % atoms
     end
     ##
     # Converts DateTime to an array of atoms.
     def to_a
       [year, month, day, hour, minute, second, zone]
     end
+    alias_method :atoms, :to_a
     ##
     # Converts DateTime to a floating point number of seconds since the Epoch.
     def to_f

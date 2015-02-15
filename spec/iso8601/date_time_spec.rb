@@ -104,8 +104,12 @@ describe ISO8601::DateTime do
   describe '#+' do
     it "should return the result of the addition" do
       expect((ISO8601::DateTime.new('2012-07-07T20:20:20Z') + 10).to_s).to eq('2012-07-07T20:20:30+00:00')
-      expect((ISO8601::DateTime.new('2012-07-07T20:20:20.5Z') + 10).to_s).to eq('2012-07-07T20:20:30.50+00:00')
-      expect((ISO8601::DateTime.new('2012-07-07T20:20:20+02:00') + 10).to_s).to eq('2012-07-07T20:20:30+02:00')
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20.5Z') + 10).to_s).to eq('2012-07-07T20:20:30.5+00:00')
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20+02:00') + 10.09).to_s).to eq('2012-07-07T20:20:30.1+02:00')
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20+02:00') + 10.1).to_s).to eq('2012-07-07T20:20:30.1+02:00')
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20+02:00') + 10).second).to eq(30)
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20.5Z') + 10).second).to eq(30.5)
+      expect((ISO8601::DateTime.new('2012-07-07T20:20:20+02:00') + 10.09).second).to eq(30.1)
     end
   end
 
