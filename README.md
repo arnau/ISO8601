@@ -30,6 +30,14 @@ sign to be able to represent negative values:
     (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s  #=> '-PT2S'
     (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
 
+### Fractional seconds precision
+
+Fractional seconds for `ISO8601::DateTime` and `ISO8601::Time` are rounded to
+one decimal.
+
+    ISO8601::DateTime.new('2015-02-03T10:11:12.12').second #=> 12.1
+    ISO8601::Time.new('T10:11:12.16').second #=> 12.2
+
 
 ## Differences with core Date, Time and DateTime
 
