@@ -100,7 +100,7 @@ RSpec.describe ISO8601::Duration do
       expect { ISO8601::Duration.new('PT1H', ISO8601::DateTime.new('2000-01-01')) - ISO8601::Duration.new('PT1H') }.to raise_error(ISO8601::Errors::DurationBaseError)
     end
 
-    it "should return the result of the substraction" do
+    it "should return the result of the subtraction" do
       expect(ISO8601::Duration.new('P1Y1M1DT1H1M1S') - ISO8601::Duration.new('PT10S')).to be_an_instance_of(ISO8601::Duration)
       expect((ISO8601::Duration.new('P1Y1M1DT1H1M11S') - ISO8601::Duration.new('PT10S')).to_s).to eq('P1Y1M1DT1H1M1S')
       expect((ISO8601::Duration.new('P1Y1M1DT1H1M11S') - ISO8601::Duration.new('P1Y1M1DT1H1M11S')).to_s).to eq('PT0S')
@@ -108,6 +108,13 @@ RSpec.describe ISO8601::Duration do
       expect((ISO8601::Duration.new('PT12S') - ISO8601::Duration.new('PT1S')).to_s).to eq('PT11S')
       expect((ISO8601::Duration.new('PT1S') - ISO8601::Duration.new('PT12S')).to_s).to eq('-PT11S')
       expect((ISO8601::Duration.new('PT1S') - ISO8601::Duration.new('-PT12S')).to_s).to eq('PT13S')
+    end
+  end
+
+  describe "#to_days" do
+    it "should return the days of a duration" do
+      expect(ISO8601::Duration.new('P1Y', ISO8601::DateTime.new('2010-01-01')).to_days).to eq(365)
+      expect(ISO8601::Duration.new('P1D').to_days).to eq(1)
     end
   end
 

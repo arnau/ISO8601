@@ -170,6 +170,21 @@ module ISO8601
       atoms = [years, months, weeks, days, hours, minutes, seconds]
       atoms.map(&:to_seconds).reduce(&:+)
     end
+    ##
+    # @return [Numeric] The duration in days
+    def to_days
+      (to_seconds / 86400)
+    end
+    ##
+    # @return [Integer] The integer part of the duration in seconds
+    def to_i
+      to_seconds.to_i
+    end
+    ##
+    # @return [Float] The duration in seconds coerced to float
+    def to_f
+      to_seconds.to_f
+    end
 
     private
 

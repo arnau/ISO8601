@@ -47,6 +47,7 @@ module ISO8601
     #
     # @return [ISO8601::Date] New date resulting of the addition
     def +(other)
+      other = other.to_days if other.respond_to?(:to_days)
       ISO8601::Date.new((@date + other).iso8601)
     end
     ##
@@ -56,6 +57,7 @@ module ISO8601
     #
     # @return [ISO8601::Date] New date resulting of the substraction
     def -(other)
+      other = other.to_days if other.respond_to?(:to_days)
       ISO8601::Date.new((@date - other).iso8601)
     end
     ##

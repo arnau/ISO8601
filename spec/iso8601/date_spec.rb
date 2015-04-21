@@ -54,14 +54,20 @@ describe ISO8601::Date do
   end
 
   describe '#+' do
-    it "should return the result of the addition" do
+    it "should return the result of the addition of a number" do
       expect((ISO8601::Date.new('2012-07-07') + 7).to_s).to eq('2012-07-14')
+    end
+    it "should return the result of the addition of a Duration" do
+      expect((ISO8601::Date.new('2012-07-07') + ISO8601::Duration.new('P7D')).to_s).to eq('2012-07-14')
     end
   end
 
   describe '#-' do
-    it "should return the result of the substraction" do
+    it "should return the result of the subtraction" do
       expect((ISO8601::Date.new('2012-07-07') - 7).to_s).to eq('2012-06-30')
+    end
+    it "should return the result of the subtraction" do
+      expect((ISO8601::Date.new('2012-07-07') - ISO8601::Duration.new('P7D')).to_s).to eq('2012-06-30')
     end
   end
 

@@ -63,7 +63,7 @@ module ISO8601
     #
     # @return [ISO8601::Time] New time resulting of the addition
     def +(other)
-      moment = @time.to_time.localtime(zone) + other.round(1)
+      moment = @time.to_time.localtime(zone) + other.to_f.round(1)
       base = ::Date.parse(moment.strftime('%Y-%m-%d'))
 
       self.class.new(moment.strftime('T%H:%M:%S.%L%:z'), base)
@@ -75,7 +75,7 @@ module ISO8601
     #
     # @return [ISO8601::Time] New time resulting of the substraction
     def -(other)
-      moment = @time.to_time.localtime(zone) - other.round(1)
+      moment = @time.to_time.localtime(zone) - other.to_f.round(1)
       base = ::Date.parse(moment.strftime('%Y-%m-%d'))
 
       self.class.new(moment.strftime('T%H:%M:%S.%L%:z'), base)
