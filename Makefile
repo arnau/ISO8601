@@ -19,7 +19,7 @@ shell :
 	docker run -it --rm -v $$(pwd):/usr/src/iso8601 $(IMAGE) \
 		pry -r ./lib/iso8601
 
-release :
+gem :
 	docker run -t --rm -v $$(pwd):/usr/src/iso8601 $(IMAGE) \
-		bundle exec rake release
+		bundle exec rake build
 
