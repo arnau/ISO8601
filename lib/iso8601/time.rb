@@ -115,22 +115,32 @@ module ISO8601
       fail ISO8601::Errors::UnknownPattern, @original if hour.nil?
 
       @separator = separator
+      require_separator = !minute.nil?
 
       hour = hour.to_i
       minute = minute.to_i
       second = second.nil? ? 0.0 : second.tr(',', '.').to_f
 
-      fail ISO8601::Errors::UnknownPattern, @original unless valid_zone?(zone)
+      atoms = [hour, minute, second, zone].compact
 
-      [hour, minute, second, zone].compact
+
+      fail ISO8601::Errors::UnknownPattern, @original unless valid_zone?(zone, require_separator)
+
+      atoms
     end
-
-    def valid_zone?(zone)
+    ##
+    # @param [String] zone The timezone offset as Z or +-hh[:mm].
+    # @param [Boolean] require_separator Flag to determine if the separator
+    #   consistency check is required as patterns with only hour atom have no
+    #   separator but the timezone can.
+    def valid_zone?(zone, require_separator)
       zone_regexp = /^(Z|[+-]\d{2}(?:(:?)\d{2})?)$/
       _, offset, separator = zone_regexp.match(zone).to_a.compact
 
       wrong_pattern = !zone.nil? && offset.nil?
-      invalid_separators = zone.to_s.match(/^[+-]\d{2}:?\d{2}$/) && (@separator != separator)
+      if (require_separator)
+        invalid_separators = zone.to_s.match(/^[+-]\d{2}:?\d{2}$/) && (@separator != separator)
+      end
 
       !(wrong_pattern || invalid_separators)
     end

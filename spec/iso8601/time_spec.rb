@@ -17,6 +17,8 @@ describe ISO8601::Time do
 
   it "should parse any allowed pattern" do
     expect { ISO8601::Time.new('T10') }.to_not raise_error
+    expect { ISO8601::Time.new('T10-00:00') }.to_not raise_error
+    expect { ISO8601::Time.new('T10Z') }.to_not raise_error
     expect { ISO8601::Time.new('T10:30') }.to_not raise_error
     expect { ISO8601::Time.new('T10:30Z') }.to_not raise_error
     expect { ISO8601::Time.new('T10:30:12') }.to_not raise_error
@@ -28,6 +30,7 @@ describe ISO8601::Time do
     expect { ISO8601::Time.new('T103012+04') }.to_not raise_error
     expect { ISO8601::Time.new('T10:30:12-00:00') }.to_not raise_error
     expect { ISO8601::Time.new('T16:26:10,5Z') }.to_not raise_error
+    expect { ISO8601::Time.new('T10+00:00') }.to_not raise_error
   end
 
   context 'reduced patterns' do
