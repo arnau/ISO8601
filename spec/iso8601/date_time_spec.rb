@@ -113,6 +113,7 @@ describe ISO8601::DateTime do
     end
     it "should return the result of the addition of a Duration" do
       expect((ISO8601::DateTime.new('2012-07-07T20:20:20Z') + ISO8601::Duration.new("PT10S")).to_s).to eq('2012-07-07T20:20:30+00:00')
+      expect((ISO8601::DateTime.new('2015-07-07T20:20:20Z') + ISO8601::Duration.new("P10D")).to_s).to eq('2015-07-17T20:20:20+00:00')
     end
   end
 

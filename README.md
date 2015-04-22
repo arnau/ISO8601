@@ -19,6 +19,9 @@ times) standard.
 
 Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md) if you are upgrading from an older version.
 
+## Documentation
+
+Check the [rubydoc documentation](http://www.rubydoc.info/gems/iso8601).
 
 ## Comments about this implementation
 
