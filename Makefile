@@ -12,7 +12,7 @@ rmo :
 rmi :
 	docker rmi $(IMAGE)
 
-run :
+test :
 	docker run -t --rm -v $$(pwd):/usr/src/iso8601 $(IMAGE)
 
 shell :
@@ -22,4 +22,3 @@ shell :
 gem :
 	docker run -t --rm -v $$(pwd):/usr/src/iso8601 $(IMAGE) \
 		bundle exec rake build
-
