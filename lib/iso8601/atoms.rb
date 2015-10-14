@@ -6,6 +6,7 @@ module ISO8601
   #
   # @abstract
   class Atom
+    include Comparable
     ##
     # @param [Numeric] atom The atom value
     # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
@@ -55,18 +56,20 @@ module ISO8601
       atom * factor
     end
     ##
-    # @param [#hash] other The contrast to compare against
+    # @param [Atom, #to_f] other The contrast to compare against
     #
-    # @return [Boolean]
-    def ==(other)
-      (hash == other.hash)
+    # @return [-1, 0, 1]
+    def <=>(other)
+      return nil if Atom === other && !other.kind_of?(self.class)
+      return nil unless other.respond_to?(:to_f)
+      to_f <=> other.to_f
     end
     ##
-    # @param [#hash] other The contrast to compare against
+    # @param [Atom, #to_f] other The contrast to compare against
     #
     # @return [Boolean]
     def eql?(other)
-      (hash == other.hash)
+      (self == other)
     end
     ##
     # @return [Fixnum]
