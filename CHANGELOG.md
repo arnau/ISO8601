@@ -1,7 +1,11 @@
+## 0.8.7
+
+* Make `Atom` comparable with the same kind (thanks @glassbead0).
+
 ## 0.8.6
 
-* Fix #26 operations with Date, DateTime and Time with Duration (ex. `ISO8601::DateTime.new('2012-07-07T20:20:20Z') - ISO8601::Duration.new('PT10M')`.)
-* Fix #25 accept time components with timezone and only hour component (ex. `ISO8601::Time.new('T10+01:00')`.)
+* Fix #26 operations with Date, DateTime and Time with Duration (e.g. `ISO8601::DateTime.new('2012-07-07T20:20:20Z') - ISO8601::Duration.new('PT10M')`).
+* Fix #25 accept time components with timezone and only hour component (e.g. `ISO8601::Time.new('T10+01:00')`).
 * Fix Docker image for testing and inspecting.
 
 ## 0.8.5
