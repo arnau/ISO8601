@@ -97,6 +97,22 @@ Week dates raise an error when two digit days provied instead of return monday:
     DateTime.new('2014-W15-02')  # => #<Date: 2014-04-07 ((2456755j,0s,0n),+0s,2299161j)>
 
 
+## Compatibility with core classes
+
+Each ISO8601 class has a method `to_*` to convert to its core equivalent:
+
+`ISO8601::DateTime#to_datetime` -> `DateTime` (it actually delegates a couple of
+methods from `DateTime`).  Check `lib/iso8601/date_time.rb:13`.
+
+`ISO8601::Date#to_date` -> `Date` (it actually delegates to a couple of methods
+from `Date`).  Check `lib/iso8601/date.rb:18`
+
+`ISO8601::Time#to_time` -> `Time` (it actually delegates to a couple of methods
+from `Time`).  Check `lib/iso8601/time.rb:15`
+
+`ISO8601::Atom#to_f` -> `Float`, `ISO8601::Atom#to_i` -> `Integer`
+
+
 ## Testing
 
 ### Raw

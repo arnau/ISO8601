@@ -1,6 +1,7 @@
 ## 0.8.7
 
 * Make `Atom` comparable with the same kind (thanks @glassbead0).
+* Fix #18 document interfaces to core date/time classes.
 
 ## 0.8.6
 
