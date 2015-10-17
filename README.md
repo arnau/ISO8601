@@ -105,23 +105,14 @@ Week dates raise an error when two digit days provied instead of return monday:
     $ bundle install
     $ bundle exec rspec
 
-### Docker (experimental)
+### Docker
 
 This way is in an early stage so for now it's only possible to test one Ruby
 version (currently Ruby 2.2.)
 
     # Install Docker
-    $ make build
-    $ make run
-
-### Vagrant (experimental)
-
-This way is in an early stage so for now it's only possible to test one Ruby
-version (currently Ruby 2.2.)
-
-    # Install Vagrant and Virtualbox
-    $ vagrant up mri-2.2
-
+    $ make install
+    $ make test
 
 ## Contributing
 
