@@ -56,20 +56,20 @@ module ISO8601
       atom * factor
     end
     ##
-    # @param [Atom, #to_f] other The contrast to compare against
+    # @param [Atom] other The contrast to compare against
     #
     # @return [-1, 0, 1]
     def <=>(other)
-      return nil if Atom === other && !other.kind_of?(self.class)
-      return nil unless other.respond_to?(:to_f)
+      return nil unless other.kind_of?(self.class)
+
       to_f <=> other.to_f
     end
     ##
-    # @param [Atom, #to_f] other The contrast to compare against
+    # @param [#hash] other The contrast to compare against
     #
     # @return [Boolean]
     def eql?(other)
-      (self == other)
+      (hash == other.hash)
     end
     ##
     # @return [Fixnum]
