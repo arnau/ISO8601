@@ -47,6 +47,21 @@ RSpec.describe ISO8601::Atom do
       expect { ISO8601::Atom.new(1).factor }.to raise_error(NotImplementedError)
     end
   end
+  describe '#<=>' do
+    it "should be comparable to atoms of the same type" do
+      expect(ISO8601::Atom.new(1) <=> ISO8601::Atom.new(1)).to eq(0)
+      expect(ISO8601::Atom.new(1) <=> ISO8601::Atom.new(2)).to eq(-1)
+      expect(ISO8601::Atom.new(2) <=> ISO8601::Atom.new(1)).to eq(1)
+    end
+    it "should not be comparable to atoms of a different type" do
+      expect(ISO8601::Years.new(1) <=> ISO8601::Months.new(1)).to be_nil 
+    end
+    it "should be comparable to numerics" do
+      expect(ISO8601::Atom.new(5) <=> 5).to eq(0)
+      expect(ISO8601::Atom.new(5) <=> 1).to eq(1)
+      expect(ISO8601::Atom.new(5) <=> 10).to eq(-1)
+    end
+  end
 end
 
 describe ISO8601::Years do
