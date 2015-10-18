@@ -134,12 +134,7 @@ version (currently Ruby 2.2.)
 
 [Contributors](https://github.com/arnau/ISO8601/graphs/contributors)
 
-1. Fork it (http://github.com/arnau/ISO8601/fork)
-2. Create your feature branch (git checkout -b features/xyz)
-3. Commit your changes (git commit -am 'Add XYZ')
-4. Push to the branch (git push origin features/xyz)
-5. Create new Pull Request
-
+Please see [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## License
 
