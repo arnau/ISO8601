@@ -17,8 +17,11 @@ module ISO8601
       @atom = atom
       @base = base
     end
+
     attr_reader :atom
+
     attr_reader :base
+
     ##
     # The integer representation
     #
@@ -26,6 +29,7 @@ module ISO8601
     def to_i
       atom.to_i
     end
+
     ##
     # The float representation
     #
@@ -33,6 +37,7 @@ module ISO8601
     def to_f
       atom.to_f
     end
+
     ##
     # Returns the ISO 8601 representation for the atom
     #
@@ -40,6 +45,7 @@ module ISO8601
     def to_s
       (value.zero?) ? '' : "#{value}#{symbol}"
     end
+
     ##
     # The simplest numeric representation. If modulo equals 0 returns an
     # integer else a float.
@@ -48,6 +54,7 @@ module ISO8601
     def value
       (atom % 1).zero? ? atom.to_i : atom
     end
+
     ##
     # The amount of seconds
     #
@@ -55,15 +62,17 @@ module ISO8601
     def to_seconds
       atom * factor
     end
+
     ##
     # @param [Atom] other The contrast to compare against
     #
     # @return [-1, 0, 1]
     def <=>(other)
-      return nil unless other.kind_of?(self.class)
+      return nil unless other.is_a?(self.class)
 
       to_f <=> other.to_f
     end
+
     ##
     # @param [#hash] other The contrast to compare against
     #
@@ -71,11 +80,13 @@ module ISO8601
     def eql?(other)
       (hash == other.hash)
     end
+
     ##
     # @return [Fixnum]
     def hash
       [atom, self.class].hash
     end
+
     ##
     # The atom factor to compute the amount of seconds for the atom
     def factor
@@ -83,6 +94,7 @@ module ISO8601
            "The #factor method should be implemented by each subclass"
     end
   end
+
   ##
   # A Years atom in a {ISO8601::Duration}
   #
@@ -103,16 +115,20 @@ module ISO8601
     #
     # @return [Integer]
     def factor
-      if base.nil?
-        ((365 * 303 + 366 * 97) / 400) * 86400
-      elsif atom.zero?
-        year = (base.year).to_i
-        (::Time.utc(year) - ::Time.utc(base.year))
-      else
-        year = (base.year + atom).to_i
-        (::Time.utc(year) - ::Time.utc(base.year)) / atom
-      end
+      return default_factor if base.nil?
+      return adjusted_time if atom.zero?
+
+      adjusted_time / atom
     end
+
+    def adjusted_time
+      ::Time.utc((base.year + atom).to_i) - ::Time.utc(base.year)
+    end
+
+    def default_factor
+      ((365 * 303 + 366 * 97) / 400) * 86400
+    end
+
     ##
     # The atom symbol.
     #
@@ -121,6 +137,7 @@ module ISO8601
       :Y
     end
   end
+
   ##
   # A Months atom in a {ISO8601::Duration}
   #
@@ -146,6 +163,7 @@ module ISO8601
         calculation
       end
     end
+
     ##
     # The atom symbol.
     #
@@ -188,6 +206,7 @@ module ISO8601
       (::Time.utc(year, month) - ::Time.utc(base.year, base.month)) / atom
     end
   end
+
   ##
   # A Weeks atom in a {ISO8601::Duration}
   class Weeks < ISO8601::Atom
@@ -196,6 +215,7 @@ module ISO8601
     def factor
       604800
     end
+
     ##
     # The atom symbol.
     #
@@ -204,6 +224,7 @@ module ISO8601
       :W
     end
   end
+
   ##
   # The Days atom in a {ISO8601::Duration}
   #
@@ -216,6 +237,7 @@ module ISO8601
     def factor
       86400
     end
+
     ##
     # The atom symbol.
     #
@@ -224,6 +246,7 @@ module ISO8601
       :D
     end
   end
+
   ##
   # The Hours atom in a {ISO8601::Duration}
   class Hours < ISO8601::Atom
@@ -232,6 +255,7 @@ module ISO8601
     def factor
       3600
     end
+
     ##
     # The atom symbol.
     #
@@ -240,6 +264,7 @@ module ISO8601
       :H
     end
   end
+
   ##
   # The Minutes atom in a {ISO8601::Duration}
   class Minutes < ISO8601::Atom
@@ -248,6 +273,7 @@ module ISO8601
     def factor
       60
     end
+
     ##
     # The atom symbol.
     #
@@ -256,6 +282,7 @@ module ISO8601
       :M
     end
   end
+
   ##
   # The Seconds atom in a {ISO8601::Duration}
   #
@@ -268,6 +295,7 @@ module ISO8601
     def factor
       1
     end
+
     ##
     # The atom symbol.
     #

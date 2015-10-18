@@ -25,6 +25,7 @@ module ISO8601
       @date_time = parse(date_time)
       @second = @date_time.second + @date_time.second_fraction.to_f.round(1)
     end
+
     ##
     # Addition
     #
@@ -34,6 +35,7 @@ module ISO8601
 
       self.class.new(moment.strftime('%Y-%m-%dT%H:%M:%S.%N%:z'))
     end
+
     ##
     # Substraction
     #
@@ -43,24 +45,28 @@ module ISO8601
 
       self.class.new(moment.strftime('%Y-%m-%dT%H:%M:%S.%N%:z'))
     end
+
     ##
     # Converts DateTime to a formated string
     def to_s
-      second_format = (second % 1).zero? ? '%02d' % second : '%04.1f' % second
+      second_format = format((second % 1).zero? ? '%02d' : '%04.1f', second)
 
-      "%04d-%02d-%02dT%02d:%02d:#{second_format}#{zone}" % atoms
+      format("%04d-%02d-%02dT%02d:%02d:#{second_format}#{zone}", *atoms)
     end
+
     ##
     # Converts DateTime to an array of atoms.
     def to_a
       [year, month, day, hour, minute, second, zone]
     end
     alias_method :atoms, :to_a
+
     ##
     # Converts DateTime to a floating point number of seconds since the Epoch.
     def to_f
       to_time.to_f
     end
+
     ##
     # @param [#hash] other The contrast to compare against
     #
@@ -68,6 +74,7 @@ module ISO8601
     def ==(other)
       (hash == other.hash)
     end
+
     ##
     # @param [#hash] other The contrast to compare against
     #
@@ -75,6 +82,7 @@ module ISO8601
     def eql?(other)
       (hash == other.hash)
     end
+
     ##
     # @return [Fixnum]
     def hash
@@ -106,6 +114,7 @@ module ISO8601
 
       ::DateTime.new(*(date_atoms + time_atoms).compact)
     end
+
     ##
     # Validates the date has the right pattern.
     #
@@ -122,6 +131,7 @@ module ISO8601
 
       date.atoms << date.separator
     end
+
     ##
     # @return [Array<String, nil>]
     def parse_time(input)
@@ -141,11 +151,12 @@ module ISO8601
 
       true
     end
+
     ##
     # If time is provided date must use a complete representation
     def valid_representation?(date, time)
       year, month, day = date
-      hour, _ = time
+      hour = time.first
 
       date.nil? || !(!year.nil? && (month.nil? || day.nil?) && !hour.nil?)
     end

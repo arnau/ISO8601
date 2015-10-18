@@ -46,10 +46,10 @@ RSpec.describe ISO8601::Duration do
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', ISO8601::DateTime.new('2010-01-01')) }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', '2010-01-01') }.to raise_error(ISO8601::Errors::TypeError)
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', 2010) }.to raise_error(ISO8601::Errors::TypeError)
-    expect {
+    expect do
       d = ISO8601::Duration.new('P1Y1M1DT1H1M1S', ISO8601::DateTime.new('2010-01-01'))
       d.base = 2012
-    }.to raise_error(ISO8601::Errors::TypeError)
+    end.to raise_error(ISO8601::Errors::TypeError)
   end
 
   it "should return a Duration instance from a Numeric input" do
@@ -261,7 +261,6 @@ RSpec.describe ISO8601::Duration do
       expect(ISO8601::Duration.new('PT1H').eql? ISO8601::Duration.new('PT1H')).to be_truthy
       expect(ISO8601::Duration.new('PT1H').eql? ISO8601::Duration.new('PT60M')).to be_falsy
     end
-
   end
 
   describe '#hash' do

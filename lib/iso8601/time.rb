@@ -17,12 +17,15 @@ module ISO8601
       :to_time, :to_date, :to_datetime,
       :hour, :minute, :zone
     )
+
     ##
     # The separator used in the original ISO 8601 string.
     attr_reader :separator
+
     ##
     # The second atom
     attr_reader :second
+
     ##
     # The original atoms
     attr_reader :atoms
@@ -37,6 +40,7 @@ module ISO8601
       @time = compose(@atoms, @base)
       @second = @time.second + @time.second_fraction.to_f.round(1)
     end
+
     ##
     # @param [#hash] other The contrast to compare against
     #
@@ -44,6 +48,7 @@ module ISO8601
     def ==(other)
       (hash == other.hash)
     end
+
     ##
     # @param [#hash] other The contrast to compare against
     #
@@ -51,11 +56,13 @@ module ISO8601
     def eql?(other)
       (hash == other.hash)
     end
+
     ##
     # @return [Fixnum]
     def hash
       [atoms, self.class].hash
     end
+
     ##
     # Forwards the time the given amount of seconds.
     #
@@ -68,6 +75,7 @@ module ISO8601
 
       self.class.new(moment.strftime('T%H:%M:%S.%L%:z'), base)
     end
+
     ##
     # Backwards the date the given amount of seconds.
     #
@@ -80,13 +88,15 @@ module ISO8601
 
       self.class.new(moment.strftime('T%H:%M:%S.%L%:z'), base)
     end
+
     ##
     # Converts self to a time component representation.
     def to_s
-      second_format = (second % 1).zero? ? '%02d' % second : '%04.1f' % second
+      second_format = format((second % 1).zero? ? '%02d' : '%04.1f', second)
 
-      "T%02d:%02d:#{second_format}#{zone}" % atoms
+      format("T%02d:%02d:#{second_format}#{zone}", *atoms)
     end
+
     ##
     # Converts self to an array of atoms.
     def to_a
@@ -104,30 +114,47 @@ module ISO8601
     #
     # @return [Array<Integer, Float>]
     def atomize(input)
-      _, time, zone = /^T?(.+?)(Z|[+-].+)?$/.match(input).to_a
+      _, time, zone = parse_timezone(input)
+      _, hour, separator, minute, second = parse_time(time)
 
-      _, hour, separator, minute, second = /^(?:
+      fail ISO8601::Errors::UnknownPattern,
+           @original if hour.nil?
+
+      @separator = separator
+      require_separator = require_separator(minute)
+
+      hour = hour.to_i
+      minute = minute.to_i
+      second = parse_second(second)
+
+      atoms = [hour, minute, second, zone].compact
+
+      fail ISO8601::Errors::UnknownPattern,
+           @original unless valid_zone?(zone, require_separator)
+
+      atoms
+    end
+
+    def require_separator(input)
+      !input.nil?
+    end
+
+    def parse_timezone(timezone)
+      /^T?(.+?)(Z|[+-].+)?$/.match(timezone).to_a
+    end
+
+    def parse_time(time)
+      /^(?:
         (\d{2})(:?)(\d{2})\2(\d{2}(?:[.,]\d+)?) |
         (\d{2})(:?)(\d{2}) |
         (\d{2})
       )$/x.match(time).to_a.compact
-
-      fail ISO8601::Errors::UnknownPattern, @original if hour.nil?
-
-      @separator = separator
-      require_separator = !minute.nil?
-
-      hour = hour.to_i
-      minute = minute.to_i
-      second = second.nil? ? 0.0 : second.tr(',', '.').to_f
-
-      atoms = [hour, minute, second, zone].compact
-
-
-      fail ISO8601::Errors::UnknownPattern, @original unless valid_zone?(zone, require_separator)
-
-      atoms
     end
+
+    def parse_second(second)
+      second.nil? ? 0.0 : second.tr(',', '.').to_f
+    end
+
     ##
     # @param [String] zone The timezone offset as Z or +-hh[:mm].
     # @param [Boolean] require_separator Flag to determine if the separator
@@ -138,12 +165,13 @@ module ISO8601
       _, offset, separator = zone_regexp.match(zone).to_a.compact
 
       wrong_pattern = !zone.nil? && offset.nil?
-      if (require_separator)
+      if require_separator
         invalid_separators = zone.to_s.match(/^[+-]\d{2}:?\d{2}$/) && (@separator != separator)
       end
 
       !(wrong_pattern || invalid_separators)
     end
+
     ##
     # Wraps ::DateNew.new to play nice with ArgumentError.
     #

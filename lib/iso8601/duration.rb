@@ -45,16 +45,19 @@ module ISO8601
       @atoms = atomize(@pattern)
       @base = validate_base(base)
     end
+
     ##
     # Raw atoms result of parsing the given pattern.
     #
     # @return [Hash<Float>]
     attr_reader :atoms
+
     ##
     # Datetime base.
     #
     # @return [ISO8601::DateTime, nil]
     attr_reader :base
+
     ##
     # Assigns a new base datetime
     #
@@ -63,15 +66,18 @@ module ISO8601
       @base = validate_base(value)
       @base
     end
+
     ##
     # @return [String] The string representation of the duration
     attr_reader :pattern
     alias_method :to_s, :pattern
+
     ##
     # @return [ISO8601::Years] The years of the duration
     def years
       ISO8601::Years.new(atoms[:years], base)
     end
+
     ##
     # @return [ISO8601::Months] The months of the duration
     def months
@@ -79,41 +85,49 @@ module ISO8601
       month_base = base.nil? ? nil : base + years.to_seconds
       ISO8601::Months.new(atoms[:months], month_base)
     end
+
     ##
     # @return [ISO8601::Weeks] The weeks of the duration
     def weeks
       ISO8601::Weeks.new(atoms[:weeks], base)
     end
+
     ##
     # @return [ISO8601::Days] The days of the duration
     def days
       ISO8601::Days.new(atoms[:days], base)
     end
+
     ##
     # @return [ISO8601::Hours] The hours of the duration
     def hours
       ISO8601::Hours.new(atoms[:hours], base)
     end
+
     ##
     # @return [ISO8601::Minutes] The minutes of the duration
     def minutes
       ISO8601::Minutes.new(atoms[:minutes], base)
     end
+
     ##
     # @return [ISO8601::Seconds] The seconds of the duration
     def seconds
       ISO8601::Seconds.new(atoms[:seconds], base)
     end
+
     ##
     # The Integer representation of the duration sign.
     #
     # @return [Integer]
     attr_reader :sign
+
     ##
     # @return [ISO8601::Duration] The absolute representation of the duration
     def abs
       self.class.new(pattern.sub(/^[-+]/, ''), base)
     end
+
     ##
     # Addition
     #
@@ -125,6 +139,7 @@ module ISO8601
       compare_bases(other)
       seconds_to_iso(to_seconds + other.to_seconds)
     end
+
     ##
     # Substraction
     #
@@ -136,6 +151,7 @@ module ISO8601
       compare_bases(other)
       seconds_to_iso(to_seconds - other.to_seconds)
     end
+
     ##
     # @param [ISO8601::Duration] other The duration to compare
     #
@@ -145,6 +161,7 @@ module ISO8601
       compare_bases(other)
       (to_seconds == other.to_seconds)
     end
+
     ##
     # @param [ISO8601::Duration] other The duration to compare
     #
@@ -152,11 +169,13 @@ module ISO8601
     def eql?(other)
       (hash == other.hash)
     end
+
     ##
     # @return [Fixnum]
     def hash
       [atoms.values, self.class].hash
     end
+
     ##
     # Converts original input into  a valid ISO 8601 duration pattern.
     #
@@ -164,22 +183,26 @@ module ISO8601
     def to_pattern
       (@original.is_a? Numeric) ? "PT#{@original}S" : @original
     end
+
     ##
     # @return [Numeric] The duration in seconds
     def to_seconds
       atoms = [years, months, weeks, days, hours, minutes, seconds]
       atoms.map(&:to_seconds).reduce(&:+)
     end
+
     ##
     # @return [Numeric] The duration in days
     def to_days
       (to_seconds / 86400)
     end
+
     ##
     # @return [Integer] The integer part of the duration in seconds
     def to_i
       to_seconds.to_i
     end
+
     ##
     # @return [Float] The duration in seconds coerced to float
     def to_f
@@ -205,7 +228,35 @@ module ISO8601
     #
     # @return [Hash<Float>]
     def atomize(input)
-      duration = input.match(/^
+      duration = parse(input) || fail(ISO8601::Errors::UnknownPattern, input)
+
+      valid_pattern?(duration)
+
+      @sign = sign_to_i(duration[:sign])
+
+      components = parse_tokens(duration)
+      components.delete(:time) # clean time capture
+
+      valid_fractions?(components.values)
+
+      components
+    end
+
+    def parse_tokens(tokens)
+      components = tokens.names.zip(tokens.captures).map! do |k, v|
+        value = v.nil? ? v : v.tr(',', '.')
+        [k.to_sym, sign * value.to_f]
+      end
+
+      Hash[components]
+    end
+
+    def sign_to_i(sign)
+      (sign == '-') ? -1 : 1
+    end
+
+    def parse(input)
+      input.match(/^
         (?<sign>\+|-)?
         P(?:
           (?:
@@ -220,23 +271,9 @@ module ISO8601
           ) |
           (?<weeks>\d+(?:[.,]\d+)?W)
         ) # Duration
-      $/x) || fail(ISO8601::Errors::UnknownPattern, input)
-
-      valid_pattern?(duration)
-
-      @sign = (duration[:sign] == '-') ? -1 : 1
-
-      components = duration.names.zip(duration.captures).map! do |k, v|
-        value = v.nil? ? v : v.tr(',', '.')
-        [k.to_sym, sign * value.to_f]
-      end
-      components = Hash[components]
-      components.delete(:time) # clean time capture
-
-      valid_fractions?(components.values)
-
-      components
+      $/x)
     end
+
     ##
     # @param [Numeric] value The seconds to promote
     #
@@ -279,18 +316,20 @@ module ISO8601
     end
 
     def valid_pattern?(components)
-      date = [
-        components[:years], components[:months], components[:days]
-      ]
-      time = [
-        components[:hours], components[:minutes], components[:seconds]
-      ].compact
+      date = [components[:years],
+              components[:months],
+              components[:days]]
+      time = [components[:hours],
+              components[:minutes],
+              components[:seconds]].compact
       weeks = components[:weeks]
       all = [date, time, weeks].flatten.compact
 
       missing_time = (weeks.nil? && !components[:time].nil? && time.empty?)
       empty = missing_time || all.empty?
-      fail ISO8601::Errors::UnknownPattern, @pattern if empty
+
+      fail ISO8601::Errors::UnknownPattern,
+           @pattern if empty
     end
 
     def valid_fractions?(values)

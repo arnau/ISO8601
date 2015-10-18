@@ -20,12 +20,15 @@ module ISO8601
       :to_s, :to_time, :to_date, :to_datetime,
       :year, :month, :day, :wday
     )
+
     ##
     # The original atoms
     attr_reader :atoms
+
     ##
     # The separator used in the original ISO 8601 string.
     attr_reader :separator
+
     ##
     # @param [String] input The date pattern
     def initialize(input)
@@ -33,6 +36,7 @@ module ISO8601
       @atoms = atomize(input)
       @date = compose(@atoms)
     end
+
     ##
     # The calendar week number (1-53)
     #
@@ -40,6 +44,7 @@ module ISO8601
     def week
       @date.cweek
     end
+
     ##
     # Forwards the date the given amount of days.
     #
@@ -50,6 +55,7 @@ module ISO8601
       other = other.to_days if other.respond_to?(:to_days)
       ISO8601::Date.new((@date + other).iso8601)
     end
+
     ##
     # Backwards the date the given amount of days.
     #
@@ -60,11 +66,13 @@ module ISO8601
       other = other.to_days if other.respond_to?(:to_days)
       ISO8601::Date.new((@date - other).iso8601)
     end
+
     ##
     # Converts self to an array of atoms.
     def to_a
       [year, month, day]
     end
+
     ##
     # @param [#hash] other The contrast to compare against
     #
@@ -72,6 +80,7 @@ module ISO8601
     def ==(other)
       (hash == other.hash)
     end
+
     ##
     # @param [#hash] other The contrast to compare against
     #
@@ -79,6 +88,7 @@ module ISO8601
     def eql?(other)
       (hash == other.hash)
     end
+
     ##
     # @return [Fixnum]
     def hash
@@ -103,14 +113,31 @@ module ISO8601
     #
     # @return [Array<Integer>]
     def atomize(input)
-      week_date = /^([+-]?)\d{4}(-?)W\d{2}(?:\2\d)?$/.match(input)
+      week_date = parse_weekdate(input)
       return atomize_week_date(input, week_date[2], week_date[1]) unless week_date.nil?
 
-      ordinal_regexp = /^([+-]?)(\d{4})(-?)(\d{3})$/
-      _, sign, year, separator, day = ordinal_regexp.match(input).to_a.compact
+      _, sign, year, separator, day = parse_ordinal(input)
       return atomize_ordinal(year, day, separator, sign) unless year.nil?
 
-      _, year, separator, month, day = /^
+      _, year, separator, month, day = parse_date(input)
+
+      fail ISO8601::Errors::UnknownPattern, @original if year.nil?
+
+      @separator = separator
+
+      [year, month, day].compact.map(&:to_i)
+    end
+
+    def parse_weekdate(input)
+      /^([+-]?)\d{4}(-?)W\d{2}(?:\2\d)?$/.match(input)
+    end
+
+    def parse_ordinal(input)
+      /^([+-]?)(\d{4})(-?)(\d{3})$/.match(input).to_a.compact
+    end
+
+    def parse_date(input)
+      /^
         ([+-]?\d{4})   # YYYY
         (?:
           (-?)(\d{2})  # YYYY-MM
@@ -119,13 +146,8 @@ module ISO8601
           )?
         )?
       $/x.match(input).to_a.compact
-
-      fail ISO8601::Errors::UnknownPattern, @original if year.nil?
-
-      @separator = separator
-
-      [year, month, day].compact.map(&:to_i)
     end
+
     ##
     # Parses a week date (YYYY-Www-D, YYYY-Www) and returns its atoms.
     #
@@ -141,6 +163,7 @@ module ISO8601
 
       [sign * date.year, date.month, date.day]
     end
+
     ##
     # Parses an ordinal date (YYYY-DDD) and returns its atoms.
     #
@@ -157,6 +180,7 @@ module ISO8601
 
       [sign * date.year, date.month, date.day]
     end
+
     ##
     # Wraps ::Date.parse to play nice with ArgumentError.
     #
@@ -168,6 +192,7 @@ module ISO8601
     rescue ArgumentError
       raise ISO8601::Errors::RangeError, @original
     end
+
     ##
     # Wraps ::Date.new to play nice with ArgumentError.
     #
