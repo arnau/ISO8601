@@ -19,14 +19,8 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 8
 
-Style/Blocks:
-  Enabled: false
-
 Style/NumericLiterals:
   MinDigits: 10
-
-Style/RegexpLiteral:
-  MaxSlashes: 0
 
 Style/StringLiterals:
   Enabled: false

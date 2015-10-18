@@ -29,8 +29,11 @@ test:
 	@$(call task)
 ##
 # Open Ruby repl
-shell:
+repl:
 	@$(call task, pry -r $(internal_path)/lib/iso8601)
+
+shell:
+	@$(call task, bash)
 ##
 # Build docker image
 build:
@@ -50,6 +53,9 @@ git-tag:
 
 version:
 	@echo "$(VERSION)"
+
+check:
+	@$(call task, bundle exec rubocop lib spec)
 
 
 define task
