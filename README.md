@@ -14,7 +14,7 @@ times) standard.
 
 ## Supported versions
 
-* MRI 1.9.3, 2.0, 2.1, 2.2
+* MRI 2.x
 * RBX 2
 
 Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md) if you are upgrading from an older version.

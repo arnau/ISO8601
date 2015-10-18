@@ -18,8 +18,27 @@ Gem::Specification.new do |s|
   EOD
   s.license = 'MIT'
   s.rubyforge_project = 'iso8601'
-
-  s.files = `git ls-files`.split("\n")
+  s.files = %W(CHANGELOG.md
+               CONTRIBUTING.md
+               Gemfile
+               LICENSE
+               README.md
+               Rakefile
+               iso8601.gemspec
+               lib/iso8601.rb
+               lib/iso8601/atoms.rb
+               lib/iso8601/date.rb
+               lib/iso8601/date_time.rb
+               lib/iso8601/duration.rb
+               lib/iso8601/errors.rb
+               lib/iso8601/time.rb
+               lib/iso8601/version.rb
+               spec/iso8601/atoms_spec.rb
+               spec/iso8601/date_spec.rb
+               spec/iso8601/date_time_spec.rb
+               spec/iso8601/duration_spec.rb
+               spec/iso8601/time_spec.rb
+               spec/spec_helper.rb)
   s.test_files = s.files.grep(%r{^(spec|features)/})
   s.require_paths = ['lib']
 

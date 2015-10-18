@@ -26,7 +26,11 @@ bundle install
 Add your code and tests and check it passes:
 
 ```sh
-make test
+make test  # mri, rbx, jruby
+# or
+make mri-test
+make rbx-test
+make jruby-test
 ```
 
 Or raw style

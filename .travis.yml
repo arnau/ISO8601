@@ -1,19 +1,10 @@
+sudo: false
 language: ruby
 rvm:
-  - 1.9.3
   - 2.0.0
   - 2.1.2
   - 2.2.0
   - ruby-head
   - rbx-2
-  - jruby-head
+  - jruby-19mode
 script: bundle exec rspec spec
-matrix:
-  include:
-    - rvm: jruby
-      env: JRUBY_OPTS='--2.0'
-  allow_failures:
-    - rvm: jruby-head
-    - rvm: ruby-head
-    - rvm: rbx-2
-  fast_finish: true

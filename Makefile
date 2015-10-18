@@ -1,4 +1,3 @@
-TAG ?= latest
 EXTERNAL_PATH ?= $(PWD)
 GEM_CREDENTIALS ?= $(HOME)/.gem/credentials
 VERSION ?= $(shell $(CAT) $(EXTERNAL_PATH)/lib/iso8601/version.rb \
@@ -14,50 +13,20 @@ GIT ?= git
 GREP ?= grep
 TR ?= tr
 
-image_name = arnau/iso8601:$(TAG)
+image_name = arnau/iso8601
 internal_path = /usr/src/iso8601
 volumes = -v $(EXTERNAL_PATH):$(internal_path) \
           -v $(GEM_CREDENTIALS):/root/.gem/credentials
 
-install: build
-##
-# Release gem to Rubygems. VERSION required.
-release: gem-build gem-push git-tag
-##
-# Run unit tests
-test:
-	@$(call task)
-##
-# Open Ruby repl
-repl:
-	@$(call task, pry -r $(internal_path)/lib/iso8601)
+include mk/*.mk
 
-shell:
-	@$(call task, bash)
-##
-# Build docker image
-build:
-	@$(DOCKER) build -t $(image_name) .
-##
-# Build gem file
-gem-build:
-	@$(call task, rake build)
-##
-# Push gem file to Rubygems
-gem-push:
-	@$(call task, gem push $(internal_path)/pkg/iso8601-$(VERSION).gem)
-##
-# Tag version to git
-git-tag:
-	@$(GIT) tag v$(VERSION)
+default: build
 
-version:
-	@echo "$(VERSION)"
+test: mri-test rbx-test jruby-test
+install: mri-pull rbx-pull jruby-pull
+clean: mri-clean rbx-clean jruby-clean
+build: mri-build rbx-build jruby-build
 
-check:
-	@$(call task, bundle exec rubocop lib spec)
-
-
-define task
-	$(DOCKER_TASK) $(volumes) $(image_name) $1
-endef
+repl: mri-repl
+shell: mri-shell
+check: mri-check

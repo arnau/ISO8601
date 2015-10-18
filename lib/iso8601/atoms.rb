@@ -12,8 +12,10 @@ module ISO8601
     # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
     #   the atom factor.
     def initialize(atom, base = nil)
-      fail TypeError, "The atom argument for #{inspect} should be a Numeric value." unless atom.is_a?(Numeric)
-      fail TypeError, "The base argument for #{inspect} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
+      fail ISO8601::Errors::TypeError,
+           "The atom argument for #{self.class} should be a Numeric value." unless atom.is_a?(Numeric)
+      fail ISO8601::Errors::TypeError,
+           "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
       @atom = atom
       @base = base
     end
