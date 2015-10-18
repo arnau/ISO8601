@@ -2,8 +2,8 @@ require 'spec_helper'
 
 RSpec.describe ISO8601::Atom do
   it "should raise a TypeError when receives anything but a Numeric value" do
-    expect { ISO8601::Atom.new('1') }.to raise_error
-    expect { ISO8601::Atom.new(true) }.to raise_error
+    expect { ISO8601::Atom.new('1') }.to raise_error(TypeError)
+    expect { ISO8601::Atom.new(true) }.to raise_error(TypeError)
     expect { ISO8601::Atom.new(-1.1) }.to_not raise_error
     expect { ISO8601::Atom.new(-1) }.to_not raise_error
     expect { ISO8601::Atom.new(0) }.to_not raise_error
@@ -13,9 +13,9 @@ RSpec.describe ISO8601::Atom do
   it "should raise a TypeError when receives anything but a ISO8601::DateTime instance or nil" do
     expect { ISO8601::Atom.new(1, ISO8601::DateTime.new('2012-07-07')) }.to_not raise_error
     expect { ISO8601::Atom.new(1, nil) }.to_not raise_error
-    expect { ISO8601::Atom.new(1, true) }.to raise_error
-    expect { ISO8601::Atom.new(1, 'foo') }.to raise_error
-    expect { ISO8601::Atom.new(1, 10) }.to raise_error
+    expect { ISO8601::Atom.new(1, true) }.to raise_error(TypeError)
+    expect { ISO8601::Atom.new(1, 'foo') }.to raise_error(TypeError)
+    expect { ISO8601::Atom.new(1, 10) }.to raise_error(TypeError)
   end
   it "should create a new atom" do
     expect(ISO8601::Atom.new(-1)).to be_an_instance_of(ISO8601::Atom)
