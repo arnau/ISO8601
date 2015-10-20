@@ -115,20 +115,27 @@ from `Time`).  Check `lib/iso8601/time.rb:15`
 
 ## Testing
 
+
+### Docker
+
+    # Install Docker
+    $ make install
+    $ make test
+
+You can alse target specific runtimes:
+
+    $ make mri-test
+    $ make rbx-test
+    $ make jruby-test
+
 ### Raw
+
+The old fashion way:
 
     # Install a Ruby flavour
     $ bundle install
     $ bundle exec rspec
 
-### Docker
-
-This way is in an early stage so for now it's only possible to test one Ruby
-version (currently Ruby 2.2.)
-
-    # Install Docker
-    $ make install
-    $ make test
 
 ## Contributing
 
