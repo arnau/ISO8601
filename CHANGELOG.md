@@ -1,3 +1,7 @@
+## 0.9.0 (wip)
+
+* Allow `ISO8601::Duration` to perform operations with `Numeric` (thanks @Angelmmiguel).
+
 ## 0.8.7
 
 * Make `Atom` comparable with the same kind (thanks @glassbead0).
