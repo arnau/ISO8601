@@ -136,8 +136,7 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def +(other)
-      other_seconds = fetch_seconds(other)
-      seconds_to_iso(to_seconds + other_seconds)
+      seconds_to_iso(to_seconds + fetch_seconds(other))
     end
 
     ##
@@ -148,8 +147,7 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def -(other)
-      other_seconds = fetch_seconds(other)
-      seconds_to_iso(to_seconds - other_seconds)
+      seconds_to_iso(to_seconds - fetch_seconds(other))
     end
 
     ##
@@ -158,8 +156,7 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
     def ==(other)
-      other_seconds = fetch_seconds(other)
-      (to_seconds == other_seconds)
+      (to_seconds == fetch_seconds(other))
     end
 
     ##
