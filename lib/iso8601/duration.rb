@@ -341,12 +341,16 @@ module ISO8601
       fail ISO8601::Errors::DurationBaseError, other if base != other.base
     end
 
-    #
+    ##
     # Fetch the number of seconds of another element.
     #
-    # == Parameters:
-    # other::
-    #   ISO8601::Duration instance or Fixnum instance
+    # @param [ISO8601::Duration or Numeric] other Instance of a class to fetch seconds.
+    #
+    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
+    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
+    #   ISO8601::Duration or Numeric classes
+    #
+    # @return [Float] Number of seconds of other param Object
     #
     def fetch_seconds(other)
       if other.is_a? ISO8601::Duration
