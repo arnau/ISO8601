@@ -136,8 +136,8 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def +(other)
-      compare_bases(other)
-      seconds_to_iso(to_seconds + other.to_seconds)
+      other_seconds = fetch_seconds(other)
+      seconds_to_iso(to_seconds + other_seconds)
     end
 
     ##
@@ -148,8 +148,8 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def -(other)
-      compare_bases(other)
-      seconds_to_iso(to_seconds - other.to_seconds)
+      other_seconds = fetch_seconds(other)
+      seconds_to_iso(to_seconds - other_seconds)
     end
 
     ##
@@ -158,8 +158,8 @@ module ISO8601
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
     def ==(other)
-      compare_bases(other)
-      (to_seconds == other.to_seconds)
+      other_seconds = fetch_seconds(other)
+      (to_seconds == other_seconds)
     end
 
     ##
@@ -342,6 +342,24 @@ module ISO8601
 
     def compare_bases(other)
       fail ISO8601::Errors::DurationBaseError, other if base != other.base
+    end
+
+    #
+    # Fetch the number of seconds of another element.
+    #
+    # == Parameters:
+    # other::
+    #   ISO8601::Duration instance or Fixnum instance
+    #
+    def fetch_seconds(other)
+      if other.is_a? ISO8601::Duration
+        compare_bases(other)
+        other.to_seconds
+      elsif other.is_a? Numeric
+        other.to_f
+      else
+        fail ISO8601::Errors::TypeError, other
+      end
     end
   end
 end
