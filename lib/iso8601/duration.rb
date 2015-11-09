@@ -344,7 +344,8 @@ module ISO8601
     ##
     # Fetch the number of seconds of another element.
     #
-    # @param [ISO8601::Duration or Numeric] other Instance of a class to fetch seconds.
+    # @param [ISO8601::Duration, Numeric] other Instance of a class to fetch
+    #   seconds.
     #
     # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
