@@ -93,6 +93,16 @@ RSpec.describe ISO8601::Duration do
       expect((ISO8601::Duration.new('P1Y1M1DT1H1M1S') + ISO8601::Duration.new('PT10S')).to_s).to eq('P1Y1M1DT1H1M11S')
       expect(ISO8601::Duration.new('P1Y1M1DT1H1M1S') + ISO8601::Duration.new('PT10S')).to be_an_instance_of(ISO8601::Duration)
     end
+
+    it "should perform addition operation with Numeric class" do
+      day = 60 * 60 * 24
+      expect((ISO8601::Duration.new('P11Y1M1DT1H1M1S') + day).to_s).to eq('P11Y1M2DT1H1M1S')
+      expect((ISO8601::Duration.new('P11Y1M1DT1H1M1S') + (2 * day).to_f).to_s).to eq('P11Y1M3DT1H1M1S')
+    end
+
+    it "should raise ISO8601::Errors::TypeError when other object is not Numeric or ISO8601::Duration" do
+      expect { ISO8601::Duration.new('PT1H') + 'wololo' }.to raise_error(ISO8601::Errors::TypeError)
+    end
   end
 
   describe '#-' do
@@ -108,6 +118,13 @@ RSpec.describe ISO8601::Duration do
       expect((ISO8601::Duration.new('PT12S') - ISO8601::Duration.new('PT1S')).to_s).to eq('PT11S')
       expect((ISO8601::Duration.new('PT1S') - ISO8601::Duration.new('PT12S')).to_s).to eq('-PT11S')
       expect((ISO8601::Duration.new('PT1S') - ISO8601::Duration.new('-PT12S')).to_s).to eq('PT13S')
+    end
+
+    it "should perform subtract operation with Numeric class" do
+      day = 60 * 60 * 24
+      minute = 60
+      expect((ISO8601::Duration.new('P11Y1M1DT1H1M1S') - day).to_s).to eq('P11Y1MT1H1M1S')
+      expect((ISO8601::Duration.new('P11Y1M1DT1H1M1S') - (2 * minute).to_f).to_s).to eq('P11Y1M1DT59M1S')
     end
   end
 
@@ -249,6 +266,12 @@ RSpec.describe ISO8601::Duration do
     it "should equal by computed value" do
       expect(ISO8601::Duration.new('PT1H') == ISO8601::Duration.new('PT1H')).to be_truthy
       expect(ISO8601::Duration.new('PT1H') == ISO8601::Duration.new('PT60M')).to be_truthy
+    end
+
+    it "should equal by a Numeric value" do
+      hour = 60 * 60
+      expect(ISO8601::Duration.new('PT1H') == hour).to be_truthy
+      expect(ISO8601::Duration.new('PT2H') == hour).to be_falsy
     end
   end
 

@@ -36,8 +36,5 @@ module ISO8601
         super("Wrong base for #{duration} duration.")
       end
     end
-
-    class TypeError < StandardError
-    end
   end
 end
