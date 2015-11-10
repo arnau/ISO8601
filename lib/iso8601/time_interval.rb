@@ -110,6 +110,80 @@ module ISO8601
       end
     end
 
+    alias_method :to_f, :size
+
+    ##
+    # Compare the TimeIntervals based on the size of the interval
+    #
+    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    #   of seconds.
+    #
+    # @return [Boolean]
+    def >(other)
+      (size > fetch_seconds(other))
+    end
+
+    ##
+    # Compare the TimeIntervals based on the size of the interval
+    #
+    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    #   of seconds.
+    #
+    # @return [Boolean]
+    def >=(other)
+      (size > fetch_seconds(other) || size == fetch_seconds(other))
+    end
+
+    ##
+    # Compare the TimeIntervals based on the size of the interval
+    #
+    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    #   of seconds.
+    #
+    # @return [Boolean]
+    def <(other)
+      (size < fetch_seconds(other))
+    end
+
+    ##
+    # Compare the TimeIntervals based on the size of the interval
+    #
+    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    #   of seconds.
+    #
+    # @return [Boolean]
+    def <=(other)
+      (size < fetch_seconds(other) || size == fetch_seconds(other))
+    end
+
+    ##
+    # Compare the TimeIntervals based on the size of the interval
+    #
+    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    #   of seconds.
+    #
+    # @return [Boolean]
+    def ==(other)
+      (size == fetch_seconds(other))
+    end
+
+    ##
+    # Compare the TimeIntervals based on the Hash of the objects
+    #
+    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    #   of seconds.
+    #
+    # @return [Boolean]
+    def eql?(other)
+      (hash == other.hash)
+    end
+
+    ##
+    # @return [Fixnum]
+    def hash
+      [@start_time.hash, @end_time.hash].hash
+    end
+
     private
 
     ##
@@ -184,6 +258,25 @@ module ISO8601
       end
       # Return values
       [time, type]
+    end
+
+    ##
+    # Fetch the number of seconds of another element.
+    #
+    # @param [ISO8601::TimeInterval, Numeric] other Instance of a class to fetch
+    #   seconds.
+    #
+    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
+    #   ISO8601::TimeInterval or Numeric classes
+    #
+    # @return [Float] Number of seconds of other param Object
+    #
+    def fetch_seconds(other)
+      if other.is_a?(self.class) || other.is_a?(Numeric)
+        other.to_f
+      else
+        fail ISO8601::Errors::TypeError, other
+      end
     end
   end
 end

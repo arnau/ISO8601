@@ -155,6 +155,16 @@ RSpec.describe ISO8601::TimeInterval do
     end
   end
 
+  describe "#original_start_time" do
+    it "should return an instance of original pattern/object" do
+      duration = ISO8601::Duration.new('PT1H')
+      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+
+      expect(ISO8601::TimeInterval.new(duration, datetime).original_start_time).to be_an_instance_of(ISO8601::Duration)
+      expect(ISO8601::TimeInterval.new(datetime, duration).original_start_time).to be_an_instance_of(ISO8601::DateTime)
+    end
+  end
+
   describe "#end_time" do
     it "should return always a ISO8601::DateTime object" do
       duration = ISO8601::Duration.new('PT1H')
@@ -173,6 +183,83 @@ RSpec.describe ISO8601::TimeInterval do
       expect(ISO8601::TimeInterval.new('2010-05-09T09:30:00Z/PT1H').end_time).to eq(end_time)
       expect(ISO8601::TimeInterval.new((end_time - 60 * 60), end_time).end_time).to eq(end_time)
       expect(ISO8601::TimeInterval.new(end_time, duration).end_time).to eq((end_time + 60 * 60))
+    end
+  end
+
+  describe "#original_end_time" do
+    it "should return an instance of original pattern/object" do
+      duration = ISO8601::Duration.new('PT1H')
+      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+
+      expect(ISO8601::TimeInterval.new(duration, datetime).original_end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, duration).original_end_time).to be_an_instance_of(ISO8601::Duration)
+    end
+  end
+
+  describe "compare Time Intervals" do
+    before(:each) do
+      @small = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      @big = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT2H')
+    end
+
+    it "should raise TypeError when compared object is not a ISO8601::TimeInterval or Numeric" do
+      expect { @small < 'Hello!' }.to raise_error(ISO8601::Errors::TypeError)
+      expect { @small > 'Hello!' }.to raise_error(ISO8601::Errors::TypeError)
+      expect { @small == 'Hello!' }.to raise_error(ISO8601::Errors::TypeError)
+    end
+
+    it "should check what interval is bigger" do
+      expect(@small > @big).to be_falsy
+      expect(@big > @small).to be_truthy
+      expect(@small > @small).to be_falsy
+      expect(@small > @small.size).to be_falsy
+      expect(@small > (@small.size + 60 * 60)).to be_falsy
+      expect(@small > (@small.size - 60 * 60)).to be_truthy
+    end
+
+    it "should check if interval is bigger or equal than other" do
+      expect(@small >= @big).to be_falsy
+      expect(@big >= @small).to be_truthy
+      expect(@small >= @small).to be_truthy
+      expect(@small >= @small.size).to be_truthy
+      expect(@small >= (@small.size + 60 * 60)).to be_falsy
+      expect(@small >= (@small.size - 60 * 60)).to be_truthy
+    end
+
+    it "should check what interval is smaller" do
+      expect(@small < @big).to be_truthy
+      expect(@big < @small).to be_falsy
+      expect(@small < @small).to be_falsy
+      expect(@small < @small.size).to be_falsy
+      expect(@small < (@small.size + 60 * 60)).to be_truthy
+      expect(@small < (@small.size - 60 * 60)).to be_falsy
+    end
+
+    it "should check if interval is smaller or equal than other" do
+      expect(@small <= @big).to be_truthy
+      expect(@big <= @small).to be_falsy
+      expect(@small <= (@small.size + 60 * 60)).to be_truthy
+      expect(@small <= (@small.size - 60 * 60)).to be_falsy
+      expect(@small <= @small).to be_truthy
+      expect(@small <= @small.size).to be_truthy
+    end
+
+    it "should check if the intervals are equals" do
+      expect(@small == @small).to be_truthy
+      expect(@small == @small.size).to be_truthy
+      expect(@small == @big).to be_falsy
+      expect(@small == @big.size).to be_falsy
+    end
+  end
+
+  describe "#eql?" do
+    it "should be equal only when start_time and end_time are the same" do
+      interval = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      interval2 = ISO8601::TimeInterval.new('2007-03-01T14:00:00Z/PT1H')
+      interval3 = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+
+      expect(interval.eql?(interval2)).to be_falsy
+      expect(interval.eql?(interval3)).to be_truthy
     end
   end
 end
