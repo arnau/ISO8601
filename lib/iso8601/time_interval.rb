@@ -151,8 +151,11 @@ module ISO8601
     ##
     # Compare the TimeIntervals based on the size of the interval
     #
-    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
     #   of seconds.
+    #
+    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
+    #   ISO8601::TimeInterval or Numeric classes
     #
     # @return [Boolean]
     def >(other)
@@ -162,8 +165,11 @@ module ISO8601
     ##
     # Compare the TimeIntervals based on the size of the interval
     #
-    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
     #   of seconds.
+    #
+    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
+    #   ISO8601::TimeInterval or Numeric classes
     #
     # @return [Boolean]
     def >=(other)
@@ -173,8 +179,11 @@ module ISO8601
     ##
     # Compare the TimeIntervals based on the size of the interval
     #
-    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
     #   of seconds.
+    #
+    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
+    #   ISO8601::TimeInterval or Numeric classes
     #
     # @return [Boolean]
     def <(other)
@@ -184,8 +193,11 @@ module ISO8601
     ##
     # Compare the TimeIntervals based on the size of the interval
     #
-    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
     #   of seconds.
+    #
+    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
+    #   ISO8601::TimeInterval or Numeric classes
     #
     # @return [Boolean]
     def <=(other)
@@ -195,8 +207,11 @@ module ISO8601
     ##
     # Compare the TimeIntervals based on the size of the interval
     #
-    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
+    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
     #   of seconds.
+    #
+    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
+    #   ISO8601::TimeInterval or Numeric classes
     #
     # @return [Boolean]
     def ==(other)
@@ -206,8 +221,7 @@ module ISO8601
     ##
     # Compare the TimeIntervals based on the Hash of the objects
     #
-    # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
-    #   of seconds.
+    # @param [ISO8601::TimeInterval] other TimeInterval instance
     #
     # @return [Boolean]
     def eql?(other)
