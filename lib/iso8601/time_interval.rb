@@ -24,7 +24,7 @@ module ISO8601
     TYPE_DATETIME = :datetime
     TYPE_DURATION = :duration
 
-    attr_reader :start_time, :start_type, :end_time, :end_type, :pattern
+    attr_reader :pattern
 
     ##
     # @param [ISO8601::DateTime, ISO8601::Duration, String] pattern This parameter
@@ -56,6 +56,42 @@ module ISO8601
       end
       # Check classes of initialized elements
       check_times
+    end
+
+    ##
+    # Calculate and return the start time of the interval
+    #
+    # @return [ISO8601::DateTime] start time
+    def start_time
+      return @start_time unless start_duration?
+      # Calculate start_time
+      @end_time - @start_time.to_seconds
+    end
+
+    ##
+    # Return original start time
+    #
+    # @return [ISO8601::DateTime or ISO8601::Duration] start time
+    def original_start_time
+      @start_time
+    end
+
+    ##
+    # Calculate and return the end time of the interval
+    #
+    # @return [ISO8601::DateTime] end time
+    def end_time
+      return @end_time unless end_duration?
+      # Calculate start_time
+      @start_time + @end_time.to_seconds
+    end
+
+    ##
+    # Return original end time
+    #
+    # @return [ISO8601::DateTime or ISO8601::Duration] end time
+    def original_end_time
+      @end_time
     end
 
     ##
