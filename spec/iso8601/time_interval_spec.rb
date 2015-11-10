@@ -133,4 +133,46 @@ RSpec.describe ISO8601::TimeInterval do
       expect(ISO8601::TimeInterval.new(datetime2, datetime).size).to eq(-hour)
     end
   end
+
+  describe "#start_time" do
+    it "should return always a ISO8601::DateTime object" do
+      duration = ISO8601::Duration.new('PT1H')
+      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+
+      expect(ISO8601::TimeInterval.new(duration, datetime).start_time.class).to eq(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, duration).start_time.class).to eq(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, datetime).start_time.class).to eq(ISO8601::DateTime)
+    end
+
+    it "should calculate correctly the start_time" do
+      start_time = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+      duration = ISO8601::Duration.new('PT1H')
+
+      expect(ISO8601::TimeInterval.new('PT1H/2010-05-09T11:30:00Z').start_time).to eq(start_time)
+      expect(ISO8601::TimeInterval.new('2010-05-09T10:30:00Z/PT1H').start_time).to eq(start_time)
+      expect(ISO8601::TimeInterval.new(start_time, (start_time + 60 * 60)).start_time).to eq(start_time)
+      expect(ISO8601::TimeInterval.new(start_time, duration).start_time).to eq(start_time)
+    end
+  end
+
+  describe "#end_time" do
+    it "should return always a ISO8601::DateTime object" do
+      duration = ISO8601::Duration.new('PT1H')
+      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+
+      expect(ISO8601::TimeInterval.new(duration, datetime).end_time.class).to eq(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, duration).end_time.class).to eq(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, datetime).end_time.class).to eq(ISO8601::DateTime)
+    end
+
+    it "should calculate correctly the end_time" do
+      end_time = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+      duration = ISO8601::Duration.new('PT1H')
+
+      expect(ISO8601::TimeInterval.new('PT1H/2010-05-09T10:30:00Z').end_time).to eq(end_time)
+      expect(ISO8601::TimeInterval.new('2010-05-09T09:30:00Z/PT1H').end_time).to eq(end_time)
+      expect(ISO8601::TimeInterval.new((end_time - 60 * 60), end_time).end_time).to eq(end_time)
+      expect(ISO8601::TimeInterval.new(end_time, duration).end_time).to eq((end_time + 60 * 60))
+    end
+  end
 end
