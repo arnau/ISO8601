@@ -113,6 +113,42 @@ module ISO8601
     alias_method :to_f, :size
 
     ##
+    # Check if a given time is inside current TimeInterval
+    #
+    # @param [ISO8601::DateTime, ISO8601::Interval, DateTime] time Object
+    #   to check if it's inside the current interval. For a ISO8601::Interval
+    #   all the interval must be inside.
+    #
+    # @raise [ISO8601::Errors::TypeError] if time param is not a compatible Object
+    #
+    # @return [Boolean]
+    def include?(other)
+      check_date_time(other)
+      if other.is_a?(self.class)
+        # Interval
+        (start_time.to_f < other.start_time.to_f && other.end_time.to_f < end_time.to_f)
+      else
+        # DateTime
+        time_seconds = other.to_time.to_f
+        (start_time.to_f < time_seconds && time_seconds < end_time.to_f)
+      end
+    end
+
+    ##
+    # Check if two intervarls overlap in time
+    #
+    # @param [ISO8601::Interval] interval Another interval to check if they overlap
+    #
+    # @raise [ISO8601::Errors::TypeError] if interval param is not a compatible Object
+    #
+    # @return [Boolean]
+    def overlap?(interval)
+      check_interval(interval)
+      # We check if the start time or end time are inside the interval
+      (include?(interval.start_time) || include?(interval.end_time))
+    end
+
+    ##
     # Compare the TimeIntervals based on the size of the interval
     #
     # @param [ISO8601::TimeInterval or Numeric] Object that we can get the number
@@ -200,6 +236,28 @@ module ISO8601
     # @return [boolean] True if the end_time is a Duration
     def end_duration?
       @end_type == TYPE_DURATION
+    end
+
+    ##
+    # Check if the given argument is a instance of ISO8601::DateTime,
+    # ISO8601::TimeInterval or DateTime.
+    #
+    # @raise [ISO8601::Errors::TypeError]
+    def check_date_time(time)
+      return if time.is_a?(::DateTime) || time.is_a?(ISO8601::DateTime) ||
+                time.is_a?(self.class)
+      fail(ISO8601::Errors::TypeError,
+           'Parameter must be an instance of ISO8601::DateTime, ISO8601::TimeInterval or DateTime')
+    end
+
+    ##
+    # Check if the given argument is a instance of ISO8601::TimeInterval
+    #
+    # @raise [ISO8601::Errors::TypeError]
+    def check_interval(interval)
+      return if interval.is_a?(self.class)
+      fail(ISO8601::Errors::TypeError,
+           'Parameter must be an instance of ISO8601::TimeInterval')
     end
 
     ##
