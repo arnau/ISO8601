@@ -4,17 +4,20 @@ module ISO8601
   # See https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
   #
   # @example
-  #     start = DateTime.new('2014-05-28T19:53Z')
-  #     end = DateTime.new('2014-05-30T19:53Z')
-  #     i = TimeInterval.new(start, end)
-  #     i.start # => '2014-05-28T19:53Z'
-  #     i.end # => '2014-05-30T19:53Z'
-  #     t.difference # => 172800 (Seconds)
+  #     start_time = ISO8601::DateTime.new('2014-05-28T19:53Z')
+  #     end_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
+  #     ti = ISO8601::TimeInterval.new(start_time, end_time)
+  #     ti.size # => 172800.0 (Seconds)
   #
   # @example
-  #     start = ISO8601::Duration.new('P1MT2H')
-  #     end = DateTime.new('2014-05-30T19:53Z')
-  #     i = TimeInterval.new(start, end)
+  #     start_time = ISO8601::Duration.new('P1MT2H')
+  #     end_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
+  #     ti = ISO8601::TimeInterval.new(start_time, end_time)
+  #     ti.size # => 2635200.0 (Seconds)
+  #
+  # @example
+  #     ti = ISO8601::TimeInterval.new('P1MT2H/2014-05-28T19:53Z')
+  #     ti.size # => 2635200.0
   #
   class TimeInterval
     # Define the type of a time
