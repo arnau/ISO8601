@@ -139,9 +139,9 @@ RSpec.describe ISO8601::TimeInterval do
       duration = ISO8601::Duration.new('PT1H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).start_time.class).to eq(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, duration).start_time.class).to eq(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, datetime).start_time.class).to eq(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(duration, datetime).start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, duration).start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, datetime).start_time).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the start_time" do
@@ -160,9 +160,9 @@ RSpec.describe ISO8601::TimeInterval do
       duration = ISO8601::Duration.new('PT1H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).end_time.class).to eq(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, duration).end_time.class).to eq(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, datetime).end_time.class).to eq(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(duration, datetime).end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, duration).end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(datetime, datetime).end_time).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the end_time" do
