@@ -119,18 +119,18 @@ RSpec.describe ISO8601::TimeInterval do
     end
   end
 
-  describe "#size" do
+  describe "#to_f" do
     it "should calculate the size of time interval" do
       duration = ISO8601::Duration.new('PT1H')
       hour = (60 * 60).to_f
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
       datetime2 = ISO8601::DateTime.new('2010-05-09T11:30:00Z')
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).size).to eq(hour)
-      expect(ISO8601::TimeInterval.new(datetime, duration).size).to eq(hour)
-      expect(ISO8601::TimeInterval.new(datetime, datetime2).size).to eq(hour)
-      expect(ISO8601::TimeInterval.new(datetime, datetime).size).to eq(0)
-      expect(ISO8601::TimeInterval.new(datetime2, datetime).size).to eq(-hour)
+      expect(ISO8601::TimeInterval.new(duration, datetime).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.new(datetime, duration).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.new(datetime, datetime2).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.new(datetime, datetime).to_f).to eq(0)
+      expect(ISO8601::TimeInterval.new(datetime2, datetime).to_f).to eq(-hour)
     end
   end
 
@@ -212,43 +212,43 @@ RSpec.describe ISO8601::TimeInterval do
       expect(@small > @big).to be_falsy
       expect(@big > @small).to be_truthy
       expect(@small > @small).to be_falsy
-      expect(@small > @small.size).to be_falsy
-      expect(@small > (@small.size + 60 * 60)).to be_falsy
-      expect(@small > (@small.size - 60 * 60)).to be_truthy
+      expect(@small > @small.to_f).to be_falsy
+      expect(@small > (@small.to_f + 60 * 60)).to be_falsy
+      expect(@small > (@small.to_f - 60 * 60)).to be_truthy
     end
 
     it "should check if interval is bigger or equal than other" do
       expect(@small >= @big).to be_falsy
       expect(@big >= @small).to be_truthy
       expect(@small >= @small).to be_truthy
-      expect(@small >= @small.size).to be_truthy
-      expect(@small >= (@small.size + 60 * 60)).to be_falsy
-      expect(@small >= (@small.size - 60 * 60)).to be_truthy
+      expect(@small >= @small.to_f).to be_truthy
+      expect(@small >= (@small.to_f + 60 * 60)).to be_falsy
+      expect(@small >= (@small.to_f - 60 * 60)).to be_truthy
     end
 
     it "should check what interval is smaller" do
       expect(@small < @big).to be_truthy
       expect(@big < @small).to be_falsy
       expect(@small < @small).to be_falsy
-      expect(@small < @small.size).to be_falsy
-      expect(@small < (@small.size + 60 * 60)).to be_truthy
-      expect(@small < (@small.size - 60 * 60)).to be_falsy
+      expect(@small < @small.to_f).to be_falsy
+      expect(@small < (@small.to_f + 60 * 60)).to be_truthy
+      expect(@small < (@small.to_f - 60 * 60)).to be_falsy
     end
 
     it "should check if interval is smaller or equal than other" do
       expect(@small <= @big).to be_truthy
       expect(@big <= @small).to be_falsy
-      expect(@small <= (@small.size + 60 * 60)).to be_truthy
-      expect(@small <= (@small.size - 60 * 60)).to be_falsy
+      expect(@small <= (@small.to_f + 60 * 60)).to be_truthy
+      expect(@small <= (@small.to_f - 60 * 60)).to be_falsy
       expect(@small <= @small).to be_truthy
-      expect(@small <= @small.size).to be_truthy
+      expect(@small <= @small.to_f).to be_truthy
     end
 
     it "should check if the intervals are equals" do
       expect(@small == @small).to be_truthy
-      expect(@small == @small.size).to be_truthy
+      expect(@small == @small.to_f).to be_truthy
       expect(@small == @big).to be_falsy
-      expect(@small == @big.size).to be_falsy
+      expect(@small == @big.to_f).to be_falsy
     end
   end
 

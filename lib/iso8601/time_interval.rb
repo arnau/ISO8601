@@ -7,17 +7,17 @@ module ISO8601
   #     start_time = ISO8601::DateTime.new('2014-05-28T19:53Z')
   #     end_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
   #     ti = ISO8601::TimeInterval.new(start_time, end_time)
-  #     ti.size # => 172800.0 (Seconds)
+  #     ti.to_f # => 172800.0 (Seconds)
   #
   # @example
   #     start_time = ISO8601::Duration.new('P1MT2H')
   #     end_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
   #     ti = ISO8601::TimeInterval.new(start_time, end_time)
-  #     ti.size # => 2635200.0 (Seconds)
+  #     ti.to_f # => 2635200.0 (Seconds)
   #
   # @example
   #     ti = ISO8601::TimeInterval.new('P1MT2H/2014-05-28T19:53Z')
-  #     ti.size # => 2635200.0
+  #     ti.to_f # => 2635200.0
   #
   class TimeInterval
     # Define the type of a time
@@ -99,7 +99,7 @@ module ISO8601
     # size of the Interval is the number of seconds of the interval.
     #
     # @return [Float] Size of the interval in seconds
-    def size
+    def to_f
       if start_duration?
         @start_time.to_f
       elsif end_duration?
@@ -109,8 +109,6 @@ module ISO8601
         @end_time.to_time.to_f - @start_time.to_time.to_f
       end
     end
-
-    alias_method :to_f, :size
 
     ##
     # Check if a given time is inside current TimeInterval
@@ -159,7 +157,7 @@ module ISO8601
     #
     # @return [Boolean]
     def >(other)
-      (size > fetch_seconds(other))
+      (to_f > fetch_seconds(other))
     end
 
     ##
@@ -173,7 +171,7 @@ module ISO8601
     #
     # @return [Boolean]
     def >=(other)
-      (size > fetch_seconds(other) || size == fetch_seconds(other))
+      (to_f > fetch_seconds(other) || to_f == fetch_seconds(other))
     end
 
     ##
@@ -187,7 +185,7 @@ module ISO8601
     #
     # @return [Boolean]
     def <(other)
-      (size < fetch_seconds(other))
+      (to_f < fetch_seconds(other))
     end
 
     ##
@@ -201,7 +199,7 @@ module ISO8601
     #
     # @return [Boolean]
     def <=(other)
-      (size < fetch_seconds(other) || size == fetch_seconds(other))
+      (to_f < fetch_seconds(other) || to_f == fetch_seconds(other))
     end
 
     ##
@@ -215,7 +213,7 @@ module ISO8601
     #
     # @return [Boolean]
     def ==(other)
-      (size == fetch_seconds(other))
+      (to_f == fetch_seconds(other))
     end
 
     ##
