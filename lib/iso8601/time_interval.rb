@@ -30,8 +30,6 @@ module ISO8601
     TYPE_DATETIME = :datetime
     TYPE_DURATION = :duration
 
-    attr_reader :pattern
-
     ##
     # @param [ISO8601::DateTime, ISO8601::Duration, String] pattern This parameter
     #     can define the full interval, based on a pattern or the start time.
@@ -108,6 +106,17 @@ module ISO8601
     def original_end_time
       @end_time
     end
+
+    ##
+    # Return the pattern that crete the same interval
+    #
+    # @return [String] The pattern of this interval
+    def pattern
+      return @pattern if @pattern
+      "#{original_start_time}/#{original_end_time}"
+    end
+
+    alias_method :to_s, :pattern
 
     ##
     # Calculate the size of the interval. If asome time is a Duration, the
