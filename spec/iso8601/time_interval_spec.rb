@@ -127,10 +127,12 @@ RSpec.describe ISO8601::TimeInterval do
       duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:12Z')
       datetime2 = ISO8601::DateTime.new('2010-05-15T10:30:12Z')
+      duration_with_base = ISO8601::Duration.new('P1Y1M1DT0.5H', datetime)
 
       expect { ISO8601::TimeInterval.new(duration, datetime) }.to_not raise_error
       expect { ISO8601::TimeInterval.new(datetime, duration) }.to_not raise_error
       expect { ISO8601::TimeInterval.new(datetime, datetime2) }.to_not raise_error
+      expect { ISO8601::TimeInterval.new(duration_with_base) }.to_not raise_error
     end
   end
 
@@ -223,6 +225,28 @@ RSpec.describe ISO8601::TimeInterval do
       expect(ISO8601::TimeInterval.new(duration, datetime).original_end_time).to be_an_instance_of(ISO8601::DateTime)
       expect(ISO8601::TimeInterval.new(datetime, duration).original_end_time).to be_an_instance_of(ISO8601::Duration)
       expect(ISO8601::TimeInterval.new(duration_with_base).original_end_time).to be_an_instance_of(ISO8601::Duration)
+    end
+  end
+
+  describe "#to_s" do
+    it "should return the pattern if TimeInterval is initialized with a pattern" do
+      pattern = 'P1Y1M1DT0,5H/2014-05-31T16:26:10,5Z'
+      pattern2 = '2007-03-01T13:00:00Z/P1Y0,5M'
+
+      expect(ISO8601::TimeInterval.new(pattern).to_s).to eq(pattern)
+      expect(ISO8601::TimeInterval.new(pattern2).to_s).to eq(pattern2)
+    end
+
+    it "should build the pattern and return if TimeInterval is initialized with objects" do
+      duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
+      datetime = ISO8601::DateTime.new('2010-05-09T10:30:12+00:00')
+      datetime2 = ISO8601::DateTime.new('2010-05-15T10:30:12+00:00')
+      duration_with_base = ISO8601::Duration.new('P1Y1M1DT0.5H', datetime)
+
+      expect(ISO8601::TimeInterval.new(duration, datetime).to_s).to eq('P1Y1M1DT0.5H/2010-05-09T10:30:12+00:00')
+      expect(ISO8601::TimeInterval.new(datetime, duration).to_s).to eq('2010-05-09T10:30:12+00:00/P1Y1M1DT0.5H')
+      expect(ISO8601::TimeInterval.new(datetime, datetime2).to_s).to eq('2010-05-09T10:30:12+00:00/2010-05-15T10:30:12+00:00')
+      expect(ISO8601::TimeInterval.new(duration_with_base).to_s).to eq('2010-05-09T10:30:12+00:00/P1Y1M1DT0.5H')
     end
   end
 
