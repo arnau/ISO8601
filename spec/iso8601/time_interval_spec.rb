@@ -80,6 +80,21 @@ RSpec.describe ISO8601::TimeInterval do
     end
   end
 
+  describe 'initialization with a ISO8601::Duration' do
+    it "should raise an ArgumentError if the Base of duration is nil" do
+      duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
+      duration2 = ISO8601::Duration.new('P1Y1DT12H')
+
+      expect { ISO8601::TimeInterval.new(duration) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.new(duration2) }.to raise_error(ArgumentError)
+    end
+    
+    it "should initialize with a correct base" do
+      duration = ISO8601::Duration.new('P1M', ISO8601::DateTime.new('2010-05-09T10:30:12Z'))
+      expect { ISO8601::TimeInterval.new(duration) }.to_not raise_error
+    end
+  end
+
   describe 'object initialization' do
     it "should raise a ISO8601::Errors::TypeError if parameters are not a ISO8601::Duration or ISO8601::DateTime instance" do
       duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
@@ -125,10 +140,12 @@ RSpec.describe ISO8601::TimeInterval do
       hour = (60 * 60).to_f
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
       datetime2 = ISO8601::DateTime.new('2010-05-09T11:30:00Z')
+      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
 
       expect(ISO8601::TimeInterval.new(duration, datetime).to_f).to eq(hour)
       expect(ISO8601::TimeInterval.new(datetime, duration).to_f).to eq(hour)
       expect(ISO8601::TimeInterval.new(datetime, datetime2).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.new(duration_with_base).to_f).to eq(hour)
       expect(ISO8601::TimeInterval.new(datetime, datetime).to_f).to eq(0)
       expect(ISO8601::TimeInterval.new(datetime2, datetime).to_f).to eq(-hour)
     end
@@ -138,20 +155,24 @@ RSpec.describe ISO8601::TimeInterval do
     it "should return always a ISO8601::DateTime object" do
       duration = ISO8601::Duration.new('PT1H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
 
       expect(ISO8601::TimeInterval.new(duration, datetime).start_time).to be_an_instance_of(ISO8601::DateTime)
       expect(ISO8601::TimeInterval.new(datetime, duration).start_time).to be_an_instance_of(ISO8601::DateTime)
       expect(ISO8601::TimeInterval.new(datetime, datetime).start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(duration_with_base).start_time).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the start_time" do
       start_time = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
       duration = ISO8601::Duration.new('PT1H')
+      duration_with_base = ISO8601::Duration.new('PT1H', start_time)
 
       expect(ISO8601::TimeInterval.new('PT1H/2010-05-09T11:30:00Z').start_time).to eq(start_time)
       expect(ISO8601::TimeInterval.new('2010-05-09T10:30:00Z/PT1H').start_time).to eq(start_time)
       expect(ISO8601::TimeInterval.new(start_time, (start_time + 60 * 60)).start_time).to eq(start_time)
       expect(ISO8601::TimeInterval.new(start_time, duration).start_time).to eq(start_time)
+      expect(ISO8601::TimeInterval.new(duration_with_base).start_time).to eq(start_time)
     end
   end
 
@@ -159,9 +180,11 @@ RSpec.describe ISO8601::TimeInterval do
     it "should return an instance of original pattern/object" do
       duration = ISO8601::Duration.new('PT1H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
 
       expect(ISO8601::TimeInterval.new(duration, datetime).original_start_time).to be_an_instance_of(ISO8601::Duration)
       expect(ISO8601::TimeInterval.new(datetime, duration).original_start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(duration_with_base).original_start_time).to be_an_instance_of(ISO8601::DateTime)
     end
   end
 
@@ -169,20 +192,25 @@ RSpec.describe ISO8601::TimeInterval do
     it "should return always a ISO8601::DateTime object" do
       duration = ISO8601::Duration.new('PT1H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
 
       expect(ISO8601::TimeInterval.new(duration, datetime).end_time).to be_an_instance_of(ISO8601::DateTime)
       expect(ISO8601::TimeInterval.new(datetime, duration).end_time).to be_an_instance_of(ISO8601::DateTime)
       expect(ISO8601::TimeInterval.new(datetime, datetime).end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(duration_with_base).end_time).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the end_time" do
       end_time = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
       duration = ISO8601::Duration.new('PT1H')
+      duration_with_base = ISO8601::Duration.new('PT1H', end_time)
 
       expect(ISO8601::TimeInterval.new('PT1H/2010-05-09T10:30:00Z').end_time).to eq(end_time)
       expect(ISO8601::TimeInterval.new('2010-05-09T09:30:00Z/PT1H').end_time).to eq(end_time)
       expect(ISO8601::TimeInterval.new((end_time - 60 * 60), end_time).end_time).to eq(end_time)
       expect(ISO8601::TimeInterval.new(end_time, duration).end_time).to eq((end_time + 60 * 60))
+      # This calculation is Base + Duration
+      expect(ISO8601::TimeInterval.new(duration_with_base).end_time).to eq((end_time + duration.to_f))
     end
   end
 
@@ -190,9 +218,11 @@ RSpec.describe ISO8601::TimeInterval do
     it "should return an instance of original pattern/object" do
       duration = ISO8601::Duration.new('PT1H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
+      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
 
       expect(ISO8601::TimeInterval.new(duration, datetime).original_end_time).to be_an_instance_of(ISO8601::DateTime)
       expect(ISO8601::TimeInterval.new(datetime, duration).original_end_time).to be_an_instance_of(ISO8601::Duration)
+      expect(ISO8601::TimeInterval.new(duration_with_base).original_end_time).to be_an_instance_of(ISO8601::Duration)
     end
   end
 
