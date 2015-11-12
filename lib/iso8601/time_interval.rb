@@ -35,6 +35,9 @@ module ISO8601
     #
     # @raise [ISO8601::Errors::TypeError] If any param is not an instance of
     #   ISO8601::Duration or ISO8601::DateTime
+    # @raise [ArgumentError] If the first element is an ISO8601::Duration/DateTime and
+    #   second element is nil or first parameter is an ISO8601::Duration and it's base
+    #   is nil when second parameter is nil too.
     def initialize(pattern, end_time = nil)
       if pattern.is_a? String
         # Check the pattern
@@ -47,7 +50,13 @@ module ISO8601
         fail(ISO8601::Errors::UnknownPattern, pattern) if time.size != 2
         @start_time, @start_type = init_time_from_pattern(time.first)
         @end_time, @end_type = init_time_from_pattern(time.last)
+      elsif pattern.is_a?(ISO8601::Duration) && end_time.nil?
+        @start_time, @start_type = init_time_from_duration(pattern)
+        pattern.base = nil
+        @end_time = pattern
+        @end_type = TYPE_DURATION
       else
+        # Initialize with two objects
         fail(ArgumentError,
              'A second parameter is required when the first parameter is a '\
              'ISO8601::DateTime or ISO8601::Duration') if end_time.nil?
@@ -302,6 +311,24 @@ module ISO8601
         parsed_time = ISO8601::DateTime.new(time)
         type = TYPE_DATETIME
       end
+      # Return values
+      [parsed_time, type]
+    end
+
+    ##
+    # Initialize time and type based on a Duration.
+    #
+    # @param [ISO8601::Duration] time String with pattern
+    #
+    # @raise [ArgumentError] If the base of time is nil
+    #
+    # @return [Array] Array with two elements: time and type (:duration or :datetime)
+    def init_time_from_duration(duration)
+      # The duration must have a base
+      fail(ArgumentError,
+           'Duration must include a Base to calculate the interval') if duration.base.nil?
+      parsed_time = duration.base
+      type = TYPE_DATETIME
       # Return values
       [parsed_time, type]
     end
