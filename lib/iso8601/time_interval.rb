@@ -19,6 +19,12 @@ module ISO8601
   #     ti = ISO8601::TimeInterval.new('P1MT2H/2014-05-28T19:53Z')
   #     ti.to_f # => 2635200.0
   #
+  # @example
+  #     base = ISO8601::DateTime.new('2014-05-30T19:53Z')
+  #     duration = ISO8601::Duration.new('P1MT2H', base)
+  #     ti = ISO8601::TimeInterval.new(start_time, end_time)
+  #     ti.to_f # => 2635200.0 (Seconds)
+  #
   class TimeInterval
     # Define the type of a time
     TYPE_DATETIME = :datetime
