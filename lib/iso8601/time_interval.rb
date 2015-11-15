@@ -26,6 +26,8 @@ module ISO8601
   #     ti.to_f # => 2635200.0 (Seconds)
   #
   class TimeInterval
+    include Comparable
+
     # Define the type of a time
     TYPE_DATETIME = :datetime
     TYPE_DURATION = :duration
@@ -171,73 +173,13 @@ module ISO8601
     end
 
     ##
-    # Compare the TimeIntervals based on the size of the interval
+    # @param [ISO8601::TimeInterval] other The contrast to compare against
     #
-    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
-    #   of seconds.
-    #
-    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
-    #   ISO8601::TimeInterval or Numeric classes
-    #
-    # @return [Boolean]
-    def >(other)
-      (to_f > fetch_seconds(other))
-    end
+    # @return [-1, 0, 1]
+    def <=>(other)
+      return nil unless other.is_a?(self.class)
 
-    ##
-    # Compare the TimeIntervals based on the size of the interval
-    #
-    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
-    #   of seconds.
-    #
-    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
-    #   ISO8601::TimeInterval or Numeric classes
-    #
-    # @return [Boolean]
-    def >=(other)
-      (to_f > fetch_seconds(other) || to_f == fetch_seconds(other))
-    end
-
-    ##
-    # Compare the TimeIntervals based on the size of the interval
-    #
-    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
-    #   of seconds.
-    #
-    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
-    #   ISO8601::TimeInterval or Numeric classes
-    #
-    # @return [Boolean]
-    def <(other)
-      (to_f < fetch_seconds(other))
-    end
-
-    ##
-    # Compare the TimeIntervals based on the size of the interval
-    #
-    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
-    #   of seconds.
-    #
-    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
-    #   ISO8601::TimeInterval or Numeric classes
-    #
-    # @return [Boolean]
-    def <=(other)
-      (to_f < fetch_seconds(other) || to_f == fetch_seconds(other))
-    end
-
-    ##
-    # Compare the TimeIntervals based on the size of the interval
-    #
-    # @param [ISO8601::TimeInterval or Numeric] other Object that we can get the number
-    #   of seconds.
-    #
-    # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
-    #   ISO8601::TimeInterval or Numeric classes
-    #
-    # @return [Boolean]
-    def ==(other)
-      (to_f == fetch_seconds(other))
+      to_f <=> other.to_f
     end
 
     ##

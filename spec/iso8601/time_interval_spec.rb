@@ -257,50 +257,41 @@ RSpec.describe ISO8601::TimeInterval do
     end
 
     it "should raise TypeError when compared object is not a ISO8601::TimeInterval or Numeric" do
-      expect { @small < 'Hello!' }.to raise_error(ISO8601::Errors::TypeError)
-      expect { @small > 'Hello!' }.to raise_error(ISO8601::Errors::TypeError)
-      expect { @small == 'Hello!' }.to raise_error(ISO8601::Errors::TypeError)
+      expect { @small < 'Hello!' }.to raise_error(ArgumentError)
+      expect { @small > 'Hello!' }.to raise_error(ArgumentError)
     end
 
     it "should check what interval is bigger" do
+      expect(@small <=> @big).to eq(-1)
+      expect(@big <=> @small).to eq(1)
+      expect(@big <=> @big).to eq(0)
+
       expect(@small > @big).to be_falsy
       expect(@big > @small).to be_truthy
       expect(@small > @small).to be_falsy
-      expect(@small > @small.to_f).to be_falsy
-      expect(@small > (@small.to_f + 60 * 60)).to be_falsy
-      expect(@small > (@small.to_f - 60 * 60)).to be_truthy
     end
 
     it "should check if interval is bigger or equal than other" do
       expect(@small >= @big).to be_falsy
       expect(@big >= @small).to be_truthy
       expect(@small >= @small).to be_truthy
-      expect(@small >= @small.to_f).to be_truthy
-      expect(@small >= (@small.to_f + 60 * 60)).to be_falsy
-      expect(@small >= (@small.to_f - 60 * 60)).to be_truthy
     end
 
     it "should check what interval is smaller" do
       expect(@small < @big).to be_truthy
       expect(@big < @small).to be_falsy
       expect(@small < @small).to be_falsy
-      expect(@small < @small.to_f).to be_falsy
-      expect(@small < (@small.to_f + 60 * 60)).to be_truthy
-      expect(@small < (@small.to_f - 60 * 60)).to be_falsy
     end
 
     it "should check if interval is smaller or equal than other" do
       expect(@small <= @big).to be_truthy
       expect(@big <= @small).to be_falsy
-      expect(@small <= (@small.to_f + 60 * 60)).to be_truthy
-      expect(@small <= (@small.to_f - 60 * 60)).to be_falsy
       expect(@small <= @small).to be_truthy
-      expect(@small <= @small.to_f).to be_truthy
     end
 
     it "should check if the intervals are equals" do
       expect(@small == @small).to be_truthy
-      expect(@small == @small.to_f).to be_truthy
+      expect(@small == @small.to_f).to be_falsy
       expect(@small == @big).to be_falsy
       expect(@small == @big.to_f).to be_falsy
     end
