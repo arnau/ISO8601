@@ -88,7 +88,7 @@ RSpec.describe ISO8601::TimeInterval do
       expect { ISO8601::TimeInterval.new(duration) }.to raise_error(ArgumentError)
       expect { ISO8601::TimeInterval.new(duration2) }.to raise_error(ArgumentError)
     end
-    
+
     it "should initialize with a correct base" do
       duration = ISO8601::Duration.new('P1M', ISO8601::DateTime.new('2010-05-09T10:30:12Z'))
       expect { ISO8601::TimeInterval.new(duration) }.to_not raise_error
@@ -123,7 +123,7 @@ RSpec.describe ISO8601::TimeInterval do
       expect { ISO8601::TimeInterval.new(duration, nil) }.to raise_error(ArgumentError)
     end
 
-    it "should initialize class with a valid objects" do
+    it "should initialize class with a valid object" do
       duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:12Z')
       datetime2 = ISO8601::DateTime.new('2010-05-15T10:30:12Z')
@@ -256,7 +256,7 @@ RSpec.describe ISO8601::TimeInterval do
       @big = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT2H')
     end
 
-    it "should raise TypeError when compared object is not a ISO8601::TimeInterval or Numeric" do
+    it "should raise TypeError when compared object is not a ISO8601::TimeInterval" do
       expect { @small < 'Hello!' }.to raise_error(ArgumentError)
       expect { @small > 'Hello!' }.to raise_error(ArgumentError)
     end
