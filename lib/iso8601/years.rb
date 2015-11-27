@@ -11,28 +11,53 @@ module ISO8601
   # A "duration year" is the duration of 365 or 366 "calendar days" depending
   # on the start and/or the end of the corresponding time interval within the
   # specific "calendar year".
-  class Years < ISO8601::Atom
+  class Years
+    include Atomic
+
     ##
-    # The Year factor
-    #
     # The "duration year" average is calculated through time intervals of 400
     # "duration years". Each cycle of 400 "duration years" has 303 "common
     # years" of 365 "calendar days" and 97 "leap years" of 366 "calendar days".
+    AVERAGE_SECONDS = ((365 * 303 + 366 * 97) / 400) * 86400
+
+    ##
+    # @param [Numeric] atom The atom value
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
+    #   the atom factor.
+    def initialize(atom, base = nil)
+      fail ISO8601::Errors::TypeError,
+           "The atom argument for #{self.class} should be a Numeric value." unless atom.is_a?(Numeric)
+      fail ISO8601::Errors::TypeError,
+           "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
+      @atom = atom
+      @base = base
+    end
+
+    ##
+    # The Year factor
     #
     # @return [Integer]
     def factor
-      return default_factor if base.nil?
-      return adjusted_time if atom.zero?
+      return average_factor if base.nil?
+      return adjusted_factor(1) if atom.zero?
 
-      adjusted_time / atom
+      adjusted_factor(atom)
     end
 
-    def adjusted_time
-      ::Time.utc((base.year + atom).to_i) - ::Time.utc(base.year)
+    def adjusted_factor(atom)
+      (::Time.utc((base.year + atom).to_i) - ::Time.utc(base.year)) / atom
     end
 
-    def default_factor
-      ((365 * 303 + 366 * 97) / 400) * 86400
+    def average_factor
+      AVERAGE_SECONDS
+    end
+
+    ##
+    # The amount of seconds
+    #
+    # @return [Numeric]
+    def to_seconds
+      atom * factor
     end
 
     ##

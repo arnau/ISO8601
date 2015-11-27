@@ -5,6 +5,7 @@ require 'forwardable'
 
 require_relative 'iso8601/version'
 require_relative 'iso8601/errors'
+require_relative 'iso8601/atomic'
 require_relative 'iso8601/atoms'
 require_relative 'iso8601/years'
 require_relative 'iso8601/months'
