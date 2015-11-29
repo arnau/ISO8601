@@ -12,11 +12,11 @@ RSpec.describe ISO8601::Years do
     end
 
     it "should return the Year factor for a common year" do
-      expect(ISO8601::Years.new(1, common_year).factor).to eq(31536000)
+      expect(ISO8601::Years.new(1).factor(common_year)).to eq(31536000)
     end
 
     it "should return the Year factor for a leap year" do
-      expect(ISO8601::Years.new(1, leap_year).factor).to eq(31622400)
+      expect(ISO8601::Years.new(1).factor(leap_year)).to eq(31622400)
     end
   end
 

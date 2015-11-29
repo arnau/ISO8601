@@ -24,27 +24,26 @@ module ISO8601
     # @param [Numeric] atom The atom value
     # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
     #   the atom factor.
-    def initialize(atom, base = nil)
-      fail ISO8601::Errors::TypeError,
-           "The atom argument for #{self.class} should be a Numeric value." unless atom.is_a?(Numeric)
-      fail ISO8601::Errors::TypeError,
-           "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
+    def initialize(atom)
+      validate_atom(atom)
+
       @atom = atom
-      @base = base
     end
 
     ##
     # The Year factor
     #
     # @return [Integer]
-    def factor
-      return AVERAGE_FACTOR if base.nil?
-      return adjusted_factor(1) if atom.zero?
+    def factor(base = nil)
+      validate_base(base)
 
-      adjusted_factor(atom)
+      return AVERAGE_FACTOR if base.nil?
+      return adjusted_factor(1, base) if atom.zero?
+
+      adjusted_factor(atom, base)
     end
 
-    def adjusted_factor(atom)
+    def adjusted_factor(atom, base)
       (::Time.utc((base.year + atom).to_i) - ::Time.utc(base.year)) / atom
     end
 
@@ -53,9 +52,11 @@ module ISO8601
     #
     # @return [Numeric]
     def to_seconds(base = nil)
+      validate_base(base)
+
       return (AVERAGE_FACTOR * atom) if base.nil?
 
-      ::Time.utc(year(base, atom)) - ::Time.utc(base.year)
+      ::Time.utc(year(atom, base)) - ::Time.utc(base.year)
     end
 
     ##
@@ -68,7 +69,13 @@ module ISO8601
 
     private
 
-    def year(base, atom)
+    def validate_base(base)
+      fail ISO8601::Errors::TypeError,
+           "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
+    end
+
+
+    def year(atom, base)
       (base.year + atom).to_i
     end
   end

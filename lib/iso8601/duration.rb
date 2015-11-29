@@ -75,7 +75,7 @@ module ISO8601
     ##
     # @return [ISO8601::Years] The years of the duration
     def years
-      ISO8601::Years.new(atoms[:years], base)
+      ISO8601::Years.new(atoms[:years])
     end
 
     ##
