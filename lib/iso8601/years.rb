@@ -22,8 +22,6 @@ module ISO8601
 
     ##
     # @param [Numeric] atom The atom value
-    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
-    #   the atom factor.
     def initialize(atom)
       valid_atom?(atom)
 
@@ -32,6 +30,9 @@ module ISO8601
 
     ##
     # The Year factor
+    #
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
+    #   the year length.
     #
     # @return [Integer]
     def factor(base = nil)
@@ -43,12 +44,11 @@ module ISO8601
       adjusted_factor(atom, base)
     end
 
-    def adjusted_factor(atom, base)
-      (::Time.utc((base.year + atom).to_i) - ::Time.utc(base.year)) / atom
-    end
-
     ##
     # The amount of seconds
+    #
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
+    #   the year length.
     #
     # @return [Numeric]
     def to_seconds(base = nil)
@@ -69,11 +69,9 @@ module ISO8601
 
     private
 
-    def valid_base?(base)
-      fail ISO8601::Errors::TypeError,
-           "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
+    def adjusted_factor(atom, base)
+      (::Time.utc((base.year + atom).to_i) - ::Time.utc(base.year)) / atom
     end
-
 
     def year(atom, base)
       (base.year + atom).to_i

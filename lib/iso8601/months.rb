@@ -10,21 +10,51 @@ module ISO8601
   # A "duration month" is the duration of 28, 29, 30 or 31 "calendar days"
   # depending on the start and/or the end of the corresponding time interval
   # within the specific "calendar month".
-  class Months < ISO8601::Atom
+  class Months
+    include Atomic
+
     ##
-    # The Month factor
-    #
     # The "duration month" average is calculated through time intervals of 400
     # "duration years". Each cycle of 400 "duration years" has 303 "common
     # years" of 365 "calendar days" and 97 "leap years" of 366 "calendar days".
-    def factor
-      if base.nil?
-        nobase_calculation
-      elsif atom.zero?
-        zero_calculation
-      else
-        calculation
-      end
+    AVERAGE_FACTOR = (((365 * 303 + 366 * 97) / 400) * 86400) / 12
+
+    ##
+    # @param [Numeric] atom The atom value
+    def initialize(atom)
+      valid_atom?(atom)
+
+      @atom = atom
+    end
+
+    ##
+    # The Month factor
+    #
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
+    #   the month length.
+    #
+    # @return [Numeric]
+    def factor(base = nil)
+      return AVERAGE_FACTOR if base.nil?
+      return zero_calculation(base) if atom.zero?
+
+      calculation(atom, base)
+    end
+
+    ##
+    # The amount of seconds
+    #
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
+    #   the month length.
+    #
+    # @return [Numeric]
+    def to_seconds(base = nil)
+      valid_base?(base)
+
+      return (AVERAGE_FACTOR * atom) if base.nil?
+      return zero_calculation(base) if atom.zero?
+
+      calculation(atom, base) * atom
     end
 
     ##
@@ -37,18 +67,14 @@ module ISO8601
 
     private
 
-    def nobase_calculation
-      (((365 * 303 + 366 * 97) / 400) * 86400) / 12
-    end
-
-    def zero_calculation
+    def zero_calculation(base)
       month = (base.month <= 12) ? base.month : (base.month % 12)
       year = base.year + ((base.month) / 12).to_i
 
       (::Time.utc(year, month) - ::Time.utc(base.year, base.month))
     end
 
-    def calculation
+    def calculation(atom, base)
       initial = base.month + atom
       if initial <= 0
         month = base.month + atom

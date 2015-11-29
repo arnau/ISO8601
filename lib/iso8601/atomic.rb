@@ -69,5 +69,10 @@ module ISO8601
       fail ISO8601::Errors::TypeError,
            "The atom argument for #{self.class} should be a Numeric value." unless atom.is_a?(Numeric)
     end
+
+    def valid_base?(base)
+      fail ISO8601::Errors::TypeError,
+           "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
+    end
   end
 end
