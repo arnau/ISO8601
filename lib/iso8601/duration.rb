@@ -159,24 +159,6 @@ module ISO8601
       years.to_seconds(base) + months_to_seconds(base) + rest.reduce(&:+)
     end
 
-    ##
-    # @return [Numeric] The duration in days
-    def to_days(base = nil)
-      (to_seconds(base) / 86400)
-    end
-
-    ##
-    # @return [Integer] The integer part of the duration in seconds
-    def to_i(base = nil)
-      to_seconds(base).to_i
-    end
-
-    ##
-    # @return [Float] The duration in seconds coerced to float
-    def to_f(base = nil)
-      to_seconds(base).to_f
-    end
-
     private
 
     # Changes the base to compute the months for the right base year
