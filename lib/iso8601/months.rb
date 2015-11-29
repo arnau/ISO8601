@@ -17,7 +17,7 @@ module ISO8601
     # The "duration month" average is calculated through time intervals of 400
     # "duration years". Each cycle of 400 "duration years" has 303 "common
     # years" of 365 "calendar days" and 97 "leap years" of 366 "calendar days".
-    AVERAGE_FACTOR = (((365 * 303 + 366 * 97) / 400) * 86400) / 12
+    AVERAGE_FACTOR = Years::AVERAGE_FACTOR / 12
 
     ##
     # @param [Numeric] atom The atom value
