@@ -107,6 +107,13 @@ RSpec.describe ISO8601::Duration do
     end
   end
 
+  describe "#to_days" do
+    it "should return the days of a duration" do
+      expect(ISO8601::Duration.new('P1Y').to_days(common_year)).to eq(365)
+      expect(ISO8601::Duration.new('P1D').to_days).to eq(1)
+    end
+  end
+
   describe '#to_seconds' do
     context 'positive durations' do
       it "should return the seconds of a P[n]Y duration in a common year" do
