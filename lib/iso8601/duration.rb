@@ -50,15 +50,6 @@ module ISO8601
     attr_reader :base
 
     ##
-    # Assigns a new base datetime
-    #
-    # @return [ISO8601::DateTime, nil]
-    def base=(value)
-      @base = validate_base(value)
-      @base
-    end
-
-    ##
     # @return [String] The string representation of the duration
     attr_reader :pattern
     alias_method :to_s, :pattern

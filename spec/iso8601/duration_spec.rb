@@ -55,10 +55,6 @@ RSpec.describe ISO8601::Duration do
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', common_year) }.to_not raise_error
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', '2010-01-01') }.to raise_error(ISO8601::Errors::TypeError)
     expect { ISO8601::Duration.new('P1Y1M1DT1H1M1S', 2010) }.to raise_error(ISO8601::Errors::TypeError)
-    expect do
-      d = ISO8601::Duration.new('P1Y1M1DT1H1M1S', common_year)
-      d.base = 2012
-    end.to raise_error(ISO8601::Errors::TypeError)
   end
 
   it "should return a Duration instance from a Numeric input" do
@@ -71,8 +67,6 @@ RSpec.describe ISO8601::Duration do
       expect(ISO8601::Duration.new('P1Y1M1DT1H1M1S').base).to be_an_instance_of(NilClass)
       expect(ISO8601::Duration.new('P1Y1M1DT1H1M1S', common_year).base).to be_an_instance_of(ISO8601::DateTime)
       expect(ISO8601::Duration.new('P1Y1M1DT1H1M1S', common_year).base).to eq(common_year)
-      d = ISO8601::Duration.new('P1Y1M1DT1H1M1S', common_year).base = dt2
-      expect(d).to eq(dt2)
     end
   end
 
