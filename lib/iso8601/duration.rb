@@ -16,21 +16,12 @@ module ISO8601
   #
   # @example Explicit base date time
   #     base = ISO8601::DateTime.new('2014-08017')
-  #     d = ISO8601::Duration.new('P2Y1MT2H', base)
-  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0,
-  #                     @base=#<ISO8601::DateTime...>>
-  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0,
-  #                     @base=#<ISO8601::DateTime...>>
-  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0,
-  #                     @base=#<ISO8601::DateTime...>>
-  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0,
-  #                     @base=#<ISO8601::DateTime...>>
-  #     d.to_seconds # => 65757600.0
+  #     d.to_seconds(base) # => 65757600.0
   #
   # @example Number of seconds versus patterns
   #     di = ISO8601::Duration.new(65707200)
-  #     dp = ISO8601::Duration.new('P2Y1MT2H')
   #     ds = ISO8601::Duration.new('P65707200S')
+  #     dp = ISO8601::Duration.new('P2Y1MT2H')
   #     di == dp # => true
   #     di == ds # => true
   #
@@ -87,31 +78,31 @@ module ISO8601
     ##
     # @return [ISO8601::Weeks] The weeks of the duration
     def weeks
-      ISO8601::Weeks.new(atoms[:weeks], base)
+      ISO8601::Weeks.new(atoms[:weeks])
     end
 
     ##
     # @return [ISO8601::Days] The days of the duration
     def days
-      ISO8601::Days.new(atoms[:days], base)
+      ISO8601::Days.new(atoms[:days])
     end
 
     ##
     # @return [ISO8601::Hours] The hours of the duration
     def hours
-      ISO8601::Hours.new(atoms[:hours], base)
+      ISO8601::Hours.new(atoms[:hours])
     end
 
     ##
     # @return [ISO8601::Minutes] The minutes of the duration
     def minutes
-      ISO8601::Minutes.new(atoms[:minutes], base)
+      ISO8601::Minutes.new(atoms[:minutes])
     end
 
     ##
     # @return [ISO8601::Seconds] The seconds of the duration
     def seconds
-      ISO8601::Seconds.new(atoms[:seconds], base)
+      ISO8601::Seconds.new(atoms[:seconds])
     end
 
     ##
