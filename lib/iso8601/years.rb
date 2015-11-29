@@ -25,7 +25,7 @@ module ISO8601
     # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
     #   the atom factor.
     def initialize(atom)
-      validate_atom(atom)
+      valid_atom?(atom)
 
       @atom = atom
     end
@@ -35,7 +35,7 @@ module ISO8601
     #
     # @return [Integer]
     def factor(base = nil)
-      validate_base(base)
+      valid_base?(base)
 
       return AVERAGE_FACTOR if base.nil?
       return adjusted_factor(1, base) if atom.zero?
@@ -52,7 +52,7 @@ module ISO8601
     #
     # @return [Numeric]
     def to_seconds(base = nil)
-      validate_base(base)
+      valid_base?(base)
 
       return (AVERAGE_FACTOR * atom) if base.nil?
 
@@ -69,7 +69,7 @@ module ISO8601
 
     private
 
-    def validate_base(base)
+    def valid_base?(base)
       fail ISO8601::Errors::TypeError,
            "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
     end

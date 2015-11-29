@@ -67,7 +67,7 @@ module ISO8601
 
     ##
     # Validates the atom is a Numeric
-    def validate_atom(atom)
+    def valid_atom?(atom)
       fail ISO8601::Errors::TypeError,
            "The atom argument for #{self.class} should be a Numeric value." unless atom.is_a?(Numeric)
     end
