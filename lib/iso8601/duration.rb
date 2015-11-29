@@ -154,15 +154,9 @@ module ISO8601
     #
     # @return [Numeric] The duration in seconds
     def to_seconds(base = nil)
-      # Changes the base to compute the months for the right base year
-      month_base = base.nil? ? nil : base + years.to_seconds(base)
-      months_seconds = months.to_seconds(month_base)
+      rest = [weeks, days, hours, minutes, seconds].map(&:to_seconds)
 
-      new_atoms = [years]
-      atoms = [weeks, days, hours, minutes, seconds]
-      new_s = new_atoms.map { |a| a.to_seconds(base) }.reduce(&:+)
-
-      months_seconds + new_s + atoms.map(&:to_seconds).reduce(&:+)
+      years.to_seconds(base) + months_to_seconds(base) + rest.reduce(&:+)
     end
 
     ##
@@ -178,6 +172,12 @@ module ISO8601
     end
 
     private
+
+    # Changes the base to compute the months for the right base year
+    def months_to_seconds(base)
+      month_base = base.nil? ? nil : base + years.to_seconds(base)
+      months.to_seconds(month_base)
+    end
 
     ##
     # Splits a duration pattern into valid atoms.
