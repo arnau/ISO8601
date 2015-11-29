@@ -6,8 +6,6 @@ module ISO8601
 
     attr_reader :atom
 
-    attr_reader :base
-
     ##
     # The integer representation
     #
