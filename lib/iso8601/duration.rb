@@ -7,10 +7,10 @@ module ISO8601
   #
   # @example
   #     d = ISO8601::Duration.new('P2Y1MT2H')
-  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0, @base=nil>
-  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0, @base=nil>
-  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0, @base=nil>
-  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0, @base=nil>
+  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0>
+  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0>
+  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0>
+  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0>
   #     d.to_seconds # => 65707200.0
   #
   # @example Explicit base date time
@@ -27,13 +27,10 @@ module ISO8601
   class Duration
     ##
     # @param [String, Numeric] input The duration pattern
-    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
-    #   calculate the duration against an specific point in time.
-    def initialize(input, base = nil)
+    def initialize(input)
       @original = input
       @pattern = to_pattern
       @atoms = atomize(@pattern)
-      @base = validate_base(base)
     end
 
     ##
@@ -152,6 +149,9 @@ module ISO8601
     end
 
     ##
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
+    #   calculate the duration against an specific point in time.
+    #
     # @return [Numeric] The duration in seconds
     def to_seconds(base = nil)
       # Changes the base to compute the months for the right base year
@@ -167,20 +167,20 @@ module ISO8601
 
     ##
     # @return [Numeric] The duration in days
-    def to_days
-      (to_seconds / 86400)
+    def to_days(base = nil)
+      (to_seconds(base) / 86400)
     end
 
     ##
     # @return [Integer] The integer part of the duration in seconds
-    def to_i
-      to_seconds.to_i
+    def to_i(base = nil)
+      to_seconds(base).to_i
     end
 
     ##
     # @return [Float] The duration in seconds coerced to float
-    def to_f
-      to_seconds.to_f
+    def to_f(base = nil)
+      to_seconds(base).to_f
     end
 
     private

@@ -109,7 +109,7 @@ RSpec.describe ISO8601::Duration do
 
   describe "#to_days" do
     it "should return the days of a duration" do
-      expect(ISO8601::Duration.new('P1Y', common_year).to_days).to eq(365)
+      expect(ISO8601::Duration.new('P1Y').to_days(common_year)).to eq(365)
       expect(ISO8601::Duration.new('P1D').to_days).to eq(1)
     end
   end
@@ -230,7 +230,7 @@ RSpec.describe ISO8601::Duration do
       it "should return the seconds of a -PT[n]H[n]M duration" do
         expect(ISO8601::Duration.new('-PT5M').to_seconds(ISO8601::DateTime.new('2012-01-01T00:05'))).to eq(Time.utc(2012, 1) - Time.utc(2012, 1, 1, 0, 5))
         expect(ISO8601::Duration.new('-PT1H5M').to_seconds(ISO8601::DateTime.new('2012-01-01T01:05'))).to eq(Time.utc(2012, 1) - Time.utc(2012, 1, 1, 1, 5))
-        expect(ISO8601::Duration.new('-PT1H5M').to_seconds(ISO8601::DateTime.new('2012-01-01'))).to eq(ISO8601::Duration.new('-PT65M', ISO8601::DateTime.new('2012-01-01')).to_seconds)
+        expect(ISO8601::Duration.new('-PT1H5M').to_seconds(common_year)).to eq(ISO8601::Duration.new('-PT65M').to_seconds(common_year))
       end
 
       it "should return the seconds of a -PT[n]H[n]M duration" do
