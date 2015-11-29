@@ -71,12 +71,5 @@ module ISO8601
       fail ISO8601::Errors::TypeError,
            "The atom argument for #{self.class} should be a Numeric value." unless atom.is_a?(Numeric)
     end
-
-    ##
-    # The atom factor to compute the amount of seconds for the atom
-    def factor
-      fail NotImplementedError,
-           "The #factor method must be implemented by the atom"
-    end
   end
 end
