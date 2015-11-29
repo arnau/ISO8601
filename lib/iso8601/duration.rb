@@ -3,8 +3,7 @@
 module ISO8601
   ##
   # A duration representation. When no base is provided, all atoms use an
-  # average factor which affects the result of any computation like
-  # `#to_seconds`.
+  # average factor to compute the amount of seconds.
   #
   # @example
   #     d = ISO8601::Duration.new('P2Y1MT2H')
@@ -42,12 +41,6 @@ module ISO8601
     #
     # @return [Hash<Float>]
     attr_reader :atoms
-
-    ##
-    # Datetime base.
-    #
-    # @return [ISO8601::DateTime, nil]
-    attr_reader :base
 
     ##
     # @return [String] The string representation of the duration
@@ -105,7 +98,7 @@ module ISO8601
     ##
     # @return [ISO8601::Duration] The absolute representation of the duration
     def abs
-      self.class.new(pattern.sub(/^[-+]/, ''), base)
+      self.class.new(pattern.sub(/^[-+]/, ''))
     end
 
     ##
@@ -113,7 +106,6 @@ module ISO8601
     #
     # @param [ISO8601::Duration] other The duration to add
     #
-    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def +(other)
       seconds_to_iso(to_seconds + fetch_seconds(other))
@@ -124,7 +116,6 @@ module ISO8601
     #
     # @param [ISO8601::Duration] other The duration to substract
     #
-    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def -(other)
       seconds_to_iso(to_seconds - fetch_seconds(other))
@@ -133,7 +124,6 @@ module ISO8601
     ##
     # @param [ISO8601::Duration] other The duration to compare
     #
-    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
     def ==(other)
       (to_seconds == fetch_seconds(other))
@@ -163,7 +153,7 @@ module ISO8601
 
     ##
     # @return [Numeric] The duration in seconds
-    def to_seconds
+    def to_seconds(base = nil)
       # Changes the base to compute the months for the right base year
       month_base = base.nil? ? nil : base + years.to_seconds(base)
       months_seconds = months.to_seconds(month_base)
@@ -324,7 +314,7 @@ module ISO8601
       fail ISO8601::Errors::InvalidFractions if fractions.size > 1 || consistent
     end
 
-    def compare_bases(other)
+    def compare_bases(other, base)
       fail ISO8601::Errors::DurationBaseError, other if base != other.base
     end
 
@@ -334,16 +324,14 @@ module ISO8601
     # @param [ISO8601::Duration, Numeric] other Instance of a class to fetch
     #   seconds.
     #
-    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
     #   ISO8601::Duration or Numeric classes
     #
     # @return [Float] Number of seconds of other param Object
     #
-    def fetch_seconds(other)
+    def fetch_seconds(other, base = nil)
       if other.is_a? ISO8601::Duration
-        compare_bases(other)
-        other.to_seconds
+        other.to_seconds(base)
       elsif other.is_a? Numeric
         other.to_f
       else
