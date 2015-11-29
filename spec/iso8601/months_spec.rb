@@ -7,6 +7,24 @@ RSpec.describe ISO8601::Months do
   let(:common_february) { ISO8601::DateTime.new('2010-02-01') }
   let(:leap_february) { ISO8601::DateTime.new('2000-02-01') }
 
+  describe 'Atomic' do
+    let(:subject) { ISO8601::Months.new(1) }
+
+    it "should respond to the Atomic interface" do
+      [:factor,
+       :to_seconds,
+       :symbol,
+       :to_i,
+       :to_f,
+       :to_s,
+       :value,
+       :<=>,
+       :eql?,
+       :hash,
+       :valid_atom?].each { |m| expect(subject).to respond_to(m) }
+    end
+  end
+
   describe '#factor' do
     it "should return the Month factor" do
       expect { ISO8601::Months.new(1).factor }.to_not raise_error
@@ -56,16 +74,11 @@ RSpec.describe ISO8601::Months do
 
   describe '#symbol' do
     it "should return the ISO symbol" do
-      expect(ISO8601::Months.new(1)).to respond_to(:symbol)
       expect(ISO8601::Months.new(1).symbol).to eq(:M)
     end
   end
 
   describe '#hash' do
-    it "should respond to #hash" do
-      expect(ISO8601::Months.new(3)).to respond_to(:hash)
-    end
-
     it "should build hash identity by value" do
       expect(ISO8601::Months.new(3).hash).to eq(ISO8601::Months.new(3).hash)
     end

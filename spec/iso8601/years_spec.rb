@@ -4,6 +4,24 @@ RSpec.describe ISO8601::Years do
   let(:common_year) { ISO8601::DateTime.new('2010-01-01') }
   let(:leap_year) { ISO8601::DateTime.new('2000-01-01') }
 
+  describe 'Atomic' do
+    let(:subject) { ISO8601::Years.new(1) }
+
+    it "should respond to the Atomic interface" do
+      [:factor,
+       :to_seconds,
+       :symbol,
+       :to_i,
+       :to_f,
+       :to_s,
+       :value,
+       :<=>,
+       :eql?,
+       :hash,
+       :valid_atom?].each { |m| expect(subject).to respond_to(m) }
+    end
+  end
+
   describe '#factor' do
     it "should return the Year factor" do
       expect { ISO8601::Years.new(1).factor }.to_not raise_error
@@ -39,22 +57,13 @@ RSpec.describe ISO8601::Years do
 
   describe '#symbol' do
     it "should return the ISO symbol" do
-      expect(ISO8601::Years.new(1)).to respond_to(:symbol)
       expect(ISO8601::Years.new(1).symbol).to eq(:Y)
     end
   end
 
   describe '#hash' do
-    let(:subject) { ISO8601::Years.new(3) }
-
-    it "should respond to #hash" do
-      expect(subject).to respond_to(:hash)
-    end
-
     it "should build hash identity by value" do
-      contrast = ISO8601::Years.new(3)
-
-      expect(subject.hash == contrast.hash).to be_truthy
+      expect(ISO8601::Years.new(3).hash).to eq(ISO8601::Years.new(3).hash)
     end
   end
 end
