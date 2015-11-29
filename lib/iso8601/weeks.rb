@@ -18,7 +18,9 @@ module ISO8601
 
     ##
     # The Week factor
-    def factor(base = nil)
+    #
+    # @return [Numeric]
+    def factor
       AVERAGE_FACTOR
     end
 
@@ -29,7 +31,7 @@ module ISO8601
     #   the month length.
     #
     # @return [Numeric]
-    def to_seconds(base = nil)
+    def to_seconds
       AVERAGE_FACTOR * atom
     end
 

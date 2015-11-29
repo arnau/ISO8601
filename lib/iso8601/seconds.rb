@@ -7,11 +7,33 @@ module ISO8601
   # The second is the base unit of measurement of time in the International
   # System of Units (SI) as defined by the International Committee of Weights
   # and Measures.
-  class Seconds < ISO8601::Atom
+  class Seconds
+    include Atomic
+
+    AVERAGE_FACTOR = 1
+
+    ##
+    # @param [Numeric] atom The atom value
+    def initialize(atom)
+      valid_atom?(atom)
+
+      @atom = atom
+    end
+
     ##
     # The Second factor
+    #
+    # @return [Numeric]
     def factor
-      1
+      AVERAGE_FACTOR
+    end
+
+    ##
+    # The amount of seconds
+    #
+    # @return [Numeric]
+    def to_seconds
+      atom
     end
 
     ##
