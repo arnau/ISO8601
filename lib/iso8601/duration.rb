@@ -166,12 +166,6 @@ module ISO8601
     end
 
     ##
-    # @return [Numeric] The duration in days
-    def to_days(base = nil)
-      (to_seconds(base) / 86400)
-    end
-
-    ##
     # @return [Integer] The integer part of the duration in seconds
     def to_i(base = nil)
       to_seconds(base).to_i
