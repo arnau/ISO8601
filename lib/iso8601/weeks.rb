@@ -27,9 +27,6 @@ module ISO8601
     ##
     # The amount of seconds
     #
-    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
-    #   the month length.
-    #
     # @return [Numeric]
     def to_seconds
       AVERAGE_FACTOR * atom
