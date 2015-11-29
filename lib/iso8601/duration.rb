@@ -29,7 +29,7 @@ module ISO8601
     # @param [String, Numeric] input The duration pattern
     def initialize(input)
       @original = input
-      @pattern = to_pattern
+      @pattern = to_pattern(input)
       @atoms = atomize(@pattern)
     end
 
@@ -144,8 +144,8 @@ module ISO8601
     # Converts original input into  a valid ISO 8601 duration pattern.
     #
     # @return [String]
-    def to_pattern
-      (@original.is_a? Numeric) ? "PT#{@original}S" : @original
+    def to_pattern(original)
+      (original.is_a? Numeric) ? "PT#{original}S" : original
     end
 
     ##
