@@ -184,8 +184,11 @@ module ISO8601
     ##
     # @return [Numeric] The duration in seconds
     def to_seconds
-      atoms = [years, months, weeks, days, hours, minutes, seconds]
-      atoms.map(&:to_seconds).reduce(&:+)
+      new_atoms = [years]
+      atoms = [months, weeks, days, hours, minutes, seconds]
+      new_s = new_atoms.map { |a| a.to_seconds(base) }.reduce(&:+)
+
+      new_s + atoms.map(&:to_seconds).reduce(&:+)
     end
 
     ##

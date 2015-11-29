@@ -54,8 +54,7 @@ RSpec.describe ISO8601::Duration do
 
   it "should return a Duration instance from a Numeric input" do
     subject = ISO8601::Duration.new(36993906, ISO8601::DateTime.new('2012-01-01'))
-    contrast = ISO8601::Duration.new('P1Y2M3DT4H5M6S', ISO8601::DateTime.new('2012-01-01'))
-    expect(subject.to_seconds).to eq(contrast.to_seconds)
+    expect(subject.to_seconds).to eq(36993906)
   end
 
   describe '#base' do

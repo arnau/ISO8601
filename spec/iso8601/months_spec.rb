@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe ISO8601::Months do
+  let(:common_year) { ISO8601::DateTime.new('2010-02-01') }
+  let(:leap_year) { ISO8601::DateTime.new('2000-02-01') }
+
   describe '#factor' do
     it "should return the Month factor" do
       expect { ISO8601::Months.new(1).factor }.to_not raise_error
@@ -35,7 +38,7 @@ RSpec.describe ISO8601::Months do
     it "should return the amount of seconds based on february for a leap year" do
       expect(ISO8601::Months.new(2, ISO8601::DateTime.new('2000-02-01')).to_seconds).to eq(5184000)
       expect(ISO8601::Months.new(12, ISO8601::DateTime.new('2000-02-01')).to_seconds).to eq(31622400)
-      expect(ISO8601::Months.new(12, ISO8601::DateTime.new('2000-02-01')).to_seconds).to eq(ISO8601::Years.new(1, ISO8601::DateTime.new("2000-02-01")).to_seconds)
+      expect(ISO8601::Months.new(12, ISO8601::DateTime.new('2000-02-01')).to_seconds).to eq(ISO8601::Years.new(1).to_seconds(leap_year))
     end
   end
   describe '#symbol' do

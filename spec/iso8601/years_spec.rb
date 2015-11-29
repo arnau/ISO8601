@@ -27,13 +27,13 @@ RSpec.describe ISO8601::Years do
     end
 
     it "should return the amount of seconds for a common year" do
-      expect(ISO8601::Years.new(2, common_year).to_seconds).to eq(63072000)
-      expect(ISO8601::Years.new(12, common_year).to_seconds).to eq(378691200)
+      expect(ISO8601::Years.new(2).to_seconds(common_year)).to eq(63072000)
+      expect(ISO8601::Years.new(12).to_seconds(common_year)).to eq(378691200)
     end
 
     it "should return the amount of seconds for a leap year" do
-      expect(ISO8601::Years.new(2, leap_year).to_seconds).to eq(63158400)
-      expect(ISO8601::Years.new(15, leap_year).to_seconds).to eq(473385600)
+      expect(ISO8601::Years.new(2).to_seconds(leap_year)).to eq(63158400)
+      expect(ISO8601::Years.new(15).to_seconds(leap_year)).to eq(473385600)
     end
   end
 

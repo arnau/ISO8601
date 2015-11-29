@@ -18,7 +18,7 @@ module ISO8601
     # The "duration year" average is calculated through time intervals of 400
     # "duration years". Each cycle of 400 "duration years" has 303 "common
     # years" of 365 "calendar days" and 97 "leap years" of 366 "calendar days".
-    AVERAGE_SECONDS = ((365 * 303 + 366 * 97) / 400) * 86400
+    AVERAGE_FACTOR = ((365 * 303 + 366 * 97) / 400) * 86400
 
     ##
     # @param [Numeric] atom The atom value
@@ -38,7 +38,7 @@ module ISO8601
     #
     # @return [Integer]
     def factor
-      return average_factor if base.nil?
+      return AVERAGE_FACTOR if base.nil?
       return adjusted_factor(1) if atom.zero?
 
       adjusted_factor(atom)
@@ -48,16 +48,14 @@ module ISO8601
       (::Time.utc((base.year + atom).to_i) - ::Time.utc(base.year)) / atom
     end
 
-    def average_factor
-      AVERAGE_SECONDS
-    end
-
     ##
     # The amount of seconds
     #
     # @return [Numeric]
-    def to_seconds
-      atom * factor
+    def to_seconds(base = nil)
+      return (AVERAGE_FACTOR * atom) if base.nil?
+
+      ::Time.utc(year(base, atom)) - ::Time.utc(base.year)
     end
 
     ##
@@ -66,6 +64,12 @@ module ISO8601
     # @return [Symbol]
     def symbol
       :Y
+    end
+
+    private
+
+    def year(base, atom)
+      (base.year + atom).to_i
     end
   end
 end
