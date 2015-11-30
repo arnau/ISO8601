@@ -24,7 +24,7 @@ module ISO8601
   # @example
   #     start_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
   #     duration = ISO8601::Duration.new('P1MT2H', base)
-  #     ti = ISO8601::TimeInterval.new(duration, start_time: start_time)
+  #     ti = ISO8601::TimeInterval.from_duration(duration, start_time: start_time)
   #     ti.to_f # => 2635200.0 (Seconds)
   #
   class TimeInterval
