@@ -4,25 +4,27 @@ module ISO8601
   # See https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
   #
   # @example
+  #     ti = ISO8601::TimeInterval.new('P1MT2H/2014-05-28T19:53Z')
+  #     ti.to_f # => 2635200.0
+  #     ti2 = ISO8601::TimeInterval.new('2014-05-28T19:53Z/2014-05-28T20:53Z')
+  #     ti2.to_f # => 3600.0
+  #
+  # @example
   #     start_time = ISO8601::DateTime.new('2014-05-28T19:53Z')
   #     end_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
-  #     ti = ISO8601::TimeInterval.new(start_time, end_time)
+  #     ti = ISO8601::TimeInterval.from_datetimes(start_time, end_time)
   #     ti.to_f # => 172800.0 (Seconds)
   #
   # @example
-  #     start_time = ISO8601::Duration.new('P1MT2H')
+  #     duration = ISO8601::Duration.new('P1MT2H')
   #     end_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
-  #     ti = ISO8601::TimeInterval.new(start_time, end_time)
+  #     ti = ISO8601::TimeInterval.from_duration(duration, end_time: end_time)
   #     ti.to_f # => 2635200.0 (Seconds)
   #
   # @example
-  #     ti = ISO8601::TimeInterval.new('P1MT2H/2014-05-28T19:53Z')
-  #     ti.to_f # => 2635200.0
-  #
-  # @example
-  #     base = ISO8601::DateTime.new('2014-05-30T19:53Z')
+  #     start_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
   #     duration = ISO8601::Duration.new('P1MT2H', base)
-  #     ti = ISO8601::TimeInterval.new(start_time, end_time)
+  #     ti = ISO8601::TimeInterval.new(duration, start_time: start_time)
   #     ti.to_f # => 2635200.0 (Seconds)
   #
   class TimeInterval
@@ -33,42 +35,83 @@ module ISO8601
     TYPE_DURATION = :duration
 
     ##
-    # @param [ISO8601::DateTime, ISO8601::Duration, String] pattern This parameter
-    #     can define the full interval, based on a pattern or the start time.
-    #     If this param is DateTime or Duration, end_time param is required
-    # @param [ISO8601::DateTime, ISO8601::Duration] end_time End time of the
-    #     interval.
+    # Initialize a TimeInterval based on a two ISO8601::DateTime instances.
     #
-    # @raise [ISO8601::Errors::TypeError] If any param is not an instance of
-    #   ISO8601::Duration or ISO8601::DateTime
-    # @raise [ArgumentError] If the first element is an ISO8601::Duration/DateTime and
-    #   second element is nil or first parameter is an ISO8601::Duration and it's base
-    #   is nil when second parameter is nil too.
-    def initialize(pattern, end_time = nil)
-      if pattern.is_a? String
-        # Check the pattern
-        fail(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
-        # It's a valid Pattern, we need to detect the elements
-        @pattern = pattern
-        time = pattern.split('/')
-        # We must check this because if a pattern is empty, this method return an
-        # Array of 1 element.
-        fail(ISO8601::Errors::UnknownPattern, pattern) if time.size != 2
-        @start_time, @start_type = init_time_from_pattern(time.first)
-        @end_time, @end_type = init_time_from_pattern(time.last)
-      elsif pattern.is_a?(ISO8601::Duration) && end_time.nil?
-        @start_time, @start_type = init_time_from_duration(pattern)
-        pattern.base = nil
-        @end_time = pattern
-        @end_type = TYPE_DURATION
+    # @param [ISO8601::DateTime] start_time An ISO8601::DateTime that represents
+    #     start time of the interval.
+    # @param [ISO8601::DateTime] start_time An ISO8601::DateTime that represents
+    #     end time of the interval.
+    #
+    # @raise [ArgumentError] If any param is not an instance of ISO8601::DateTime
+    #
+    def self.from_datetimes(start_time, end_time)
+      valid_date_time?(start_time) && valid_date_time?(end_time)
+      new("#{start_time}/#{end_time}")
+    end
+
+    ##
+    # Initialize a TimeInterval based on a ISO8601::Duration. To set a correct
+    # time interval, we need a start or end point. This point is sent in second
+    # parameter.
+    #
+    # @param [ISO8601::Duration] duration An ISO8601::Duration that represent the
+    #     size of the interval.
+    # @param [Hash] time A hash to set the start or end point of the time interval.
+    #     This hash must contain an unique key (start_time or end_time) and a
+    #     ISO8601::DateTime as value. For example:
+    #       { start_time: iso_8601_datetime }
+    #       { end_time: iso_8601_datetime }
+    #
+    # @raise [ArgumentError] if duration is not an instance of ISO8601::Duration
+    # @raise [ArgumentError] if keys of time hash are not valid, or the value is not
+    #     an instance of ISO8601::DateTime
+    #
+    def self.from_duration(duration, time)
+      valid_duration? duration
+      pattern = ''
+      if time.is_a?(Hash) && time.keys.size == 1
+        if time.keys.include?(:start_time) && valid_date_time?(time[:start_time])
+          pattern = "#{time[:start_time]}/#{duration}"
+        elsif time.keys.include?(:end_time) && valid_date_time?(time[:end_time])
+          pattern = "#{duration}/#{time[:end_time]}"
+        else
+          fail(ArgumentError, 'You must specify an start_time or end_time in second parameter')
+        end
       else
-        # Initialize with two objects
-        fail(ArgumentError,
-             'A second parameter is required when the first parameter is a '\
-             'ISO8601::DateTime or ISO8601::Duration') if end_time.nil?
-        @start_time, @start_type = init_time_from_object(pattern)
-        @end_time, @end_type = init_time_from_object(end_time)
+        fail(ArgumentError, 'Time parameter is not valid')
       end
+      # Initialize the class
+      new(pattern)
+    end
+
+    ##
+    # Initialize a TimeInterval ISO8601 by a pattern. If you initialize it with
+    # a duration pattern, the second argument is mandatory because you need to
+    # specify an start/end point to calculate the interval.
+    #
+    # @param [String] pattern This parameter define a full time interval. These
+    #     patterns are defined in the ISO8601:
+    #         - <start_time>/<end_time>
+    #         - <start_time>/<duration>
+    #         - <duration>/<end_time>
+    #
+    # @raise [ISO8601::Errors::UnknownPattern] If given pattern is not a valid
+    #     ISO8601 pattern.
+    # @raise [ArgumentError] Pattern parameter must be an string
+    #
+    def initialize(pattern)
+      # Check pattern
+      fail(ArgumentError, 'The pattern must be an string') unless pattern.is_a? String
+      fail(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
+
+      # It's a valid Pattern, we need to detect the elements
+      @pattern = pattern
+      time = pattern.split('/')
+      # We must check this because if a pattern is empty, this method return an
+      # Array of 1 element.
+      fail(ISO8601::Errors::UnknownPattern, pattern) if time.size != 2
+      @start_time, @start_type = init_time_from_pattern(time.first)
+      @end_time, @end_type = init_time_from_pattern(time.last)
       # Check classes of initialized elements
       check_times
     end
@@ -245,7 +288,8 @@ module ISO8601
     # @raise [ISO8601::Errors::TypeError] If start_time and end_time are durations
     def check_times
       return unless start_duration? && end_duration?
-      fail ISO8601::Errors::TypeError, 'Only one time (start time or end time) can be a duration'
+      fail ISO8601::Errors::UnknownPattern,
+           "The pattenr of a time interval can't be <duration>/<duration>"
     end
 
     ##
@@ -273,45 +317,32 @@ module ISO8601
     end
 
     ##
-    # Initialize time and type based on a Duration.
+    # Check if the parameter is an instance of Duration class.
     #
-    # @param [ISO8601::Duration] time String with pattern
+    # @param [ISO8601::Duration] duration Duration instance
     #
-    # @raise [ArgumentError] If the base of time is nil
-    #
-    # @return [Array] Array with two elements: time and type (:duration or :datetime)
-    def init_time_from_duration(duration)
-      # The duration must have a base
+    # @raise [ArgumentError] If one of parameters is not an instance of
+    #   ISO8601::Duration
+    def self.valid_duration?(duration)
+      # Check the type of parameters
+      return true if duration.is_a?(ISO8601::Duration)
       fail(ArgumentError,
-           'Duration must include a Base to calculate the interval') if duration.base.nil?
-      parsed_time = duration.base
-      type = TYPE_DATETIME
-      # Return values
-      [parsed_time, type]
+           'Duration must be an instance of ISO8601::Duration')
     end
 
     ##
-    # Check the class of given time. It must be ISO8601::DateTime or
-    # ISO8601::Duration
+    # Check two parameters are an instance of DateTime class.
     #
-    # @param [ISO8601::DateTime, ISO8601::Duration] time Given time
+    # @param [ISO8601::DateTime] time DateTime instance
     #
-    # @raise [ISO8601::Errors::TypeError] If time param is not an instance of
-    #   ISO8601::Duration or ISO8601::DateTime
+    # @raise [ArgumentError] If time parameters is not an instance of
+    #   ISO8601::DateTime
     #
-    # @return [Array] Array with two elements: time and type (:duration or :datetime)
-    def init_time_from_object(time)
-      # Check the type of time
-      if time.is_a? ISO8601::DateTime
-        type = TYPE_DATETIME
-      elsif time.is_a? ISO8601::Duration
-        type = TYPE_DURATION
-      else
-        # Not valid type
-        fail ISO8601::Errors::TypeError, time
-      end
-      # Return values
-      [time, type]
+    def self.valid_date_time?(time)
+      # Check the type of parameters
+      return true if time.is_a?(ISO8601::DateTime)
+      fail(ArgumentError,
+           'Start time and End time must be an instance of ISO8601::DateTime')
     end
 
     ##

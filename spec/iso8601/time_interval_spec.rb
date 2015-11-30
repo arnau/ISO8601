@@ -48,9 +48,9 @@ RSpec.describe ISO8601::TimeInterval do
       end
     end
 
-    it "should raise a ISO8601::Errors::TypeError if start time and end time are durations" do
-      expect { ISO8601::TimeInterval.new('P1Y2M10D/P1Y2M10D') }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ISO8601::TimeInterval.new('P1Y0.5M/P1Y0.5M') }.to raise_error(ISO8601::Errors::TypeError)
+    it "should raise a ISO8601::Errors::UnknownPattern if start time and end time are durations" do
+      expect { ISO8601::TimeInterval.new('P1Y2M10D/P1Y2M10D') }.to raise_error(ISO8601::Errors::UnknownPattern)
+      expect { ISO8601::TimeInterval.new('P1Y0.5M/P1Y0.5M') }.to raise_error(ISO8601::Errors::UnknownPattern)
     end
 
     it "should parse any allowed pattern" do
@@ -81,150 +81,134 @@ RSpec.describe ISO8601::TimeInterval do
   end
 
   describe 'initialization with a ISO8601::Duration' do
-    it "should raise an ArgumentError if the Base of duration is nil" do
-      duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
-      duration2 = ISO8601::Duration.new('P1Y1DT12H')
+    it "should raise a ArgumentError if parameter is not a ISO8601::Duration" do
+      datetime = ISO8601::DateTime.new('2010-05-09T10:30:12Z')
 
-      expect { ISO8601::TimeInterval.new(duration) }.to raise_error(ArgumentError)
-      expect { ISO8601::TimeInterval.new(duration2) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_duration('hi', {}) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_duration([], {}) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_duration(datetime, {}) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_duration({}, {}) }.to raise_error(ArgumentError)
     end
 
-    it "should initialize with a correct base" do
-      duration = ISO8601::Duration.new('P1M', ISO8601::DateTime.new('2010-05-09T10:30:12Z'))
-      expect { ISO8601::TimeInterval.new(duration) }.to_not raise_error
+    it "should raise an ArgumentError if the time hash is no valid" do
+      duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
+      datetime = ISO8601::DateTime.new('2010-05-09T10:30:12Z')
+
+      expect { ISO8601::TimeInterval.from_duration(duration, { time: datetime }) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_duration(duration, { start_time: nil }) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_duration(duration, { start_time: datetime, end_time: datetime }) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_duration(duration, {}) }.to raise_error(ArgumentError)
+    end
+
+    it "should initialize with a valid duration and time" do
+      time = ISO8601::DateTime.new('2010-05-09T10:30:12Z')
+      duration = ISO8601::Duration.new('P1M')
+
+      expect { ISO8601::TimeInterval.from_duration(duration, { start_time: time }) }.to_not raise_error
+      expect { ISO8601::TimeInterval.from_duration(duration, { end_time: time }) }.to_not raise_error
     end
   end
 
-  describe 'object initialization' do
-    it "should raise a ISO8601::Errors::TypeError if parameters are not a ISO8601::Duration or ISO8601::DateTime instance" do
+  describe 'initialization with a ISO8601::DateTime' do
+    it "should raise a ArgumentError if parameters are not an ISO8601::DateTime instance" do
       duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:12Z')
 
-      expect { ISO8601::TimeInterval.new(duration, 'Hello!') }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ISO8601::TimeInterval.new([], duration) }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ISO8601::TimeInterval.new(datetime, 'Hello!') }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ISO8601::TimeInterval.new({}, datetime) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ISO8601::TimeInterval.from_datetimes(duration, datetime) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_datetimes(datetime, duration) }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_datetimes(datetime, 'Hello!') }.to raise_error(ArgumentError)
+      expect { ISO8601::TimeInterval.from_datetimes({}, datetime) }.to raise_error(ArgumentError)
     end
 
-    it "should raise a ISO8601::Errors::TypeError if start time and end time are durations" do
-      duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
-      duration2 = ISO8601::Duration.new('P1Y1M1DT2H')
-      expect { ISO8601::TimeInterval.new(duration, duration) }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ISO8601::TimeInterval.new(duration, duration2) }.to raise_error(ISO8601::Errors::TypeError)
-    end
-
-    it "should raise an ArgumentError if second parameter is nil" do
-      duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
-      datetime = ISO8601::DateTime.new('2010-05-09T10:30:12Z')
-
-      expect { ISO8601::TimeInterval.new(duration) }.to raise_error(ArgumentError)
-      expect { ISO8601::TimeInterval.new(datetime) }.to raise_error(ArgumentError)
-      expect { ISO8601::TimeInterval.new(datetime, nil) }.to raise_error(ArgumentError)
-      expect { ISO8601::TimeInterval.new(duration, nil) }.to raise_error(ArgumentError)
-    end
-
-    it "should initialize class with a valid object" do
-      duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
+    it "should initialize class with a valid datetimes" do
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:12Z')
       datetime2 = ISO8601::DateTime.new('2010-05-15T10:30:12Z')
-      duration_with_base = ISO8601::Duration.new('P1Y1M1DT0.5H', datetime)
 
-      expect { ISO8601::TimeInterval.new(duration, datetime) }.to_not raise_error
-      expect { ISO8601::TimeInterval.new(datetime, duration) }.to_not raise_error
-      expect { ISO8601::TimeInterval.new(datetime, datetime2) }.to_not raise_error
-      expect { ISO8601::TimeInterval.new(duration_with_base) }.to_not raise_error
+      expect { ISO8601::TimeInterval.from_datetimes(datetime, datetime2) }.to_not raise_error
+      expect { ISO8601::TimeInterval.from_datetimes(datetime2, datetime) }.to_not raise_error
     end
   end
 
   describe "#to_f" do
     it "should calculate the size of time interval" do
-      duration = ISO8601::Duration.new('PT1H')
       hour = (60 * 60).to_f
-      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
-      datetime2 = ISO8601::DateTime.new('2010-05-09T11:30:00Z')
-      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
+      pattern = 'PT1H/2010-05-09T10:30:00Z'
+      pattern2 = '2010-05-09T11:30:00Z/PT1H'
+      pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).to_f).to eq(hour)
-      expect(ISO8601::TimeInterval.new(datetime, duration).to_f).to eq(hour)
-      expect(ISO8601::TimeInterval.new(datetime, datetime2).to_f).to eq(hour)
-      expect(ISO8601::TimeInterval.new(duration_with_base).to_f).to eq(hour)
-      expect(ISO8601::TimeInterval.new(datetime, datetime).to_f).to eq(0)
-      expect(ISO8601::TimeInterval.new(datetime2, datetime).to_f).to eq(-hour)
+      expect(ISO8601::TimeInterval.new(pattern).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.new(pattern2).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.new(pattern3).to_f).to eq(hour)
     end
   end
 
   describe "#start_time" do
     it "should return always a ISO8601::DateTime object" do
-      duration = ISO8601::Duration.new('PT1H')
-      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
-      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
+      pattern = 'PT1H/2010-05-09T10:30:00Z'
+      pattern2 = '2010-05-09T11:30:00Z/PT1H'
+      pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).start_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, duration).start_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, datetime).start_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(duration_with_base).start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern).start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern2).start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern3).start_time).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the start_time" do
       start_time = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
-      duration = ISO8601::Duration.new('PT1H')
-      duration_with_base = ISO8601::Duration.new('PT1H', start_time)
+      pattern = 'PT1H/2010-05-09T11:30:00Z'
+      pattern2 = '2010-05-09T10:30:00Z/PT1H'
+      pattern3 = '2010-05-09T10:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new('PT1H/2010-05-09T11:30:00Z').start_time).to eq(start_time)
-      expect(ISO8601::TimeInterval.new('2010-05-09T10:30:00Z/PT1H').start_time).to eq(start_time)
-      expect(ISO8601::TimeInterval.new(start_time, (start_time + 60 * 60)).start_time).to eq(start_time)
-      expect(ISO8601::TimeInterval.new(start_time, duration).start_time).to eq(start_time)
-      expect(ISO8601::TimeInterval.new(duration_with_base).start_time).to eq(start_time)
+      expect(ISO8601::TimeInterval.new(pattern).start_time).to eq(start_time)
+      expect(ISO8601::TimeInterval.new(pattern2).start_time).to eq(start_time)
+      expect(ISO8601::TimeInterval.new(pattern3).start_time).to eq(start_time)
     end
   end
 
   describe "#original_start_time" do
     it "should return an instance of original pattern/object" do
-      duration = ISO8601::Duration.new('PT1H')
-      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
-      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
+      pattern = 'PT1H/2010-05-09T11:30:00Z'
+      pattern2 = '2010-05-09T10:30:00Z/PT1H'
+      pattern3 = '2010-05-09T10:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).original_start_time).to be_an_instance_of(ISO8601::Duration)
-      expect(ISO8601::TimeInterval.new(datetime, duration).original_start_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(duration_with_base).original_start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern).original_start_time).to be_an_instance_of(ISO8601::Duration)
+      expect(ISO8601::TimeInterval.new(pattern2).original_start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern3).original_start_time).to be_an_instance_of(ISO8601::DateTime)
     end
   end
 
   describe "#end_time" do
     it "should return always a ISO8601::DateTime object" do
-      duration = ISO8601::Duration.new('PT1H')
-      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
-      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
+      pattern = 'PT1H/2010-05-09T10:30:00Z'
+      pattern2 = '2010-05-09T11:30:00Z/PT1H'
+      pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).end_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, duration).end_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, datetime).end_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(duration_with_base).end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern).end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern2).end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern3).end_time).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the end_time" do
       end_time = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
-      duration = ISO8601::Duration.new('PT1H')
-      duration_with_base = ISO8601::Duration.new('PT1H', end_time)
+      pattern = 'PT1H/2010-05-09T10:30:00Z'
+      pattern2 = '2010-05-09T09:30:00Z/PT1H'
+      pattern3 = '2010-05-09T09:30:00Z/2010-05-09T10:30:00Z'
 
-      expect(ISO8601::TimeInterval.new('PT1H/2010-05-09T10:30:00Z').end_time).to eq(end_time)
-      expect(ISO8601::TimeInterval.new('2010-05-09T09:30:00Z/PT1H').end_time).to eq(end_time)
-      expect(ISO8601::TimeInterval.new((end_time - 60 * 60), end_time).end_time).to eq(end_time)
-      expect(ISO8601::TimeInterval.new(end_time, duration).end_time).to eq((end_time + 60 * 60))
-      # This calculation is Base + Duration
-      expect(ISO8601::TimeInterval.new(duration_with_base).end_time).to eq((end_time + duration.to_f))
+      expect(ISO8601::TimeInterval.new(pattern).end_time).to eq(end_time)
+      expect(ISO8601::TimeInterval.new(pattern2).end_time).to eq(end_time)
+      expect(ISO8601::TimeInterval.new(pattern3).end_time).to eq(end_time)
     end
   end
 
   describe "#original_end_time" do
     it "should return an instance of original pattern/object" do
-      duration = ISO8601::Duration.new('PT1H')
-      datetime = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
-      duration_with_base = ISO8601::Duration.new('PT1H', datetime)
+      pattern = 'PT1H/2010-05-09T10:30:00Z'
+      pattern2 = '2010-05-09T09:30:00Z/PT1H'
+      pattern3 = '2010-05-09T09:30:00Z/2010-05-09T10:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).original_end_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(datetime, duration).original_end_time).to be_an_instance_of(ISO8601::Duration)
-      expect(ISO8601::TimeInterval.new(duration_with_base).original_end_time).to be_an_instance_of(ISO8601::Duration)
+      expect(ISO8601::TimeInterval.new(pattern).original_end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern2).original_end_time).to be_an_instance_of(ISO8601::Duration)
+      expect(ISO8601::TimeInterval.new(pattern3).original_end_time).to be_an_instance_of(ISO8601::DateTime)
     end
   end
 
@@ -241,12 +225,10 @@ RSpec.describe ISO8601::TimeInterval do
       duration = ISO8601::Duration.new('P1Y1M1DT0.5H')
       datetime = ISO8601::DateTime.new('2010-05-09T10:30:12+00:00')
       datetime2 = ISO8601::DateTime.new('2010-05-15T10:30:12+00:00')
-      duration_with_base = ISO8601::Duration.new('P1Y1M1DT0.5H', datetime)
 
-      expect(ISO8601::TimeInterval.new(duration, datetime).to_s).to eq('P1Y1M1DT0.5H/2010-05-09T10:30:12+00:00')
-      expect(ISO8601::TimeInterval.new(datetime, duration).to_s).to eq('2010-05-09T10:30:12+00:00/P1Y1M1DT0.5H')
-      expect(ISO8601::TimeInterval.new(datetime, datetime2).to_s).to eq('2010-05-09T10:30:12+00:00/2010-05-15T10:30:12+00:00')
-      expect(ISO8601::TimeInterval.new(duration_with_base).to_s).to eq('2010-05-09T10:30:12+00:00/P1Y1M1DT0.5H')
+      expect(ISO8601::TimeInterval.from_duration(duration, { end_time: datetime }).to_s).to eq('P1Y1M1DT0.5H/2010-05-09T10:30:12+00:00')
+      expect(ISO8601::TimeInterval.from_duration(duration, { start_time: datetime }).to_s).to eq('2010-05-09T10:30:12+00:00/P1Y1M1DT0.5H')
+      expect(ISO8601::TimeInterval.from_datetimes(datetime, datetime2).to_s).to eq('2010-05-09T10:30:12+00:00/2010-05-15T10:30:12+00:00')
     end
   end
 
