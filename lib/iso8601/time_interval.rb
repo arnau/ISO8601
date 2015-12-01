@@ -67,19 +67,8 @@ module ISO8601
     #     an instance of ISO8601::DateTime
     #
     def self.from_duration(duration, time)
-      valid_duration? duration
-      pattern = ''
-      if time.is_a?(Hash) && time.keys.size == 1
-        if time.keys.include?(:start_time) && valid_date_time?(time[:start_time])
-          pattern = "#{time[:start_time]}/#{duration}"
-        elsif time.keys.include?(:end_time) && valid_date_time?(time[:end_time])
-          pattern = "#{duration}/#{time[:end_time]}"
-        else
-          fail(ArgumentError, 'You must specify an start_time or end_time in second parameter')
-        end
-      else
-        fail(ArgumentError, 'Time parameter is not valid')
-      end
+      valid_duration?(duration)
+      pattern = pattern_from_duration(duration, time)
       # Initialize the class
       new(pattern)
     end
@@ -101,7 +90,7 @@ module ISO8601
     #
     def initialize(pattern)
       # Check pattern
-      fail(ArgumentError, 'The pattern must be an string') unless pattern.is_a? String
+      fail(ArgumentError, 'The pattern must be an string') unless pattern.is_a?(String)
       fail(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
 
       # It's a valid Pattern, we need to detect the elements
@@ -328,6 +317,31 @@ module ISO8601
       return true if duration.is_a?(ISO8601::Duration)
       fail(ArgumentError,
            'Duration must be an instance of ISO8601::Duration')
+    end
+
+    ##
+    # Create the pattern based on a duration and time options.
+    #
+    # @param [ISO8601::Duration] duration An ISO8601::Duration that represent the
+    #     size of the interval.
+    # @param [Hash] time A hash to set the start or end point of the time interval.
+    #     This hash must contain an unique key (start_time or end_time) and a
+    #     ISO8601::DateTime as value. For example:
+    #       { start_time: iso_8601_datetime }
+    #       { end_time: iso_8601_datetime }
+    #
+    # @raise [ArgumentError] if keys of time hash are not valid, or the value is not
+    #     an instance of ISO8601::DateTime
+    #
+    def self.pattern_from_duration(duration, time)
+      fail(ArgumentError, 'Time parameter is not valid') if time.is_a?(Hash) && time.keys.size != 1
+      if time.keys.include?(:start_time) && valid_date_time?(time[:start_time])
+        return "#{time[:start_time]}/#{duration}"
+      elsif time.keys.include?(:end_time) && valid_date_time?(time[:end_time])
+        return "#{duration}/#{time[:end_time]}"
+      else
+        fail(ArgumentError, 'You must specify an start_time or end_time in second parameter')
+      end
     end
 
     ##
