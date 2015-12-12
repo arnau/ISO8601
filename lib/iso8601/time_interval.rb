@@ -365,7 +365,8 @@ module ISO8601
       fail(ArgumentError, 'Timehash parameter must have only one key') \
         unless timehash.keys.length == 1
 
-      fail(ArgumentError, 'You must specify an start_time or end_time in second parameter') \
+      fail(ArgumentError,
+           'You must specify an start_time or end_time in second parameter') \
         unless timehash.keys.include?(:start_time) || timehash.keys.include?(:end_time)
     end
 
