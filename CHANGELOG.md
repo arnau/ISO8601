@@ -1,5 +1,17 @@
 ## 0.9.0 (wip)
 
+This version is **not compatible** with previous versions.  Atoms and Durations
+changed their interface when treating base dates so it is only applied when
+computing the Atom length (e.g. `#to_seconds`).  As a consequence, it is no
+longer possible to do operations like `DateTime + Duration`.
+
+* Remove `Duration#to_i`.
+* Change `Duration#to_seconds` to accept a base `DateTime`.
+* Remove duration dependency on a base date on the instance level.
+* Change `Years#to_seconds` and `Months#to_seconds` to accept a base `DateTime`.
+* Remove atom dependency on a base date on the instance level.
+* Add `Atomic` mixin.
+* Remove `Atom` abstract class.
 * Allow `ISO8601::Duration` to perform operations with `Numeric` (thanks @Angelmmiguel).
 
 ## 0.8.7

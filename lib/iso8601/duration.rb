@@ -3,47 +3,34 @@
 module ISO8601
   ##
   # A duration representation. When no base is provided, all atoms use an
-  # average factor which affects the result of any computation like
-  # `#to_seconds`.
+  # average factor to compute the amount of seconds.
   #
   # @example
   #     d = ISO8601::Duration.new('P2Y1MT2H')
-  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0, @base=nil>
-  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0, @base=nil>
-  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0, @base=nil>
-  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0, @base=nil>
+  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0>
+  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0>
+  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0>
+  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0>
   #     d.to_seconds # => 65707200.0
   #
   # @example Explicit base date time
   #     base = ISO8601::DateTime.new('2014-08017')
-  #     d = ISO8601::Duration.new('P2Y1MT2H', base)
-  #     d.years  # => #<ISO8601::Years:0x000000051adee8 @atom=2.0,
-  #                     @base=#<ISO8601::DateTime...>>
-  #     d.months # => #<ISO8601::Months:0x00000004f230b0 @atom=1.0,
-  #                     @base=#<ISO8601::DateTime...>>
-  #     d.days   # => #<ISO8601::Days:0x00000005205468 @atom=0,
-  #                     @base=#<ISO8601::DateTime...>>
-  #     d.hours  # => #<ISO8601::Hours:0x000000051e02a8 @atom=2.0,
-  #                     @base=#<ISO8601::DateTime...>>
-  #     d.to_seconds # => 65757600.0
+  #     d.to_seconds(base) # => 65757600.0
   #
   # @example Number of seconds versus patterns
   #     di = ISO8601::Duration.new(65707200)
-  #     dp = ISO8601::Duration.new('P2Y1MT2H')
   #     ds = ISO8601::Duration.new('P65707200S')
+  #     dp = ISO8601::Duration.new('P2Y1MT2H')
   #     di == dp # => true
   #     di == ds # => true
   #
   class Duration
     ##
     # @param [String, Numeric] input The duration pattern
-    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
-    #   calculate the duration against an specific point in time.
-    def initialize(input, base = nil)
+    def initialize(input)
       @original = input
-      @pattern = to_pattern
+      @pattern = to_pattern(input)
       @atoms = atomize(@pattern)
-      @base = validate_base(base)
     end
 
     ##
@@ -53,21 +40,6 @@ module ISO8601
     attr_reader :atoms
 
     ##
-    # Datetime base.
-    #
-    # @return [ISO8601::DateTime, nil]
-    attr_reader :base
-
-    ##
-    # Assigns a new base datetime
-    #
-    # @return [ISO8601::DateTime, nil]
-    def base=(value)
-      @base = validate_base(value)
-      @base
-    end
-
-    ##
     # @return [String] The string representation of the duration
     attr_reader :pattern
     alias_method :to_s, :pattern
@@ -75,45 +47,43 @@ module ISO8601
     ##
     # @return [ISO8601::Years] The years of the duration
     def years
-      ISO8601::Years.new(atoms[:years], base)
+      ISO8601::Years.new(atoms[:years])
     end
 
     ##
     # @return [ISO8601::Months] The months of the duration
     def months
-      # Changes the base to compute the months for the right base year
-      month_base = base.nil? ? nil : base + years.to_seconds
-      ISO8601::Months.new(atoms[:months], month_base)
+      ISO8601::Months.new(atoms[:months])
     end
 
     ##
     # @return [ISO8601::Weeks] The weeks of the duration
     def weeks
-      ISO8601::Weeks.new(atoms[:weeks], base)
+      ISO8601::Weeks.new(atoms[:weeks])
     end
 
     ##
     # @return [ISO8601::Days] The days of the duration
     def days
-      ISO8601::Days.new(atoms[:days], base)
+      ISO8601::Days.new(atoms[:days])
     end
 
     ##
     # @return [ISO8601::Hours] The hours of the duration
     def hours
-      ISO8601::Hours.new(atoms[:hours], base)
+      ISO8601::Hours.new(atoms[:hours])
     end
 
     ##
     # @return [ISO8601::Minutes] The minutes of the duration
     def minutes
-      ISO8601::Minutes.new(atoms[:minutes], base)
+      ISO8601::Minutes.new(atoms[:minutes])
     end
 
     ##
     # @return [ISO8601::Seconds] The seconds of the duration
     def seconds
-      ISO8601::Seconds.new(atoms[:seconds], base)
+      ISO8601::Seconds.new(atoms[:seconds])
     end
 
     ##
@@ -125,7 +95,7 @@ module ISO8601
     ##
     # @return [ISO8601::Duration] The absolute representation of the duration
     def abs
-      self.class.new(pattern.sub(/^[-+]/, ''), base)
+      self.class.new(pattern.sub(/^[-+]/, ''))
     end
 
     ##
@@ -133,7 +103,6 @@ module ISO8601
     #
     # @param [ISO8601::Duration] other The duration to add
     #
-    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def +(other)
       seconds_to_iso(to_seconds + fetch_seconds(other))
@@ -144,7 +113,6 @@ module ISO8601
     #
     # @param [ISO8601::Duration] other The duration to substract
     #
-    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [ISO8601::Duration]
     def -(other)
       seconds_to_iso(to_seconds - fetch_seconds(other))
@@ -153,7 +121,6 @@ module ISO8601
     ##
     # @param [ISO8601::Duration] other The duration to compare
     #
-    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @return [Boolean]
     def ==(other)
       (to_seconds == fetch_seconds(other))
@@ -177,36 +144,28 @@ module ISO8601
     # Converts original input into  a valid ISO 8601 duration pattern.
     #
     # @return [String]
-    def to_pattern
-      (@original.is_a? Numeric) ? "PT#{@original}S" : @original
+    def to_pattern(original)
+      (original.is_a? Numeric) ? "PT#{original}S" : original
     end
 
     ##
+    # @param [ISO8601::DateTime, nil] base (nil) The base datetime to
+    #   calculate the duration against an specific point in time.
+    #
     # @return [Numeric] The duration in seconds
-    def to_seconds
-      atoms = [years, months, weeks, days, hours, minutes, seconds]
-      atoms.map(&:to_seconds).reduce(&:+)
-    end
+    def to_seconds(base = nil)
+      rest = [weeks, days, hours, minutes, seconds].map(&:to_seconds)
 
-    ##
-    # @return [Numeric] The duration in days
-    def to_days
-      (to_seconds / 86400)
-    end
-
-    ##
-    # @return [Integer] The integer part of the duration in seconds
-    def to_i
-      to_seconds.to_i
-    end
-
-    ##
-    # @return [Float] The duration in seconds coerced to float
-    def to_f
-      to_seconds.to_f
+      years.to_seconds(base) + months_to_seconds(base) + rest.reduce(&:+)
     end
 
     private
+
+    # Changes the base to compute the months for the right base year
+    def months_to_seconds(base)
+      month_base = base.nil? ? nil : base + years.to_seconds(base)
+      months.to_seconds(month_base)
+    end
 
     ##
     # Splits a duration pattern into valid atoms.
@@ -337,7 +296,7 @@ module ISO8601
       fail ISO8601::Errors::InvalidFractions if fractions.size > 1 || consistent
     end
 
-    def compare_bases(other)
+    def compare_bases(other, base)
       fail ISO8601::Errors::DurationBaseError, other if base != other.base
     end
 
@@ -347,16 +306,14 @@ module ISO8601
     # @param [ISO8601::Duration, Numeric] other Instance of a class to fetch
     #   seconds.
     #
-    # @raise [ISO8601::Errors::DurationBaseError] If bases doesn't match
     # @raise [ISO8601::Errors::TypeError] If other param is not an instance of
     #   ISO8601::Duration or Numeric classes
     #
     # @return [Float] Number of seconds of other param Object
     #
-    def fetch_seconds(other)
+    def fetch_seconds(other, base = nil)
       if other.is_a? ISO8601::Duration
-        compare_bases(other)
-        other.to_seconds
+        other.to_seconds(base)
       elsif other.is_a? Numeric
         other.to_f
       else
