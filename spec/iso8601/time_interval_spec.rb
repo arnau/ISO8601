@@ -53,30 +53,36 @@ RSpec.describe ISO8601::TimeInterval do
       expect { ISO8601::TimeInterval.new('P1Y0.5M/P1Y0.5M') }.to raise_error(ISO8601::Errors::UnknownPattern)
     end
 
-    it "should parse any allowed pattern" do
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P0.5Y') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y0.5M') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y0,5M') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1D') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1.0S') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1,0S') }.to_not raise_error
+    context "allowed patterns" do
+      it "should parse <start>/<duration>" do
+        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P0.5Y') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y0.5M') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y0,5M') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1D') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1.0S') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1,0S') }.to_not raise_error
+      end
 
-      expect { ISO8601::TimeInterval.new('P1Y0,5M/2010-05-09T10:30:12+04') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('P1Y1M1D/2010-05-09T10:30:12+04:00') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('P1Y1M0.5D/2010-05-09T10:30:12-04:00') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('P1Y1M0,5D/2010-05-09T10:30:12-00:00') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('P1Y1M1DT1H/-2014-05-31T16:26:00Z') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('P1Y1M1DT0.5H/2014-05-31T16:26:10.5Z') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('P1Y1M1DT0,5H/2014-05-31T16:26:10,5Z') }.to_not raise_error
+      it "should parse <duration>/<end>" do
+        expect { ISO8601::TimeInterval.new('P1Y0,5M/2010-05-09T10:30:12+04') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('P1Y1M1D/2010-05-09T10:30:12+04:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('P1Y1M0.5D/2010-05-09T10:30:12-04:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('P1Y1M0,5D/2010-05-09T10:30:12-00:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('P1Y1M1DT1H/-2014-05-31T16:26:00Z') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('P1Y1M1DT0.5H/2014-05-31T16:26:10.5Z') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('P1Y1M1DT0,5H/2014-05-31T16:26:10,5Z') }.to_not raise_error
+      end
 
-      expect { ISO8601::TimeInterval.new('2014-001/2010-05-09T10:30') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('2014121/2010-05-09T10:30:12') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('2014-121T10:11:12Z/2010-05-09T10:30:12Z') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('20100509T103012+0400/2010-05-09T10:30:12+04') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('20100509/2010-05-09T10:30:12+04:00') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('T103012+0400/2010-05-09T10:30:12-04:00') }.to_not raise_error
-      expect { ISO8601::TimeInterval.new('T103012+04/2010-05-09T10:30:12-00:00') }.to_not raise_error
+      it "should parse <start>/<end>" do
+        expect { ISO8601::TimeInterval.new('2014-001/2010-05-09T10:30') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('2014121/2010-05-09T10:30:12') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('2014-121T10:11:12Z/2010-05-09T10:30:12Z') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('20100509T103012+0400/2010-05-09T10:30:12+04') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('20100509/2010-05-09T10:30:12+04:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('T103012+0400/2010-05-09T10:30:12-04:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.new('T103012+04/2010-05-09T10:30:12-00:00') }.to_not raise_error
+      end
     end
   end
 
