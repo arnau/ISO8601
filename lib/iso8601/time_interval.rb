@@ -108,6 +108,13 @@ module ISO8601
     end
 
     ##
+    # Alias of `initialize` to have a closer interface to the core `Time`,
+    # `Date` and `DateTime` interfaces.
+    def parse(pattern)
+      new(pattern)
+    end
+
+    ##
     # Calculate and return the start time of the interval
     #
     # @return [ISO8601::DateTime] start time
