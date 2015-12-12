@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
                README.md
                Rakefile
                iso8601.gemspec
+               docs/time-intervals.md
                lib/iso8601.rb
                lib/iso8601/atoms.rb
                lib/iso8601/date.rb

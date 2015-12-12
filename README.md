@@ -24,6 +24,8 @@ times) standard.
 
 Check the [rubydoc documentation](http://www.rubydoc.info/gems/iso8601).
 
+* [Time intervals](docs/time-intervals.md)
+
 ## Comments about this implementation
 
 ### Duration sign

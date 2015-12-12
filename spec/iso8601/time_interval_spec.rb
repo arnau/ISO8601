@@ -332,6 +332,7 @@ RSpec.describe ISO8601::TimeInterval do
       ti = ISO8601::TimeInterval.new('2015-01-15T00:00:00Z/P1D')
       ti2 = ISO8601::TimeInterval.new('2015-01-01T00:00:00Z/P1M')
 
+      expect(ti.subset?(ti)).to be_truthy
       expect(ti.subset?(ti2)).to be_truthy
       expect(ti2.subset?(ti)).to be_falsy
     end
@@ -352,6 +353,7 @@ RSpec.describe ISO8601::TimeInterval do
       ti2 = ISO8601::TimeInterval.new('2015-01-15T00:00:00Z/P1D')
       ti3 = ISO8601::TimeInterval.new('2015-03-01T00:00:00Z/P1D')
 
+      expect(ti.superset?(ti)).to be_truthy
       expect(ti.superset?(ti2)).to be_truthy
       expect(ti.superset?(ti3)).to be_falsy
     end
@@ -378,6 +380,25 @@ RSpec.describe ISO8601::TimeInterval do
       expect(ti.intersect?(included)).to be_truthy
       expect(ti.intersect?(overlaped)).to be_truthy
       expect(ti.intersect?(not_overlaped)).to be_falsy
+    end
+  end
+
+  describe "#disjoint?" do
+    it "raise TypeError when the parameter is not valid" do
+      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      dt = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
+
+      expect { ti.disjoint?('2007-03-01T13:00:00Z/PT1H') }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.disjoint?(1) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.disjoint?(dt) }.to raise_error(ISO8601::Errors::TypeError)
+    end
+
+    it "should check if two intervals are disjoint" do
+      ti = ISO8601::TimeInterval.new('2015-01-01T00:00:00Z/P1D')
+      ti2 = ISO8601::TimeInterval.new('2015-02-01T00:00:00Z/P1D')
+
+      expect(ti.disjoint?(ti)).to be_falsy
+      expect(ti.disjoint?(ti2)).to be_truthy
     end
   end
 end

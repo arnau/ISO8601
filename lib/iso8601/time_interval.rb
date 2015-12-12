@@ -196,7 +196,7 @@ module ISO8601
         unless other.respond_to?(:to_time)
 
       seconds = other.to_time.to_f
-      (start_time.to_f < seconds && seconds < end_time.to_f)
+      (start_time.to_f <= seconds && end_time.to_f >= seconds)
     end
 
     ##
@@ -233,7 +233,6 @@ module ISO8601
        end_time.to_time >= other.end_time.to_time)
     end
 
-
     ##
     # Check if two intervarls intersect.
     #
@@ -249,6 +248,20 @@ module ISO8601
         unless other.is_a?(self.class)
 
       (include?(other.start_time) || include?(other.end_time))
+    end
+
+    ##
+    # Check if two intervarls have no element in common.  This method is the
+    # opposite of `#intersect?`.
+    #
+    # @param [ISO8601::Interval] other Another interval to check if they
+    #   intersect.
+    #
+    # @raise [ISO8601::Errors::TypeError] if the param is not a TimeInterval.
+    #
+    # @return [Boolean]
+    def disjoint?(other)
+      !intersect?(other)
     end
 
     ##
