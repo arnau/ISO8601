@@ -2,7 +2,6 @@ module ISO8601
   ##
   # Contains all ISO8601-specific errors.
   module Errors
-
     ##
     # Catch-all exception.
     class StandardError < ::StandardError
