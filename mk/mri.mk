@@ -21,10 +21,13 @@ mri-shell:
 mri-doc:
 	@$(call mri-task, bundle exec yardoc)
 
+mri-update:
+	@$(call mri-task, bundle update)
+
 ##
 # Build docker image
 mri-build:
-	@$(DOCKER) build -t $(rbx_image_name) -f Dockerfile .
+	@$(DOCKER) build -t $(mri_image_name) -f Dockerfile .
 
 mri-clean:
 	@$(DOCKER) rmi $(mri_image_name)
