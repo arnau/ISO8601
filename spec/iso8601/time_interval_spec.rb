@@ -6,82 +6,82 @@ RSpec.describe ISO8601::TimeInterval do
   describe 'pattern initialization' do
     it "should raise a ISO8601::Errors::UnknownPattern if it not a valid interval pattern" do
       # Invalid separators
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00ZP1Y2M10DT2H30M') }
+      expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00ZP1Y2M10DT2H30M') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z-P1Y2M10D') }
+      expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z-P1Y2M10D') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z~P1Y2M10D') }
+      expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z~P1Y2M10D') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('P1Y2M10DT2H30M2007-03-01T13:00:00Z') }
+      expect { ISO8601::TimeInterval.parse('P1Y2M10DT2H30M2007-03-01T13:00:00Z') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('P1Y2M10D-2007-03-01T13:00:00Z') }
+      expect { ISO8601::TimeInterval.parse('P1Y2M10D-2007-03-01T13:00:00Z') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('P1Y2M10D~2007-03-01T13:00:00Z') }
+      expect { ISO8601::TimeInterval.parse('P1Y2M10D~2007-03-01T13:00:00Z') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z2008-05-11T15:30:00Z') }
+      expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z2008-05-11T15:30:00Z') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z-2008-05-11T15:30:00Z') }
+      expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z-2008-05-11T15:30:00Z') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z~2008-05-11T15:30:00Z') }
+      expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z~2008-05-11T15:30:00Z') }
         .to raise_error(ISO8601::Errors::UnknownPattern)
     end
 
     describe 'with duration' do
       it "should raise a ISO8601::Errors::UnknownPattern for any unknown pattern" do
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/') }
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/') }
           .to raise_error(ISO8601::Errors::UnknownPattern)
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P') }
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P') }
           .to raise_error(ISO8601::Errors::UnknownPattern)
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT') }
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT') }
           .to raise_error(ISO8601::Errors::UnknownPattern)
       end
     end
 
     describe 'with DateTimes' do
       it "should raise a ISO8601::Errors::UnknownPattern for any unknown pattern" do
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/2010-0-09') }
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/2010-0-09') }
           .to raise_error(ISO8601::Errors::UnknownPattern)
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/2010-05-09T103012+0400') }
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/2010-05-09T103012+0400') }
           .to raise_error(ISO8601::Errors::UnknownPattern)
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/2014-W15-02T10:11:12Z') }
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/2014-W15-02T10:11:12Z') }
           .to raise_error(ISO8601::Errors::UnknownPattern)
       end
     end
 
     it "should raise a ISO8601::Errors::UnknownPattern if start time and end time are durations" do
-      expect { ISO8601::TimeInterval.new('P1Y2M10D/P1Y2M10D') }.to raise_error(ISO8601::Errors::UnknownPattern)
-      expect { ISO8601::TimeInterval.new('P1Y0.5M/P1Y0.5M') }.to raise_error(ISO8601::Errors::UnknownPattern)
+      expect { ISO8601::TimeInterval.parse('P1Y2M10D/P1Y2M10D') }.to raise_error(ISO8601::Errors::UnknownPattern)
+      expect { ISO8601::TimeInterval.parse('P1Y0.5M/P1Y0.5M') }.to raise_error(ISO8601::Errors::UnknownPattern)
     end
 
     context "allowed patterns" do
       it "should parse <start>/<duration>" do
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P0.5Y') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y0.5M') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y0,5M') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1D') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1.0S') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1,0S') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P0.5Y') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y0.5M') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y0,5M') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y1M1D') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1.0S') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1,0S') }.to_not raise_error
       end
 
       it "should parse <duration>/<end>" do
-        expect { ISO8601::TimeInterval.new('P1Y0,5M/2010-05-09T10:30:12+04') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('P1Y1M1D/2010-05-09T10:30:12+04:00') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('P1Y1M0.5D/2010-05-09T10:30:12-04:00') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('P1Y1M0,5D/2010-05-09T10:30:12-00:00') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('P1Y1M1DT1H/-2014-05-31T16:26:00Z') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('P1Y1M1DT0.5H/2014-05-31T16:26:10.5Z') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('P1Y1M1DT0,5H/2014-05-31T16:26:10,5Z') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('P1Y0,5M/2010-05-09T10:30:12+04') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('P1Y1M1D/2010-05-09T10:30:12+04:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('P1Y1M0.5D/2010-05-09T10:30:12-04:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('P1Y1M0,5D/2010-05-09T10:30:12-00:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('P1Y1M1DT1H/-2014-05-31T16:26:00Z') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('P1Y1M1DT0.5H/2014-05-31T16:26:10.5Z') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('P1Y1M1DT0,5H/2014-05-31T16:26:10,5Z') }.to_not raise_error
       end
 
       it "should parse <start>/<end>" do
-        expect { ISO8601::TimeInterval.new('2014-001/2010-05-09T10:30') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('2014121/2010-05-09T10:30:12') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('2014-121T10:11:12Z/2010-05-09T10:30:12Z') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('20100509T103012+0400/2010-05-09T10:30:12+04') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('20100509/2010-05-09T10:30:12+04:00') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('T103012+0400/2010-05-09T10:30:12-04:00') }.to_not raise_error
-        expect { ISO8601::TimeInterval.new('T103012+04/2010-05-09T10:30:12-00:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2014-001/2010-05-09T10:30') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2014121/2010-05-09T10:30:12') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('2014-121T10:11:12Z/2010-05-09T10:30:12Z') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('20100509T103012+0400/2010-05-09T10:30:12+04') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('20100509/2010-05-09T10:30:12+04:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('T103012+0400/2010-05-09T10:30:12-04:00') }.to_not raise_error
+        expect { ISO8601::TimeInterval.parse('T103012+04/2010-05-09T10:30:12-00:00') }.to_not raise_error
       end
     end
   end
@@ -142,20 +142,20 @@ RSpec.describe ISO8601::TimeInterval do
       pattern2 = '2010-05-09T11:30:00Z/PT1H'
       pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).to_f).to eq(hour)
-      expect(ISO8601::TimeInterval.new(pattern2).to_f).to eq(hour)
-      expect(ISO8601::TimeInterval.new(pattern3).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.parse(pattern).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.parse(pattern2).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.parse(pattern3).to_f).to eq(hour)
     end
 
     it "should be 0" do
-      expect(ISO8601::TimeInterval.new('2015-01-01/2015-01-01').to_f).to eq(0)
+      expect(ISO8601::TimeInterval.parse('2015-01-01/2015-01-01').to_f).to eq(0)
     end
   end
 
   describe "#empty?" do
     it "should check if the interval is empty" do
-      expect(ISO8601::TimeInterval.new('2015-01-01/2015-01-01').empty?).to be_truthy
-      expect(ISO8601::TimeInterval.new('2015-01-01/2015-01-02').empty?).to be_falsy
+      expect(ISO8601::TimeInterval.parse('2015-01-01/2015-01-01').empty?).to be_truthy
+      expect(ISO8601::TimeInterval.parse('2015-01-01/2015-01-02').empty?).to be_falsy
     end
   end
 
@@ -165,9 +165,9 @@ RSpec.describe ISO8601::TimeInterval do
       pattern2 = '2010-05-09T11:30:00Z/PT1H'
       pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).first).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern2).first).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern3).first).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.parse(pattern).first).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.parse(pattern2).first).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.parse(pattern3).first).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the start_time" do
@@ -176,9 +176,9 @@ RSpec.describe ISO8601::TimeInterval do
       pattern2 = '2010-05-09T10:30:00Z/PT1H'
       pattern3 = '2010-05-09T10:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).first).to eq(start_time)
-      expect(ISO8601::TimeInterval.new(pattern2).first).to eq(start_time)
-      expect(ISO8601::TimeInterval.new(pattern3).first).to eq(start_time)
+      expect(ISO8601::TimeInterval.parse(pattern).first).to eq(start_time)
+      expect(ISO8601::TimeInterval.parse(pattern2).first).to eq(start_time)
+      expect(ISO8601::TimeInterval.parse(pattern3).first).to eq(start_time)
     end
   end
 
@@ -188,9 +188,9 @@ RSpec.describe ISO8601::TimeInterval do
       pattern2 = '2010-05-09T11:30:00Z/PT1H'
       pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).last).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern2).last).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern3).last).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.parse(pattern).last).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.parse(pattern2).last).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.parse(pattern3).last).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the last datetime" do
@@ -199,9 +199,9 @@ RSpec.describe ISO8601::TimeInterval do
       pattern2 = '2010-05-09T09:30:00Z/PT1H'
       pattern3 = '2010-05-09T09:30:00Z/2010-05-09T10:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).last).to eq(end_time)
-      expect(ISO8601::TimeInterval.new(pattern2).last).to eq(end_time)
-      expect(ISO8601::TimeInterval.new(pattern3).last).to eq(end_time)
+      expect(ISO8601::TimeInterval.parse(pattern).last).to eq(end_time)
+      expect(ISO8601::TimeInterval.parse(pattern2).last).to eq(end_time)
+      expect(ISO8601::TimeInterval.parse(pattern3).last).to eq(end_time)
     end
   end
 
@@ -210,8 +210,8 @@ RSpec.describe ISO8601::TimeInterval do
       pattern = 'P1Y1M1DT0,5H/2014-05-31T16:26:10,5Z'
       pattern2 = '2007-03-01T13:00:00Z/P1Y0,5M'
 
-      expect(ISO8601::TimeInterval.new(pattern).to_s).to eq(pattern)
-      expect(ISO8601::TimeInterval.new(pattern2).to_s).to eq(pattern2)
+      expect(ISO8601::TimeInterval.parse(pattern).to_s).to eq(pattern)
+      expect(ISO8601::TimeInterval.parse(pattern2).to_s).to eq(pattern2)
     end
 
     it "should build the pattern and return if TimeInterval is initialized with objects" do
@@ -227,8 +227,8 @@ RSpec.describe ISO8601::TimeInterval do
 
   describe "compare Time Intervals" do
     before(:each) do
-      @small = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
-      @big = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT2H')
+      @small = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
+      @big = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT2H')
     end
 
     it "should raise TypeError when compared object is not a ISO8601::TimeInterval" do
@@ -274,9 +274,9 @@ RSpec.describe ISO8601::TimeInterval do
 
   describe "#eql?" do
     it "should be equal only when start_time and end_time are the same" do
-      interval = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
-      interval2 = ISO8601::TimeInterval.new('2007-03-01T14:00:00Z/PT1H')
-      interval3 = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      interval = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
+      interval2 = ISO8601::TimeInterval.parse('2007-03-01T14:00:00Z/PT1H')
+      interval3 = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
 
       expect(interval.eql?(interval2)).to be_falsy
       expect(interval.eql?(interval3)).to be_truthy
@@ -285,14 +285,14 @@ RSpec.describe ISO8601::TimeInterval do
 
   describe "#include?" do
     it "raise TypeError when the parameter is not valid" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      ti = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
       expect { ti.include?('hola') }.to raise_error(ISO8601::Errors::TypeError)
       expect { ti.include?(123) }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ti.include?(ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.include?(ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')) }.to raise_error(ISO8601::Errors::TypeError)
     end
 
     it "should check if a DateTime is included" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1DT1H')
+      ti = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1DT1H')
       included = DateTime.new(2007, 3, 1, 15, 0, 0)
       included_iso8601 = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
       not_included = DateTime.new(2007, 2, 1, 15, 0, 0)
@@ -307,7 +307,7 @@ RSpec.describe ISO8601::TimeInterval do
 
   describe "#subset?" do
     it "raise TypeError when the parameter is not valid" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      ti = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
       dt = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
 
       expect { ti.subset?('2007-03-01T18:00:00Z') }.to raise_error(ISO8601::Errors::TypeError)
@@ -316,8 +316,8 @@ RSpec.describe ISO8601::TimeInterval do
     end
 
     it "should check if an interval is subset of another one" do
-      ti = ISO8601::TimeInterval.new('2015-01-15T00:00:00Z/P1D')
-      ti2 = ISO8601::TimeInterval.new('2015-01-01T00:00:00Z/P1M')
+      ti = ISO8601::TimeInterval.parse('2015-01-15T00:00:00Z/P1D')
+      ti2 = ISO8601::TimeInterval.parse('2015-01-01T00:00:00Z/P1M')
 
       expect(ti.subset?(ti)).to be_truthy
       expect(ti.subset?(ti2)).to be_truthy
@@ -327,7 +327,7 @@ RSpec.describe ISO8601::TimeInterval do
 
   describe "#superset?" do
     it "raise TypeError when the parameter is not valid" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      ti = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
       dt = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
 
       expect { ti.superset?('2007-03-01T18:00:00Z') }.to raise_error(ISO8601::Errors::TypeError)
@@ -336,9 +336,9 @@ RSpec.describe ISO8601::TimeInterval do
     end
 
     it "should check if the interval is superset of the given one" do
-      ti = ISO8601::TimeInterval.new('2015-01-01T00:00:00Z/P1M')
-      ti2 = ISO8601::TimeInterval.new('2015-01-15T00:00:00Z/P1D')
-      ti3 = ISO8601::TimeInterval.new('2015-03-01T00:00:00Z/P1D')
+      ti = ISO8601::TimeInterval.parse('2015-01-01T00:00:00Z/P1M')
+      ti2 = ISO8601::TimeInterval.parse('2015-01-15T00:00:00Z/P1D')
+      ti3 = ISO8601::TimeInterval.parse('2015-03-01T00:00:00Z/P1D')
 
       expect(ti.superset?(ti)).to be_truthy
       expect(ti.superset?(ti2)).to be_truthy
@@ -348,7 +348,7 @@ RSpec.describe ISO8601::TimeInterval do
 
   describe "#intersect?" do
     it "raise TypeError when the parameter is not valid" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      ti = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
       dt = DateTime.new(2007, 2, 1, 15, 0, 0)
       dt_iso8601 = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
 
@@ -359,10 +359,10 @@ RSpec.describe ISO8601::TimeInterval do
     end
 
     it "should check if two intervals intersect" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1DT1H')
-      included = ISO8601::TimeInterval.new('2007-03-01T14:00:00Z/PT2H')
-      overlaped = ISO8601::TimeInterval.new('2007-03-01T18:00:00Z/P1DT1H')
-      not_overlaped = ISO8601::TimeInterval.new('2007-03-14T14:00:00Z/PT2H')
+      ti = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1DT1H')
+      included = ISO8601::TimeInterval.parse('2007-03-01T14:00:00Z/PT2H')
+      overlaped = ISO8601::TimeInterval.parse('2007-03-01T18:00:00Z/P1DT1H')
+      not_overlaped = ISO8601::TimeInterval.parse('2007-03-14T14:00:00Z/PT2H')
 
       expect(ti.intersect?(included)).to be_truthy
       expect(ti.intersect?(overlaped)).to be_truthy
@@ -371,12 +371,12 @@ RSpec.describe ISO8601::TimeInterval do
   end
 
   describe "#intersection" do
-    let(:small) { ISO8601::TimeInterval.new('2015-06-15/P1D') }
-    let(:big) { ISO8601::TimeInterval.new('2015-06-01/P1M') }
-    let(:other) { ISO8601::TimeInterval.new('2015-06-30/P1D') }
+    let(:small) { ISO8601::TimeInterval.parse('2015-06-15/P1D') }
+    let(:big) { ISO8601::TimeInterval.parse('2015-06-01/P1M') }
+    let(:other) { ISO8601::TimeInterval.parse('2015-06-30/P1D') }
 
     it "raise TypeError when the parameter is not valid" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      ti = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
       dt = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
 
       expect { ti.intersection('2007-03-01T13:00:00Z/PT1H') }.to raise_error(ISO8601::Errors::TypeError)
@@ -397,7 +397,7 @@ RSpec.describe ISO8601::TimeInterval do
 
   describe "#disjoint?" do
     it "raise TypeError when the parameter is not valid" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      ti = ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/PT1H')
       dt = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
 
       expect { ti.disjoint?('2007-03-01T13:00:00Z/PT1H') }.to raise_error(ISO8601::Errors::TypeError)
@@ -406,8 +406,8 @@ RSpec.describe ISO8601::TimeInterval do
     end
 
     it "should check if two intervals are disjoint" do
-      ti = ISO8601::TimeInterval.new('2015-01-01T00:00:00Z/P1D')
-      ti2 = ISO8601::TimeInterval.new('2015-02-01T00:00:00Z/P1D')
+      ti = ISO8601::TimeInterval.parse('2015-01-01T00:00:00Z/P1D')
+      ti2 = ISO8601::TimeInterval.parse('2015-02-01T00:00:00Z/P1D')
 
       expect(ti.disjoint?(ti)).to be_falsy
       expect(ti.disjoint?(ti2)).to be_truthy

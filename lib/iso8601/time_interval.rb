@@ -102,7 +102,7 @@ module ISO8601
     ##
     # Alias of `initialize` to have a closer interface to the core `Time`,
     # `Date` and `DateTime` interfaces.
-    def parse(pattern)
+    def self.parse(pattern)
       new(pattern)
     end
 
