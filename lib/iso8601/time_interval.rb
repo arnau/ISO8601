@@ -69,6 +69,7 @@ module ISO8601
     #
     def self.from_duration(duration, time)
       valid_duration?(duration)
+      valid_timehash?(time)
       pattern = pattern_from_duration(duration, time)
 
       new(pattern)
@@ -325,7 +326,7 @@ module ISO8601
     #
     # @param [ISO8601::Duration] duration An ISO8601::Duration that represent the
     #     size of the interval.
-    # @param [Hash] time A hash to set the start or end point of the time interval.
+    # @param [Hash] timehash A hash to set the start or end point of the time interval.
     #     This hash must contain an unique key (start_time or end_time) and a
     #     ISO8601::DateTime as value. For example:
     #       { start_time: iso_8601_datetime }
@@ -334,15 +335,31 @@ module ISO8601
     # @raise [ArgumentError] if keys of time hash are not valid, or the value is not
     #     an instance of ISO8601::DateTime
     #
-    def self.pattern_from_duration(duration, time)
-      fail(ArgumentError, 'Time parameter is not valid') if time.is_a?(Hash) && time.keys.size != 1
-      if time.keys.include?(:start_time) && valid_date_time?(time[:start_time])
-        return "#{time[:start_time]}/#{duration}"
-      elsif time.keys.include?(:end_time) && valid_date_time?(time[:end_time])
-        return "#{duration}/#{time[:end_time]}"
-      else
-        fail(ArgumentError, 'You must specify an start_time or end_time in second parameter')
-      end
+    def self.pattern_from_duration(duration, timehash)
+      return "#{timehash[:start_time]}/#{duration}" \
+        if timehash.keys.include?(:start_time) && valid_date_time?(timehash[:start_time])
+
+      return "#{duration}/#{timehash[:end_time]}" \
+        if timehash.keys.include?(:end_time) && valid_date_time?(timehash[:end_time])
+    end
+
+    ##
+    # Validates if timehash is a Hash and contains either :start_date or :end_date
+    #
+    # @param [Hash] timehash A hash to set the start or end point of the time interval.
+    #     This hash must contain an unique key (start_time or end_time) and a
+    #     ISO8601::DateTime as value. For example:
+    #       { start_time: iso_8601_datetime }
+    #       { end_time: iso_8601_datetime }
+    def self.valid_timehash?(timehash)
+      fail(ArgumentError, 'Timehash parameter must be a Hash') \
+        unless timehash.is_a?(Hash)
+
+      fail(ArgumentError, 'Timehash parameter must have only one key') \
+        unless timehash.keys.length == 1
+
+      fail(ArgumentError, 'You must specify an start_time or end_time in second parameter') \
+        unless timehash.keys.include?(:start_time) || timehash.keys.include?(:end_time)
     end
 
     ##
