@@ -46,6 +46,7 @@ module ISO8601
     #
     def self.from_datetimes(start_time, end_time)
       valid_date_time?(start_time) && valid_date_time?(end_time)
+
       new("#{start_time}/#{end_time}")
     end
 
@@ -69,7 +70,7 @@ module ISO8601
     def self.from_duration(duration, time)
       valid_duration?(duration)
       pattern = pattern_from_duration(duration, time)
-      # Initialize the class
+
       new(pattern)
     end
 
