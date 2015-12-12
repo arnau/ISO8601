@@ -280,22 +280,6 @@ module ISO8601
     end
 
     ##
-    # Check if the start time is a duration
-    #
-    # @return [boolean] True if the start_time is a Duration
-    def start_duration?
-      @start_type == TYPE_DURATION
-    end
-
-    ##
-    # Check if the end time is a duration
-    #
-    # @return [boolean] True if the end_time is a Duration
-    def end_duration?
-      @end_type == TYPE_DURATION
-    end
-
-    ##
     # Check if the given argument is a instance of ISO8601::DateTime,
     # ISO8601::TimeInterval or DateTime.
     #
@@ -326,19 +310,29 @@ module ISO8601
     #
     # @return [Array]
     def boundaries(atoms)
+      valid_atoms?(atoms)
+
+      if atoms.none? { |x| x.is_a?(ISO8601::Duration) }
+        return [atoms.first,
+                atoms.last,
+                (atoms.last.to_time - atoms.first.to_time)]
+      elsif atoms.first.is_a?(ISO8601::Duration)
+        seconds = atoms.first.to_seconds(atoms.last)
+        return [(atoms.last - seconds),
+                atoms.last,
+                seconds]
+      else
+        seconds = atoms.last.to_seconds(atoms.first)
+        return [atoms.first,
+                (atoms.first + seconds),
+                seconds]
+      end
+    end
+
+    def valid_atoms?(atoms)
       fail(ISO8601::Errors::UnknownPattern,
            "The pattern of a time interval can't be <duration>/<duration>") \
         if atoms.all? { |x| x.is_a?(ISO8601::Duration) }
-
-      if atoms.none? { |x| x.is_a?(ISO8601::Duration) }
-        return [atoms.first, atoms.last, (atoms.last.to_time - atoms.first.to_time)]
-      elsif atoms.first.is_a?(ISO8601::Duration)
-        seconds = atoms.first.to_seconds(atoms.last)
-        return [(atoms.last - seconds), atoms.last, seconds]
-      else
-        seconds = atoms.last.to_seconds(atoms.first)
-        return [atoms.first, (atoms.first + seconds), seconds]
-      end
     end
 
     ##
