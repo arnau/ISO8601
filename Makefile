@@ -26,6 +26,7 @@ test: mri-test rbx-test jruby-test
 install: mri-pull rbx-pull jruby-pull
 clean: mri-clean rbx-clean jruby-clean
 build: mri-build rbx-build jruby-build
+doc: mri-doc
 
 repl: mri-repl
 shell: mri-shell

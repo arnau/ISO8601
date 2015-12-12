@@ -39,7 +39,7 @@ module ISO8601
     #
     # @param [ISO8601::DateTime] start_time An ISO8601::DateTime that represents
     #     start time of the interval.
-    # @param [ISO8601::DateTime] start_time An ISO8601::DateTime that represents
+    # @param [ISO8601::DateTime] end_time An ISO8601::DateTime that represents
     #     end time of the interval.
     #
     # @raise [ArgumentError] If any param is not an instance of ISO8601::DateTime
@@ -55,17 +55,17 @@ module ISO8601
     # time interval, we need a start or end point. This point is sent in second
     # parameter.
     #
-    # @param [ISO8601::Duration] duration An ISO8601::Duration that represent the
-    #     size of the interval.
-    # @param [Hash] time A hash to set the start or end point of the time interval.
-    #     This hash must contain an unique key (start_time or end_time) and a
-    #     ISO8601::DateTime as value. For example:
+    # @param [ISO8601::Duration] duration An ISO8601::Duration that represent
+    #     the size of the interval.
+    # @param [Hash] time A hash to set the start or end point of the time
+    #     interval.  This hash must contain an unique key (start_time or
+    #     end_time) and a ISO8601::DateTime as value. For example:
     #       { start_time: iso_8601_datetime }
     #       { end_time: iso_8601_datetime }
     #
     # @raise [ArgumentError] if duration is not an instance of ISO8601::Duration
-    # @raise [ArgumentError] if keys of time hash are not valid, or the value is not
-    #     an instance of ISO8601::DateTime
+    # @raise [ArgumentError] if keys of time hash are not valid, or the value is
+    #     not an instance of ISO8601::DateTime.
     #
     def self.from_duration(duration, time)
       valid_duration?(duration)
@@ -81,9 +81,9 @@ module ISO8601
     #
     # @param [String] pattern This parameter define a full time interval. These
     #     patterns are defined in the ISO8601:
-    #         - <start_time>/<end_time>
-    #         - <start_time>/<duration>
-    #         - <duration>/<end_time>
+    #         * <start_time>/<end_time>
+    #         * <start_time>/<duration>
+    #         * <duration>/<end_time>
     #
     # @raise [ISO8601::Errors::UnknownPattern] If given pattern is not a valid
     #     ISO8601 pattern.
@@ -172,7 +172,7 @@ module ISO8601
     ##
     # Check if a given time is inside current TimeInterval
     #
-    # @param [ISO8601::DateTime, ISO8601::Interval, DateTime] time Object
+    # @param [ISO8601::DateTime, ISO8601::Interval, ::DateTime] other DateTime
     #   to check if it's inside the current interval. For a ISO8601::Interval
     #   all the interval must be inside.
     #

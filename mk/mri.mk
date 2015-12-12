@@ -18,6 +18,9 @@ mri-repl:
 mri-shell:
 	@$(call mri-task, bash)
 
+mri-doc:
+	@$(call mri-task, bundle exec yardoc)
+
 ##
 # Build docker image
 mri-build:
