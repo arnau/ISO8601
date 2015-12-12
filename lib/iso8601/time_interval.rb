@@ -350,16 +350,6 @@ module ISO8601
     end
 
     ##
-    # Check if the given argument is a instance of ISO8601::TimeInterval
-    #
-    # @raise [ISO8601::Errors::TypeError]
-    def check_interval(interval)
-      return if interval.is_a?(self.class)
-      fail(ISO8601::Errors::TypeError,
-           'Parameter must be an instance of ISO8601::TimeInterval')
-    end
-
-    ##
     # Check if start_time and end_time are Durations. Only one of these elements
     # can be a Duration
     #

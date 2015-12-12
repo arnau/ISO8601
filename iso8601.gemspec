@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.has_rdoc = 'yard'
-  s.required_ruby_version = '>= 1.9.3'
-  s.add_development_dependency 'rspec', '~> 3.3'
-  s.add_development_dependency 'rubocop', '~> 0.34'
+  s.required_ruby_version = '>= 2.0.0'
+  s.add_development_dependency 'rspec', '~> 3.4'
+  s.add_development_dependency 'rubocop', '~> 0.35'
 end
