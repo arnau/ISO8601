@@ -165,9 +165,9 @@ RSpec.describe ISO8601::TimeInterval do
       pattern2 = '2010-05-09T11:30:00Z/PT1H'
       pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).start_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern2).start_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern3).start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern).first).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern2).first).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern3).first).to be_an_instance_of(ISO8601::DateTime)
     end
 
     it "should calculate correctly the start_time" do
@@ -176,21 +176,9 @@ RSpec.describe ISO8601::TimeInterval do
       pattern2 = '2010-05-09T10:30:00Z/PT1H'
       pattern3 = '2010-05-09T10:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).start_time).to eq(start_time)
-      expect(ISO8601::TimeInterval.new(pattern2).start_time).to eq(start_time)
-      expect(ISO8601::TimeInterval.new(pattern3).start_time).to eq(start_time)
-    end
-  end
-
-  describe "#original_start_time" do
-    it "should return an instance of original pattern/object" do
-      pattern = 'PT1H/2010-05-09T11:30:00Z'
-      pattern2 = '2010-05-09T10:30:00Z/PT1H'
-      pattern3 = '2010-05-09T10:30:00Z/2010-05-09T12:30:00Z'
-
-      expect(ISO8601::TimeInterval.new(pattern).original_start_time).to be_an_instance_of(ISO8601::Duration)
-      expect(ISO8601::TimeInterval.new(pattern2).original_start_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern3).original_start_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern).first).to eq(start_time)
+      expect(ISO8601::TimeInterval.new(pattern2).first).to eq(start_time)
+      expect(ISO8601::TimeInterval.new(pattern3).first).to eq(start_time)
     end
   end
 
@@ -214,18 +202,6 @@ RSpec.describe ISO8601::TimeInterval do
       expect(ISO8601::TimeInterval.new(pattern).last).to eq(end_time)
       expect(ISO8601::TimeInterval.new(pattern2).last).to eq(end_time)
       expect(ISO8601::TimeInterval.new(pattern3).last).to eq(end_time)
-    end
-  end
-
-  describe "#original_end_time" do
-    it "should return an instance of original pattern/object" do
-      pattern = 'PT1H/2010-05-09T10:30:00Z'
-      pattern2 = '2010-05-09T09:30:00Z/PT1H'
-      pattern3 = '2010-05-09T09:30:00Z/2010-05-09T10:30:00Z'
-
-      expect(ISO8601::TimeInterval.new(pattern).original_end_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern2).original_end_time).to be_an_instance_of(ISO8601::Duration)
-      expect(ISO8601::TimeInterval.new(pattern3).original_end_time).to be_an_instance_of(ISO8601::DateTime)
     end
   end
 

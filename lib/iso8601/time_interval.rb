@@ -30,10 +30,6 @@ module ISO8601
   class TimeInterval
     include Comparable
 
-    # Define the type of a time
-    TYPE_DATETIME = :datetime
-    TYPE_DURATION = :duration
-
     ##
     # Initialize a TimeInterval based on a two ISO8601::DateTime instances.
     #
@@ -91,20 +87,16 @@ module ISO8601
     # @raise [ArgumentError] Pattern parameter must be an string
     #
     def initialize(pattern)
-      # Check pattern
       fail(ArgumentError, 'The pattern must be an string') unless pattern.is_a?(String)
       fail(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
 
-      # It's a valid Pattern, we need to detect the elements
       @pattern = pattern
-      time = pattern.split('/')
-      # We must check this because if a pattern is empty, this method return an
-      # Array of 1 element.
-      fail(ISO8601::Errors::UnknownPattern, pattern) if time.size != 2
-      @start_time, @start_type = init_time_from_pattern(time.first)
-      @end_time, @end_type = init_time_from_pattern(time.last)
-      # Check classes of initialized elements
-      check_times
+      subpatterns = pattern.split('/')
+
+      fail(ISO8601::Errors::UnknownPattern, pattern) if subpatterns.size != 2
+
+      @atoms = subpatterns.map { |x| parse_subpattern(x) }
+      @first, @last, @size = boundaries(@atoms)
     end
 
     ##
@@ -115,71 +107,37 @@ module ISO8601
     end
 
     ##
-    # Calculate and return the start time of the interval
+    # The start time (first) of the interval.
     #
     # @return [ISO8601::DateTime] start time
-    def start_time
-      return @start_time unless start_duration?
-      # Calculate start_time
-      @end_time - @start_time.to_seconds
-    end
-    alias_method :first, :start_time
+    attr_reader :first
 
     ##
-    # Return original start time
-    #
-    # @return [ISO8601::DateTime or ISO8601::Duration] start time
-    def original_start_time
-      @start_time
-    end
-
-    ##
-    # Calculate and return the end time of the interval
+    # The end time (last) of the interval.
     #
     # @return [ISO8601::DateTime] end time
-    def end_time
-      return @end_time unless end_duration?
-      # Calculate start_time
-      @start_time + @end_time.to_seconds
-    end
-    alias_method :last, :end_time
+    attr_reader :last
 
     ##
-    # Return original end time
-    #
-    # @return [ISO8601::DateTime or ISO8601::Duration] end time
-    def original_end_time
-      @end_time
-    end
-
-    ##
-    # Return the pattern that craete the same interval
+    # The pattern for the interval.
     #
     # @return [String] The pattern of this interval
     def pattern
       return @pattern if @pattern
-      "#{original_start_time}/#{original_end_time}"
+
+      "#{@atoms.first}/#{@atoms.last}"
     end
 
     alias_method :to_s, :pattern
 
     ##
-    # Calculate the size of the interval. If any bound is a Duration, the
+    # The size of the interval. If any bound is a Duration, the
     # size of the interval is the number of seconds of the interval.
     #
     # @return [Float] Size of the interval in seconds
-    def to_f
-      if start_duration?
-        @start_time.to_seconds(@end_time)
-      elsif end_duration?
-        @end_time.to_seconds(@start_time)
-      else
-        # We must calculate the size based on Time interval
-        @end_time.to_time.to_f - @start_time.to_time.to_f
-      end
-    end
-    alias_method :size, :to_f
-    alias_method :length, :to_f
+    attr_reader :size
+    alias_method :to_f, :size
+    alias_method :length, :size
 
     ##
     # Checks if the interval is empty.
@@ -312,7 +270,7 @@ module ISO8601
     ##
     # @return [Fixnum]
     def hash
-      [@start_time.hash, @end_time.hash].hash
+      @atoms.hash
     end
 
     private
@@ -350,38 +308,37 @@ module ISO8601
     end
 
     ##
-    # Check if start_time and end_time are Durations. Only one of these elements
-    # can be a Duration
+    # Parses a subpattern to a correct type.
     #
-    # @raise [ISO8601::Errors::TypeError] If start_time and end_time are durations
-    def check_times
-      return unless start_duration? && end_duration?
-      fail ISO8601::Errors::UnknownPattern,
-           "The pattenr of a time interval can't be <duration>/<duration>"
+    # @param [String] pattern
+    #
+    # @return [ISO8601::Duration, ISO8601::DateTime]
+    def parse_subpattern(pattern)
+      return ISO8601::Duration.new(pattern) if pattern.start_with?('P')
+
+      ISO8601::DateTime.new(pattern)
     end
 
     ##
-    # Initialize time and type based of a given pattern. The pattern must
-    # coincide with a Duration or DateTime ISO8601 format.
+    # Calculates the boundaries (first, last) and the size of the interval.
     #
-    # @param [ISO8601::DateTime, ISO8601::Duration] time String with pattern
+    # @param [Array] atoms The atoms result of parsing the pattern.
     #
-    # @raise [ISO8601::Errors::UnknownPattern] If the given pattern is not valid
-    #   String of ISO8601 Duration or DateTime
-    #
-    # @return [Array] Array with two elements: time and type (:duration or :datetime)
-    def init_time_from_pattern(time)
-      if time.start_with?('P')
-        # Duration
-        parsed_time = ISO8601::Duration.new(time)
-        type = TYPE_DURATION
+    # @return [Array]
+    def boundaries(atoms)
+      fail(ISO8601::Errors::UnknownPattern,
+           "The pattern of a time interval can't be <duration>/<duration>") \
+        if atoms.all? { |x| x.is_a?(ISO8601::Duration) }
+
+      if atoms.none? { |x| x.is_a?(ISO8601::Duration) }
+        return [atoms.first, atoms.last, (atoms.last.to_time - atoms.first.to_time)]
+      elsif atoms.first.is_a?(ISO8601::Duration)
+        seconds = atoms.first.to_seconds(atoms.last)
+        return [(atoms.last - seconds), atoms.last, seconds]
       else
-        # DateTime
-        parsed_time = ISO8601::DateTime.new(time)
-        type = TYPE_DATETIME
+        seconds = atoms.last.to_seconds(atoms.first)
+        return [atoms.first, (atoms.first + seconds), seconds]
       end
-      # Return values
-      [parsed_time, type]
     end
 
     ##
