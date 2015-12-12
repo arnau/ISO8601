@@ -178,41 +178,59 @@ module ISO8601
     end
 
     ##
-    # Check if a given time is inside current TimeInterval
+    # Check if a given time is inside the current TimeInterval.
+    #
+    # @param [ISO8601::DateTime, ::DateTime] other DateTime to check if it's
+    #   inside the current interval. For a ISO8601::Interval all the interval
+    #   must be inside.
+    #
+    # @raise [ISO8601::Errors::TypeError] if time param is not a compatible
+    #   Object.
+    #
+    # @return [Boolean]
+    def include?(other)
+      valid_date_time?(other)
+
+      seconds = other.to_time.to_f
+      (start_time.to_f < seconds && seconds < end_time.to_f)
+    end
+
+    ##
+    # Check if a given time interval is inside the current TimeInterval.
     #
     # @param [ISO8601::DateTime, ISO8601::Interval, ::DateTime] other DateTime
     #   to check if it's inside the current interval. For a ISO8601::Interval
     #   all the interval must be inside.
     #
-    # @raise [ISO8601::Errors::TypeError] if time param is not a compatible Object
+    # @raise [ISO8601::Errors::TypeError] if time param is not a compatible
+    #   Object.
     #
     # @return [Boolean]
-    def include?(other)
-      check_date_time(other)
-      if other.is_a?(self.class)
-        # Interval
-        (start_time.to_f < other.start_time.to_f && other.end_time.to_f < end_time.to_f)
-      else
-        # DateTime
-        time_seconds = other.to_time.to_f
-        (start_time.to_f < time_seconds && time_seconds < end_time.to_f)
-      end
+    def subset?(other)
+      fail(ISO8601::Errors::TypeError,
+           "The parameter must be an instance of #{self.class}") \
+        unless other.is_a?(self.class)
+
+      (start_time.to_time <= other.start_time.to_time &&
+       end_time.to_time >= other.end_time.to_time)
     end
 
     ##
-    # Check if two intervarls overlap in time
+    # Check if two intervarls intersect.
     #
-    # @param [ISO8601::Interval] interval Another interval to check if they overlap
+    # @param [ISO8601::Interval] other Another interval to check if they
+    #   intersect.
     #
-    # @raise [ISO8601::Errors::TypeError] if interval param is not a compatible Object
+    # @raise [ISO8601::Errors::TypeError] if the param is not a TimeInterval.
     #
     # @return [Boolean]
-    def overlap?(interval)
-      check_interval(interval)
-      # We check if the start time or end time are inside the interval
-      (include?(interval.start_time) || include?(interval.end_time))
+    def intersect?(other)
+      fail(ISO8601::Errors::TypeError,
+           "The parameter must be an instance of #{self.class}") \
+        unless other.is_a?(self.class)
+
+      (include?(other.start_time) || include?(other.end_time))
     end
-    alias_method :intersect?, :overlap?
 
     ##
     # @param [ISO8601::TimeInterval] other The contrast to compare against
@@ -263,9 +281,9 @@ module ISO8601
     # ISO8601::TimeInterval or DateTime.
     #
     # @raise [ISO8601::Errors::TypeError]
-    def check_date_time(time)
-      return if time.is_a?(::DateTime) || time.is_a?(ISO8601::DateTime) ||
-                time.is_a?(self.class)
+    def valid_date_time?(time)
+      return if time.is_a?(::DateTime) || time.is_a?(ISO8601::DateTime)
+
       fail(ISO8601::Errors::TypeError,
            'Parameter must be an instance of ISO8601::DateTime, ISO8601::TimeInterval or DateTime')
     end

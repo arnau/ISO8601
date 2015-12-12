@@ -301,6 +301,7 @@ RSpec.describe ISO8601::TimeInterval do
       ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
       expect { ti.include?('hola') }.to raise_error(ISO8601::Errors::TypeError)
       expect { ti.include?(123) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.include?(ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')) }.to raise_error(ISO8601::Errors::TypeError)
     end
 
     it "should check if a DateTime is included" do
@@ -315,40 +316,50 @@ RSpec.describe ISO8601::TimeInterval do
       expect(ti.include?(not_included)).to be_falsy
       expect(ti.include?(not_included_iso8601)).to be_falsy
     end
+  end
 
-    it "should check if an interval is included" do
-      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1DT1H')
-      included = ISO8601::TimeInterval.new('2007-03-01T14:00:00Z/PT2H')
-      not_included = ISO8601::TimeInterval.new('2007-03-05T14:00:00Z/PT2H')
-      overlaped = ISO8601::TimeInterval.new('2007-03-01T18:00:00Z/P1DT1H')
+  describe "#subset?" do
+    it "raise TypeError when the parameter is not valid" do
+      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      dt = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
 
-      expect(ti.include?(included)).to be_truthy
-      expect(ti.include?(not_included)).to be_falsy
-      expect(ti.include?(overlaped)).to be_falsy
+      expect { ti.subset?('2007-03-01T18:00:00Z') }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.subset?(123) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.subset?(dt) }.to raise_error(ISO8601::Errors::TypeError)
+    end
+
+    it "should check if an interval is subset of another one" do
+      ti = ISO8601::TimeInterval.new('2015-01-01T00:00:00Z/P1M')
+      ti2 = ISO8601::TimeInterval.new('2015-01-15T00:00:00Z/P1D')
+      ti3 = ISO8601::TimeInterval.new('2015-03-01T00:00:00Z/P1D')
+
+      expect(ti.subset?(ti2)).to be_truthy
+      expect(ti.subset?(ti3)).to be_falsy
     end
   end
 
-  describe "#overlap?" do
+
+  describe "#intersect?" do
     it "raise TypeError when the parameter is not valid" do
       ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
       dt = DateTime.new(2007, 2, 1, 15, 0, 0)
       dt_iso8601 = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
 
-      expect { ti.overlap?('hola') }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ti.overlap?(123) }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ti.overlap?(dt) }.to raise_error(ISO8601::Errors::TypeError)
-      expect { ti.overlap?(dt_iso8601) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.intersect?('hola') }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.intersect?(123) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.intersect?(dt) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.intersect?(dt_iso8601) }.to raise_error(ISO8601::Errors::TypeError)
     end
 
-    it "should check if two Intervals are overlapped" do
+    it "should check if two intervals intersect" do
       ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/P1DT1H')
       included = ISO8601::TimeInterval.new('2007-03-01T14:00:00Z/PT2H')
       overlaped = ISO8601::TimeInterval.new('2007-03-01T18:00:00Z/P1DT1H')
       not_overlaped = ISO8601::TimeInterval.new('2007-03-14T14:00:00Z/PT2H')
 
-      expect(ti.overlap?(included)).to be_truthy
-      expect(ti.overlap?(overlaped)).to be_truthy
-      expect(ti.overlap?(not_overlaped)).to be_falsy
+      expect(ti.intersect?(included)).to be_truthy
+      expect(ti.intersect?(overlaped)).to be_truthy
+      expect(ti.intersect?(not_overlaped)).to be_falsy
     end
   end
 end
