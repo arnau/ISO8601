@@ -164,7 +164,7 @@ module ISO8601
     alias_method :to_s, :pattern
 
     ##
-    # Calculate the size of the interval. If asome time is a Duration, the
+    # Calculate the size of the interval. If some time is a Duration, the
     # size of the Interval is the number of seconds of the interval.
     #
     # @return [Float] Size of the interval in seconds
@@ -178,6 +178,8 @@ module ISO8601
         @end_time.to_time.to_f - @start_time.to_time.to_f
       end
     end
+    alias_method :size, :to_f
+    alias_method :length, :to_f
 
     ##
     # Check if a given time is inside the current TimeInterval.
@@ -198,7 +200,7 @@ module ISO8601
     end
 
     ##
-    # Check if a given time interval is inside the current TimeInterval.
+    # Returns true if the interval is a subset of the given interval.
     #
     # @param [ISO8601::TimeInterval] other a time interval.
     #
@@ -210,9 +212,27 @@ module ISO8601
       fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
+      (start_time.to_time >= other.start_time.to_time &&
+       end_time.to_time <= other.end_time.to_time)
+    end
+
+    ##
+    # Returns true if the interval is a superset of the given interval.
+    #
+    # @param [ISO8601::TimeInterval] other a time interval.
+    #
+    # @raise [ISO8601::Errors::TypeError] if time param is not a compatible
+    #   Object.
+    #
+    # @return [Boolean]
+    def superset?(other)
+      fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
+        unless other.is_a?(self.class)
+
       (start_time.to_time <= other.start_time.to_time &&
        end_time.to_time >= other.end_time.to_time)
     end
+
 
     ##
     # Check if two intervarls intersect.

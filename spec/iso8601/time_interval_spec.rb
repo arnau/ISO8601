@@ -329,15 +329,33 @@ RSpec.describe ISO8601::TimeInterval do
     end
 
     it "should check if an interval is subset of another one" do
+      ti = ISO8601::TimeInterval.new('2015-01-15T00:00:00Z/P1D')
+      ti2 = ISO8601::TimeInterval.new('2015-01-01T00:00:00Z/P1M')
+
+      expect(ti.subset?(ti2)).to be_truthy
+      expect(ti2.subset?(ti)).to be_falsy
+    end
+  end
+
+  describe "#superset?" do
+    it "raise TypeError when the parameter is not valid" do
+      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      dt = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
+
+      expect { ti.superset?('2007-03-01T18:00:00Z') }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.superset?(123) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.superset?(dt) }.to raise_error(ISO8601::Errors::TypeError)
+    end
+
+    it "should check if the interval is superset of the given one" do
       ti = ISO8601::TimeInterval.new('2015-01-01T00:00:00Z/P1M')
       ti2 = ISO8601::TimeInterval.new('2015-01-15T00:00:00Z/P1D')
       ti3 = ISO8601::TimeInterval.new('2015-03-01T00:00:00Z/P1D')
 
-      expect(ti.subset?(ti2)).to be_truthy
-      expect(ti.subset?(ti3)).to be_falsy
+      expect(ti.superset?(ti2)).to be_truthy
+      expect(ti.superset?(ti3)).to be_falsy
     end
   end
-
 
   describe "#intersect?" do
     it "raise TypeError when the parameter is not valid" do
