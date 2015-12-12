@@ -146,15 +146,16 @@ RSpec.describe ISO8601::TimeInterval do
       expect(ISO8601::TimeInterval.new(pattern2).to_f).to eq(hour)
       expect(ISO8601::TimeInterval.new(pattern3).to_f).to eq(hour)
     end
-  end
 
-  describe "#empty?" do
     it "should be 0" do
       expect(ISO8601::TimeInterval.new('2015-01-01/2015-01-01').to_f).to eq(0)
     end
+  end
 
+  describe "#empty?" do
     it "should check if the interval is empty" do
       expect(ISO8601::TimeInterval.new('2015-01-01/2015-01-01').empty?).to be_truthy
+      expect(ISO8601::TimeInterval.new('2015-01-01/2015-01-02').empty?).to be_falsy
     end
   end
 

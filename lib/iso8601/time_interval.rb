@@ -181,6 +181,10 @@ module ISO8601
     alias_method :size, :to_f
     alias_method :length, :to_f
 
+    ##
+    # Checks if the interval is empty.
+    #
+    # @return [Boolean]
     def empty?
       first == last
     end
@@ -200,7 +204,7 @@ module ISO8601
         unless other.respond_to?(:to_time)
 
       seconds = other.to_time.to_f
-      (start_time.to_f <= seconds && end_time.to_f >= seconds)
+      (first.to_f <= seconds && last.to_f >= seconds)
     end
 
     ##
@@ -216,8 +220,8 @@ module ISO8601
       fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
-      (start_time.to_time >= other.start_time.to_time &&
-       end_time.to_time <= other.end_time.to_time)
+      (first.to_time >= other.first.to_time &&
+       last.to_time <= other.last.to_time)
     end
 
     ##
@@ -233,8 +237,8 @@ module ISO8601
       fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
-      (start_time.to_time <= other.start_time.to_time &&
-       end_time.to_time >= other.end_time.to_time)
+      (first.to_time <= other.last.to_time &&
+       last.to_time >= other.last.to_time)
     end
 
     ##
@@ -251,7 +255,7 @@ module ISO8601
            "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
-      (include?(other.start_time) || include?(other.end_time))
+      (include?(other.first) || include?(other.last))
     end
 
     ##
