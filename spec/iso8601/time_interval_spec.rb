@@ -183,26 +183,26 @@ RSpec.describe ISO8601::TimeInterval do
     end
   end
 
-  describe "#end_time" do
+  describe "#last" do
     it "should return always a ISO8601::DateTime object" do
       pattern = 'PT1H/2010-05-09T10:30:00Z'
       pattern2 = '2010-05-09T11:30:00Z/PT1H'
       pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).end_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern2).end_time).to be_an_instance_of(ISO8601::DateTime)
-      expect(ISO8601::TimeInterval.new(pattern3).end_time).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern).last).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern2).last).to be_an_instance_of(ISO8601::DateTime)
+      expect(ISO8601::TimeInterval.new(pattern3).last).to be_an_instance_of(ISO8601::DateTime)
     end
 
-    it "should calculate correctly the end_time" do
+    it "should calculate correctly the last datetime" do
       end_time = ISO8601::DateTime.new('2010-05-09T10:30:00Z')
       pattern = 'PT1H/2010-05-09T10:30:00Z'
       pattern2 = '2010-05-09T09:30:00Z/PT1H'
       pattern3 = '2010-05-09T09:30:00Z/2010-05-09T10:30:00Z'
 
-      expect(ISO8601::TimeInterval.new(pattern).end_time).to eq(end_time)
-      expect(ISO8601::TimeInterval.new(pattern2).end_time).to eq(end_time)
-      expect(ISO8601::TimeInterval.new(pattern3).end_time).to eq(end_time)
+      expect(ISO8601::TimeInterval.new(pattern).last).to eq(end_time)
+      expect(ISO8601::TimeInterval.new(pattern2).last).to eq(end_time)
+      expect(ISO8601::TimeInterval.new(pattern3).last).to eq(end_time)
     end
   end
 

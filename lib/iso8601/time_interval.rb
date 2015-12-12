@@ -123,6 +123,7 @@ module ISO8601
       # Calculate start_time
       @end_time - @start_time.to_seconds
     end
+    alias_method :first, :start_time
 
     ##
     # Return original start time
@@ -141,6 +142,7 @@ module ISO8601
       # Calculate start_time
       @start_time + @end_time.to_seconds
     end
+    alias_method :last, :end_time
 
     ##
     # Return original end time
@@ -205,8 +207,7 @@ module ISO8601
     #
     # @return [Boolean]
     def subset?(other)
-      fail(ISO8601::Errors::TypeError,
-           "The parameter must be an instance of #{self.class}") \
+      fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
       (start_time.to_time <= other.start_time.to_time &&
