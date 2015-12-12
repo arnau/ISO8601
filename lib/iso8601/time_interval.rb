@@ -164,8 +164,8 @@ module ISO8601
     alias_method :to_s, :pattern
 
     ##
-    # Calculate the size of the interval. If some time is a Duration, the
-    # size of the Interval is the number of seconds of the interval.
+    # Calculate the size of the interval. If any bound is a Duration, the
+    # size of the interval is the number of seconds of the interval.
     #
     # @return [Float] Size of the interval in seconds
     def to_f
@@ -206,6 +206,7 @@ module ISO8601
       (first.to_time <= other.to_time &&
        last.to_time >= other.to_time)
     end
+    alias_method :member?, :include?
 
     ##
     # Returns true if the interval is a subset of the given interval.
@@ -242,7 +243,7 @@ module ISO8601
     ##
     # Check if two intervarls intersect.
     #
-    # @param [ISO8601::Interval] other Another interval to check if they
+    # @param [ISO8601::TimeInterval] other Another interval to check if they
     #   intersect.
     #
     # @raise [ISO8601::Errors::TypeError] if the param is not a TimeInterval.
@@ -259,7 +260,7 @@ module ISO8601
     ##
     # Return the intersection between two intervals.
     #
-    # @param [ISO8601::Interval] other time interval
+    # @param [ISO8601::TimeInterval] other time interval
     #
     # @raise [ISO8601::Errors::TypeError] if the param is not a TimeInterval.
     #
@@ -279,8 +280,7 @@ module ISO8601
     # Check if two intervarls have no element in common.  This method is the
     # opposite of `#intersect?`.
     #
-    # @param [ISO8601::Interval] other Another interval to check if they
-    #   intersect.
+    # @param [ISO8601::TimeInterval] other Time interval.
     #
     # @raise [ISO8601::Errors::TypeError] if the param is not a TimeInterval.
     #

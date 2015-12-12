@@ -417,7 +417,6 @@ RSpec.describe ISO8601::TimeInterval do
       expect(big.intersection(small)).to eq(small)
       expect(small.intersection(big)).to eq(small)
     end
-
   end
 
   describe "#disjoint?" do
