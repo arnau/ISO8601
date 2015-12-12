@@ -148,6 +148,16 @@ RSpec.describe ISO8601::TimeInterval do
     end
   end
 
+  describe "#empty?" do
+    it "should be 0" do
+      expect(ISO8601::TimeInterval.new('2015-01-01/2015-01-01').to_f).to eq(0)
+    end
+
+    it "should check if the interval is empty" do
+      expect(ISO8601::TimeInterval.new('2015-01-01/2015-01-01').empty?).to be_truthy
+    end
+  end
+
   describe "#start_time" do
     it "should return always a ISO8601::DateTime object" do
       pattern = 'PT1H/2010-05-09T10:30:00Z'

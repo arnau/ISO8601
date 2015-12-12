@@ -181,6 +181,10 @@ module ISO8601
     alias_method :size, :to_f
     alias_method :length, :to_f
 
+    def empty?
+      first == last
+    end
+
     ##
     # Check if a given time is inside the current TimeInterval.
     #
