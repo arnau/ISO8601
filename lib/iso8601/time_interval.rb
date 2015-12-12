@@ -170,9 +170,9 @@ module ISO8601
     # @return [Float] Size of the interval in seconds
     def to_f
       if start_duration?
-        @start_time.to_f
+        @start_time.to_seconds(@end_time)
       elsif end_duration?
-        @end_time.to_f
+        @end_time.to_seconds(@start_time)
       else
         # We must calculate the size based on Time interval
         @end_time.to_time.to_f - @start_time.to_time.to_f
