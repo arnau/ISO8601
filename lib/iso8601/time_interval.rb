@@ -87,6 +87,17 @@ module ISO8601
     # @raise [ArgumentError] Pattern parameter must be an string
     #
     def initialize(pattern)
+      parse(pattern)
+    end
+
+    ##
+    # Alias of `initialize` to have a closer interface to the core `Time`,
+    # `Date` and `DateTime` interfaces.
+    def self.parse(pattern)
+      new(pattern)
+    end
+
+    def parse(pattern)
       fail(ArgumentError, 'The pattern must be an string') unless pattern.is_a?(String)
       fail(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
 
@@ -97,13 +108,6 @@ module ISO8601
 
       @atoms = subpatterns.map { |x| parse_subpattern(x) }
       @first, @last, @size = boundaries(@atoms)
-    end
-
-    ##
-    # Alias of `initialize` to have a closer interface to the core `Time`,
-    # `Date` and `DateTime` interfaces.
-    def self.parse(pattern)
-      new(pattern)
     end
 
     ##
