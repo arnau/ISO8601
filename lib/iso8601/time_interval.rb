@@ -203,8 +203,8 @@ module ISO8601
       fail(ISO8601::Errors::TypeError, 'The parameter must respond_to #to_time') \
         unless other.respond_to?(:to_time)
 
-      seconds = other.to_time.to_f
-      (first.to_f <= seconds && last.to_f >= seconds)
+      (first.to_time <= other.to_time &&
+       last.to_time >= other.to_time)
     end
 
     ##
@@ -220,8 +220,7 @@ module ISO8601
       fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
-      (first.to_time >= other.first.to_time &&
-       last.to_time <= other.last.to_time)
+      other.include?(first) && other.include?(last)
     end
 
     ##
@@ -237,8 +236,7 @@ module ISO8601
       fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
-      (first.to_time <= other.last.to_time &&
-       last.to_time >= other.last.to_time)
+      include?(other.first) && include?(other.last)
     end
 
     ##
@@ -255,7 +253,7 @@ module ISO8601
            "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
-      (include?(other.first) || include?(other.last))
+      include?(other.first) || include?(other.last)
     end
 
     ##
