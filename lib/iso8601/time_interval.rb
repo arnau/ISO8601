@@ -151,7 +151,7 @@ module ISO8601
     end
 
     ##
-    # Return the pattern that crete the same interval
+    # Return the pattern that craete the same interval
     #
     # @return [String] The pattern of this interval
     def pattern
@@ -212,6 +212,7 @@ module ISO8601
       # We check if the start time or end time are inside the interval
       (include?(interval.start_time) || include?(interval.end_time))
     end
+    alias_method :intersect?, :overlap?
 
     ##
     # @param [ISO8601::TimeInterval] other The contrast to compare against
