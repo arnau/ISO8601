@@ -180,16 +180,16 @@ module ISO8601
     ##
     # Check if a given time is inside the current TimeInterval.
     #
-    # @param [ISO8601::DateTime, ::DateTime] other DateTime to check if it's
-    #   inside the current interval. For a ISO8601::Interval all the interval
-    #   must be inside.
+    # @param [#to_time] other DateTime to check if it's
+    #   inside the current interval.
     #
     # @raise [ISO8601::Errors::TypeError] if time param is not a compatible
     #   Object.
     #
     # @return [Boolean]
     def include?(other)
-      valid_date_time?(other)
+      fail(ISO8601::Errors::TypeError, 'The parameter must respond_to #to_time') \
+        unless other.respond_to?(:to_time)
 
       seconds = other.to_time.to_f
       (start_time.to_f < seconds && seconds < end_time.to_f)
@@ -198,9 +198,7 @@ module ISO8601
     ##
     # Check if a given time interval is inside the current TimeInterval.
     #
-    # @param [ISO8601::DateTime, ISO8601::Interval, ::DateTime] other DateTime
-    #   to check if it's inside the current interval. For a ISO8601::Interval
-    #   all the interval must be inside.
+    # @param [ISO8601::TimeInterval] other a time interval.
     #
     # @raise [ISO8601::Errors::TypeError] if time param is not a compatible
     #   Object.
