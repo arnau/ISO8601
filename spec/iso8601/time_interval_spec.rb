@@ -394,6 +394,32 @@ RSpec.describe ISO8601::TimeInterval do
     end
   end
 
+  describe "#intersection" do
+    let(:small) { ISO8601::TimeInterval.new('2015-06-15/P1D') }
+    let(:big) { ISO8601::TimeInterval.new('2015-06-01/P1M') }
+    let(:other) { ISO8601::TimeInterval.new('2015-06-30/P1D') }
+
+    it "raise TypeError when the parameter is not valid" do
+      ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')
+      dt = ISO8601::DateTime.new('2007-03-01T18:00:00Z')
+
+      expect { ti.intersection('2007-03-01T13:00:00Z/PT1H') }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.intersection(1) }.to raise_error(ISO8601::Errors::TypeError)
+      expect { ti.intersection(dt) }.to raise_error(ISO8601::Errors::TypeError)
+    end
+
+    it "raise IntervalError when the intervals are disjoint" do
+      expect { small.intersection(other) }.to raise_error(ISO8601::Errors::IntervalError)
+    end
+
+    it "should return the smallest when one is subset of the other" do
+      expect(small.intersection(small)).to eq(small)
+      expect(big.intersection(small)).to eq(small)
+      expect(small.intersection(big)).to eq(small)
+    end
+
+  end
+
   describe "#disjoint?" do
     it "raise TypeError when the parameter is not valid" do
       ti = ISO8601::TimeInterval.new('2007-03-01T13:00:00Z/PT1H')

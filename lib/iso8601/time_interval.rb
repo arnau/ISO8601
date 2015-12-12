@@ -257,6 +257,25 @@ module ISO8601
     end
 
     ##
+    # Return the intersection between two intervals.
+    #
+    # @param [ISO8601::Interval] other time interval
+    #
+    # @raise [ISO8601::Errors::TypeError] if the param is not a TimeInterval.
+    #
+    # @return [Boolean]
+    def intersection(other)
+      fail(ISO8601::Errors::IntervalError, "The intervals are disjoint") \
+        if disjoint?(other) && other.disjoint?(self)
+
+      return self if subset?(other)
+      return other if other.subset?(self)
+
+      a, b = sort_pair(self, other)
+      self.class.from_datetimes(b.first, a.last)
+    end
+
+    ##
     # Check if two intervarls have no element in common.  This method is the
     # opposite of `#intersect?`.
     #
@@ -297,6 +316,10 @@ module ISO8601
     end
 
     private
+
+    def sort_pair(a, b)
+      (a.first < b.first) ? [a, b] : [b, a]
+    end
 
     ##
     # Check if the start time is a duration
