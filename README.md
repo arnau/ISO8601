@@ -22,19 +22,13 @@ times) standard.
 
 ## Documentation
 
-Check the [rubydoc documentation](http://www.rubydoc.info/gems/iso8601).
+Check the [rubydoc documentation](http://www.rubydoc.info/gems/iso8601). Or
+take a look to the implementation notes:
 
-* [Time intervals](docs/time-intervals.md)
+* [Duration](docs/duration.md)
+* [Time interval](docs/time-interval.md)
 
 ## Comments about this implementation
-
-### Duration sign
-
-Because `Durations` and `DateTime` have a substraction method, `Durations` has
-sign to be able to represent negative values:
-
-    (ISO8601::Duration.new('PT10S') - ISO8601::Duration.new('PT12S')).to_s  #=> '-PT2S'
-    (ISO8601::Duration.new('-PT10S') + ISO8601::Duration.new('PT12S')).to_s #=> 'PT2S'
 
 ### Fractional seconds precision
 

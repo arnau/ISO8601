@@ -1,4 +1,4 @@
-# Time Intervals
+# Time Interval
 
 > A time interval is the intervening time between two time points.
 Source: [Wikipedia ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Time_intervals)
@@ -11,9 +11,7 @@ with the following constructors:
 * `TimeInterval.from_datetime(DateTime, DateTime)`
 
 
-## Patterns
-
-The supported patterns are:
+## Supported patterns
 
 ```
 <start>/<end>

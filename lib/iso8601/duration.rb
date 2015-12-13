@@ -310,14 +310,14 @@ module ISO8601
     #   ISO8601::Duration or Numeric classes
     #
     # @return [Float] Number of seconds of other param Object
-    #
     def fetch_seconds(other, base = nil)
-      if other.is_a? ISO8601::Duration
+      case other
+      when ISO8601::Duration
         other.to_seconds(base)
-      elsif other.is_a? Numeric
+      when Numeric
         other.to_f
       else
-        fail ISO8601::Errors::TypeError, other
+        fail(ISO8601::Errors::TypeError, other)
       end
     end
   end
