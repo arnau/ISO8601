@@ -1,10 +1,11 @@
-## 0.9.0 (wip)
+## 0.9.0
 
 This version is **not compatible** with previous versions.  Atoms and Durations
 changed their interface when treating base dates so it is only applied when
 computing the Atom length (e.g. `#to_seconds`).  As a consequence, it is no
 longer possible to do operations like `DateTime + Duration`.
 
+* Add time intervals (thanks @Angelmmiguel).
 * Remove `Duration#to_i`.
 * Change `Duration#to_seconds` to accept a base `DateTime`.
 * Remove duration dependency on a base date on the instance level.
