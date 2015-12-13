@@ -4,90 +4,103 @@ module ISO8601
   # See https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
   #
   # @example
-  #     ti = ISO8601::TimeInterval.new('P1MT2H/2014-05-28T19:53Z')
-  #     ti.to_f # => 2635200.0
-  #     ti2 = ISO8601::TimeInterval.new('2014-05-28T19:53Z/2014-05-28T20:53Z')
+  #     ti = ISO8601::TimeInterval.parse('P1MT2H/2014-05-28T19:53Z')
+  #     ti.size # => 2635200.0
+  #     ti2 = ISO8601::TimeInterval.parse('2014-05-28T19:53Z/2014-05-28T20:53Z')
   #     ti2.to_f # => 3600.0
   #
   # @example
   #     start_time = ISO8601::DateTime.new('2014-05-28T19:53Z')
   #     end_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
   #     ti = ISO8601::TimeInterval.from_datetimes(start_time, end_time)
-  #     ti.to_f # => 172800.0 (Seconds)
+  #     ti.size # => 172800.0 (Seconds)
   #
   # @example
   #     duration = ISO8601::Duration.new('P1MT2H')
   #     end_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
-  #     ti = ISO8601::TimeInterval.from_duration(duration, end_time: end_time)
-  #     ti.to_f # => 2635200.0 (Seconds)
+  #     ti = ISO8601::TimeInterval.from_duration(duration, end_time)
+  #     ti.size # => 2635200.0 (Seconds)
   #
   # @example
   #     start_time = ISO8601::DateTime.new('2014-05-30T19:53Z')
   #     duration = ISO8601::Duration.new('P1MT2H', base)
-  #     ti = ISO8601::TimeInterval.from_duration(duration, start_time: start_time)
-  #     ti.to_f # => 2635200.0 (Seconds)
+  #     ti = ISO8601::TimeInterval.from_duration(start_time, duration)
+  #     ti.size # => 2635200.0 (Seconds)
   #
   class TimeInterval
     include Comparable
 
     ##
-    # Initialize a TimeInterval based on a two ISO8601::DateTime instances.
+    # Initializes a time interval based on two time points.
     #
-    # @param [ISO8601::DateTime] start_time An ISO8601::DateTime that represents
-    #     start time of the interval.
-    # @param [ISO8601::DateTime] end_time An ISO8601::DateTime that represents
-    #     end time of the interval.
+    # @overload from_datetimes(start_time, end_time)
+    #   @param [ISO8601::DateTime] start_time The start time point of the
+    #       interval.
+    #   @param [ISO8601::DateTime] end_time The end time point of the interaval.
     #
-    # @raise [ArgumentError] If any param is not an instance of ISO8601::DateTime
+    # @raise [ISO8601::Errors::TypeError] If both params are not instances of
+    #   `ISO8601::DateTime`.
     #
-    def self.from_datetimes(start_time, end_time)
-      valid_date_time?(start_time) && valid_date_time?(end_time)
+    # @return [ISO8601::TimeInterval]
+    def self.from_datetimes(*atoms)
+      atoms.all? { |x| valid_date_time?(x) }
 
-      new("#{start_time}/#{end_time}")
+      new(atoms)
     end
 
     ##
-    # Initialize a TimeInterval based on a ISO8601::Duration. To set a correct
-    # time interval, we need a start or end point. This point is sent in second
-    # parameter.
+    # Initializes a TimeInterval based on a `ISO8601::Duration` and a
+    # `ISO8601::DateTime`.  The order of the params define the strategy to
+    # compute the interval.
     #
-    # @param [ISO8601::Duration] duration An ISO8601::Duration that represent
-    #     the size of the interval.
-    # @param [Hash] time A hash to set the start or end point of the time
-    #     interval.  This hash must contain an unique key (start_time or
-    #     end_time) and a ISO8601::DateTime as value. For example:
-    #       { start_time: iso_8601_datetime }
-    #       { end_time: iso_8601_datetime }
+    # @overload from_duration(start_time, duration)
+    #   Equivalent to the `<start>/<duration>` pattern.
+    #   @param [ISO8601::DateTime] start_time The start time point of the
+    #       interval.
+    #   @param [ISO8601::Duration] duration The size of the interval.
     #
-    # @raise [ArgumentError] if duration is not an instance of ISO8601::Duration
-    # @raise [ArgumentError] if keys of time hash are not valid, or the value is
-    #     not an instance of ISO8601::DateTime.
+    # @overload from_duration(duration, end_time)
+    #   Equivalent to the `<duration>/<end>` pattern.
+    #   @param [ISO8601::Duration] duration The size of the interval.
+    #   @param [ISO8601::DateTime] end_time The end time point of the interaval.
     #
-    def self.from_duration(duration, time)
-      valid_duration?(duration)
-      valid_timehash?(time)
-      pattern = pattern_from_duration(duration, time)
+    # @raise [ISO8601::Errors::TypeError] If the params aren't a mix of
+    #   `ISO8601::DateTime` and `ISO8601::Duration`.
+    #
+    # @return [ISO8601::TimeInterval]
+    def self.from_duration(*atoms)
+      fail(ISO8601::Errors::TypeError, "Expected one date time and one duration") \
+        unless atoms.any? { |x| x.is_a?(ISO8601::Duration) } &&
+               atoms.any? { |x| x.is_a?(ISO8601::DateTime) }
 
-      new(pattern)
+      new(atoms)
     end
 
     ##
-    # Initialize a TimeInterval ISO8601 by a pattern. If you initialize it with
-    # a duration pattern, the second argument is mandatory because you need to
-    # specify an start/end point to calculate the interval.
+    # Dispatches the constructor based on the type of the input.
     #
-    # @param [String] pattern This parameter define a full time interval. These
-    #     patterns are defined in the ISO8601:
-    #         * <start_time>/<end_time>
-    #         * <start_time>/<duration>
-    #         * <duration>/<end_time>
+    # @overload new(pattern)
+    #   Parses a pattern.
+    #   @param [String] input A time interval pattern.
     #
-    # @raise [ISO8601::Errors::UnknownPattern] If given pattern is not a valid
-    #     ISO8601 pattern.
-    # @raise [ArgumentError] Pattern parameter must be an string
+    # @overload new([start_time, duration])
+    #   Equivalent to the `<start>/<duration>` pattern.
+    #   @param [Array<(ISO8601::DateTime, ISO8601::Duration)>] input
     #
-    def initialize(pattern)
-      parse(pattern)
+    # @overload new([duration, end_time])
+    #   Equivalent to the `<duration>/<end>` pattern.
+    #   @param [Array<(ISO8601::Duration, ISO8601::DateTime)>] input
+    #
+    # @return [ISO8601::TimeInterval]
+    def initialize(input)
+      case input
+      when String
+        parse(input)
+      when Array
+        from_atoms(input)
+      else
+        fail(ISO8601::Errors::TypeError, 'The pattern must be a String or a Hash')
+      end
     end
 
     ##
@@ -97,30 +110,19 @@ module ISO8601
       new(pattern)
     end
 
-    def parse(pattern)
-      fail(ArgumentError, 'The pattern must be an string') unless pattern.is_a?(String)
-      fail(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
-
-      @pattern = pattern
-      subpatterns = pattern.split('/')
-
-      fail(ISO8601::Errors::UnknownPattern, pattern) if subpatterns.size != 2
-
-      @atoms = subpatterns.map { |x| parse_subpattern(x) }
-      @first, @last, @size = boundaries(@atoms)
-    end
-
     ##
     # The start time (first) of the interval.
     #
     # @return [ISO8601::DateTime] start time
     attr_reader :first
+    alias_method :start_time, :first
 
     ##
     # The end time (last) of the interval.
     #
     # @return [ISO8601::DateTime] end time
     attr_reader :last
+    alias_method :end_time, :last
 
     ##
     # The pattern for the interval.
@@ -131,7 +133,6 @@ module ISO8601
 
       "#{@atoms.first}/#{@atoms.last}"
     end
-
     alias_method :to_s, :pattern
 
     ##
@@ -256,7 +257,7 @@ module ISO8601
     #
     # @return [-1, 0, 1]
     def <=>(other)
-      return nil unless other.is_a?(self.class)
+      fail(ISO8601::Errors::TypeError) unless other.is_a?(self.class)
 
       to_f <=> other.to_f
     end
@@ -279,20 +280,32 @@ module ISO8601
 
     private
 
-    def sort_pair(a, b)
-      (a.first < b.first) ? [a, b] : [b, a]
+    # Initialize a TimeInterval ISO8601 by a pattern. If you initialize it with
+    # a duration pattern, the second argument is mandatory because you need to
+    # specify an start/end point to calculate the interval.
+    #
+    # @param [String] pattern This parameter define a full time interval. These
+    #     patterns are defined in the ISO8601:
+    #         * <start_time>/<end_time>
+    #         * <start_time>/<duration>
+    #         * <duration>/<end_time>
+    #
+    # @raise [ISO8601::Errors::UnknownPattern] If given pattern is not a valid
+    #     ISO8601 pattern.
+    def parse(pattern)
+      fail(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
+
+      @pattern = pattern
+      subpatterns = pattern.split('/')
+
+      fail(ISO8601::Errors::UnknownPattern, pattern) if subpatterns.size != 2
+
+      @atoms = subpatterns.map { |x| parse_subpattern(x) }
+      @first, @last, @size = boundaries(@atoms)
     end
 
-    ##
-    # Check if the given argument is a instance of ISO8601::DateTime,
-    # ISO8601::TimeInterval or DateTime.
-    #
-    # @raise [ISO8601::Errors::TypeError]
-    def valid_date_time?(time)
-      return if time.is_a?(::DateTime) || time.is_a?(ISO8601::DateTime)
-
-      fail(ISO8601::Errors::TypeError,
-           'Parameter must be an instance of ISO8601::DateTime, ISO8601::TimeInterval or DateTime')
+    def sort_pair(a, b)
+      (a.first < b.first) ? [a, b] : [b, a]
     end
 
     ##
@@ -308,11 +321,20 @@ module ISO8601
     end
 
     ##
+    # See the constructor methods.
+    #
+    # @param [Array] atoms
+    def from_atoms(atoms)
+      @atoms = atoms
+      @first, @last, @size = boundaries(@atoms)
+    end
+
+    ##
     # Calculates the boundaries (first, last) and the size of the interval.
     #
     # @param [Array] atoms The atoms result of parsing the pattern.
     #
-    # @return [Array]
+    # @return [Array<(ISO8601::DateTime, ISO8601::DateTime, ISO8601::Duration)>]
     def boundaries(atoms)
       valid_atoms?(atoms)
 
@@ -344,55 +366,24 @@ module ISO8601
     #
     # @param [ISO8601::Duration] duration Duration instance
     #
-    # @raise [ArgumentError] If one of parameters is not an instance of
-    #   ISO8601::Duration
+    # @raise [ISO8601::Errors::TypeError] If one of parameters is not an
+    #   instance of `ISO8601::Duration`.
     def self.valid_duration?(duration)
-      # Check the type of parameters
       return true if duration.is_a?(ISO8601::Duration)
-      fail(ArgumentError,
+      fail(ISO8601::Errors::TypeError,
            'Duration must be an instance of ISO8601::Duration')
     end
 
     ##
-    # Create the pattern based on a duration and time options.
+    # Check if the given argument is a instance of ISO8601::DateTime,
+    # ISO8601::TimeInterval or DateTime.
     #
-    # @param [ISO8601::Duration] duration An ISO8601::Duration that represent the
-    #     size of the interval.
-    # @param [Hash] timehash A hash to set the start or end point of the time interval.
-    #     This hash must contain an unique key (start_time or end_time) and a
-    #     ISO8601::DateTime as value. For example:
-    #       { start_time: iso_8601_datetime }
-    #       { end_time: iso_8601_datetime }
-    #
-    # @raise [ArgumentError] if keys of time hash are not valid, or the value is not
-    #     an instance of ISO8601::DateTime
-    #
-    def self.pattern_from_duration(duration, timehash)
-      return "#{timehash[:start_time]}/#{duration}" \
-        if timehash.keys.include?(:start_time) && valid_date_time?(timehash[:start_time])
+    # @raise [ISO8601::Errors::TypeError]
+    def valid_date_time?(time)
+      return if time.is_a?(::DateTime) || time.is_a?(ISO8601::DateTime)
 
-      return "#{duration}/#{timehash[:end_time]}" \
-        if timehash.keys.include?(:end_time) && valid_date_time?(timehash[:end_time])
-    end
-
-    ##
-    # Validates if timehash is a Hash and contains either :start_date or :end_date
-    #
-    # @param [Hash] timehash A hash to set the start or end point of the time interval.
-    #     This hash must contain an unique key (start_time or end_time) and a
-    #     ISO8601::DateTime as value. For example:
-    #       { start_time: iso_8601_datetime }
-    #       { end_time: iso_8601_datetime }
-    def self.valid_timehash?(timehash)
-      fail(ArgumentError, 'Timehash parameter must be a Hash') \
-        unless timehash.is_a?(Hash)
-
-      fail(ArgumentError, 'Timehash parameter must have only one key') \
-        unless timehash.keys.length == 1
-
-      fail(ArgumentError,
-           'You must specify an start_time or end_time in second parameter') \
-        unless timehash.keys.include?(:start_time) || timehash.keys.include?(:end_time)
+      fail(ISO8601::Errors::TypeError,
+           'Parameter must be an instance of ISO8601::DateTime, ISO8601::TimeInterval or DateTime')
     end
 
     ##
@@ -400,13 +391,12 @@ module ISO8601
     #
     # @param [ISO8601::DateTime] time DateTime instance
     #
-    # @raise [ArgumentError] If time parameters is not an instance of
+    # @raise [ISO8601::Errors::TypeError] If time parameters is not an instance of
     #   ISO8601::DateTime
     #
     def self.valid_date_time?(time)
-      # Check the type of parameters
       return true if time.is_a?(ISO8601::DateTime)
-      fail(ArgumentError,
+      fail(ISO8601::Errors::TypeError,
            'Start time and End time must be an instance of ISO8601::DateTime')
     end
   end

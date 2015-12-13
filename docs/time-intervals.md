@@ -39,7 +39,7 @@ The resulting time interval will have a starting point based on the provided
 ti = ISO8601::TimeInterval.parse('2015-12-12T19:53:00Z/2015-12-13T19:53:00Z')
 ti.start_time.to_s  # => '2015-12-12T19:53:00Z'
 ti.end_time.to_s    # => '2015-12-13T19:53:00Z'
-ti.to_f             # => 86_400.0
+ti.size             # => 86_400.0
 ```
 
 ### `<start>/<duration>`
@@ -51,7 +51,7 @@ The resulting time interval will have a starting point based on the provided
 ti = ISO8601::TimeInterval.parse('2015-12-12T19:53:00Z/P1D')
 ti.start_time.to_s  # => '2015-12-12T19:53:00Z'
 ti.end_time.to_s    # => '2015-12-13T19:53:00Z'
-ti.to_f             # => 86_400.0
+ti.size             # => 86_400.0
 ```
 
 ### `<duration>/<end>`
@@ -63,26 +63,26 @@ The resulting time interval will have a starting point result of
 ti = ISO8601::TimeInterval.parse('P1D/2015-12-13T19:53:00Z')
 ti.start_time.to_s  # => '2015-12-12T19:53:00Z'
 ti.end_time.to_s    # => '2015-12-13T19:53:00Z'
-ti.to_f             # => 86_400.0
+ti.size             # => 86_400.0
 ```
 
 
 ### `TimeInterval.from_duration`
 
 ```ruby
-d = ISO8601::Duration.new('P1D`)
-dt_start = ISO8601::DateTime.new('2015-12-12T19:53:00Z')
-ti = ISO8601::TimeInterval.from_duration(d, {start_date: dt_start)
+duration = ISO8601::Duration.new('P1D`)
+start_time = ISO8601::DateTime.new('2015-12-12T19:53:00Z')
+ti = ISO8601::TimeInterval.from_duration(start_time, duration)
 ti.start_time.to_s  # => '2015-12-12T19:53:00Z'
 ti.end_time.to_s    # => '2015-12-13T19:53:00Z'
-ti.to_f             # => 86_400.0
+ti.size             # => 86_400.0
 
 
-dt_end = ISO8601::DateTime.new('2015-12-13T19:53:00Z')
-ti2 = ISO8601::TimeInterval.from_duration(d, {end_date: dt_end)
+end_time = ISO8601::DateTime.new('2015-12-13T19:53:00Z')
+ti2 = ISO8601::TimeInterval.from_duration(duration, end_time)
 ti2.start_time.to_s  # => '2015-12-12T19:53:00Z'
 ti2.end_time.to_s    # => '2015-12-13T19:53:00Z'
-ti2.to_f             # => 86_400.0
+ti2.size             # => 86_400.0
 ```
 
 ### `TimeInterval.from_datetime`
@@ -90,12 +90,12 @@ ti2.to_f             # => 86_400.0
 This constructor is an alternative way to `<start>/<end>` via Ruby objects.
 
 ```ruby
-dt_start = ISO8601::DateTime.new('2015-12-12T19:53:00Z')
-dt_end = ISO8601::DateTime.new('2015-12-13T19:53:00Z')
-ti2 = ISO8601::TimeInterval.from_duration(dt_start, dt_end)
+start_time = ISO8601::DateTime.new('2015-12-12T19:53:00Z')
+end_time = ISO8601::DateTime.new('2015-12-13T19:53:00Z')
+ti2 = ISO8601::TimeInterval.from_duration(start_time, end_time)
 ti2.start_time.to_s  # => '2015-12-12T19:53:00Z'
 ti2.end_time.to_s    # => '2015-12-13T19:53:00Z'
-ti2.to_f             # => 86_400.0
+ti2.size             # => 86_400.0
 ```
 
 ## Operate with time intervals

@@ -33,7 +33,7 @@ module ISO8601
 
     ##
     # Raised when the type is unexpected
-    class TypeError < StandardError
+    class TypeError < ::ArgumentError
     end
 
     ##
