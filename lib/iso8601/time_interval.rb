@@ -43,8 +43,7 @@ module ISO8601
     #
     # @return [ISO8601::TimeInterval]
     def self.from_datetimes(*atoms)
-      atoms.all? { |x| valid_date_time?(x) }
-
+      guard_from_datetimes(atoms, 'Start and end times must instances of ISO8601::DateTime')
       new(atoms)
     end
 
@@ -69,10 +68,7 @@ module ISO8601
     #
     # @return [ISO8601::TimeInterval]
     def self.from_duration(*atoms)
-      fail(ISO8601::Errors::TypeError, "Expected one date time and one duration") \
-        unless atoms.any? { |x| x.is_a?(ISO8601::Duration) } &&
-               atoms.any? { |x| x.is_a?(ISO8601::DateTime) }
-
+      guard_from_duration(atoms, 'Expected one date time and one duration')
       new(atoms)
     end
 
@@ -253,19 +249,19 @@ module ISO8601
     end
 
     ##
-    # @param [ISO8601::TimeInterval] other The contrast to compare against
+    # @param [ISO8601::TimeInterval] other
     #
-    # @return [-1, 0, 1]
+    # @return [-1, 0, 1, nil]
     def <=>(other)
-      fail(ISO8601::Errors::TypeError) unless other.is_a?(self.class)
+      return nil unless other.is_a?(self.class)
 
       to_f <=> other.to_f
     end
 
     ##
-    # Compare the TimeIntervals based on the Hash of the objects
+    # Equality by hash.
     #
-    # @param [ISO8601::TimeInterval] other TimeInterval instance
+    # @param [ISO8601::TimeInterval] other
     #
     # @return [Boolean]
     def eql?(other)
@@ -301,7 +297,7 @@ module ISO8601
       fail(ISO8601::Errors::UnknownPattern, pattern) if subpatterns.size != 2
 
       @atoms = subpatterns.map { |x| parse_subpattern(x) }
-      @first, @last, @size = boundaries(@atoms)
+      @first, @last, @size = limits(@atoms)
     end
 
     def sort_pair(a, b)
@@ -326,33 +322,45 @@ module ISO8601
     # @param [Array] atoms
     def from_atoms(atoms)
       @atoms = atoms
-      @first, @last, @size = boundaries(@atoms)
+      @first, @last, @size = limits(@atoms)
     end
 
     ##
-    # Calculates the boundaries (first, last) and the size of the interval.
+    # Calculates the limits (first, last) and the size of the interval.
     #
     # @param [Array] atoms The atoms result of parsing the pattern.
     #
     # @return [Array<(ISO8601::DateTime, ISO8601::DateTime, ISO8601::Duration)>]
-    def boundaries(atoms)
+    def limits(atoms)
       valid_atoms?(atoms)
 
       if atoms.none? { |x| x.is_a?(ISO8601::Duration) }
-        return [atoms.first,
-                atoms.last,
-                (atoms.last.to_time - atoms.first.to_time)]
+        return tuple_by_both(atoms)
       elsif atoms.first.is_a?(ISO8601::Duration)
-        seconds = atoms.first.to_seconds(atoms.last)
-        return [(atoms.last - seconds),
-                atoms.last,
-                seconds]
+        return tuple_by_end(atoms)
       else
-        seconds = atoms.last.to_seconds(atoms.first)
-        return [atoms.first,
-                (atoms.first + seconds),
-                seconds]
+        return tuple_by_start(atoms)
       end
+    end
+
+    def tuple_by_both(atoms)
+      [atoms.first,
+       atoms.last,
+       (atoms.last.to_time - atoms.first.to_time)]
+    end
+
+    def tuple_by_end(atoms)
+      seconds = atoms.first.to_seconds(atoms.last)
+      [(atoms.last - seconds),
+       atoms.last,
+       seconds]
+    end
+
+    def tuple_by_start(atoms)
+      seconds = atoms.last.to_seconds(atoms.first)
+      [atoms.first,
+       (atoms.first + seconds),
+       seconds]
     end
 
     def valid_atoms?(atoms)
@@ -361,43 +369,24 @@ module ISO8601
         if atoms.all? { |x| x.is_a?(ISO8601::Duration) }
     end
 
-    ##
-    # Check if the parameter is an instance of Duration class.
-    #
-    # @param [ISO8601::Duration] duration Duration instance
-    #
-    # @raise [ISO8601::Errors::TypeError] If one of parameters is not an
-    #   instance of `ISO8601::Duration`.
-    def self.valid_duration?(duration)
-      return true if duration.is_a?(ISO8601::Duration)
-      fail(ISO8601::Errors::TypeError,
-           'Duration must be an instance of ISO8601::Duration')
-    end
-
-    ##
-    # Check if the given argument is a instance of ISO8601::DateTime,
-    # ISO8601::TimeInterval or DateTime.
-    #
-    # @raise [ISO8601::Errors::TypeError]
     def valid_date_time?(time)
-      return if time.is_a?(::DateTime) || time.is_a?(ISO8601::DateTime)
-
-      fail(ISO8601::Errors::TypeError,
-           'Parameter must be an instance of ISO8601::DateTime, ISO8601::TimeInterval or DateTime')
+      self.valid_date_time?(time)
     end
 
-    ##
-    # Check two parameters are an instance of DateTime class.
-    #
-    # @param [ISO8601::DateTime] time DateTime instance
-    #
-    # @raise [ISO8601::Errors::TypeError] If time parameters is not an instance of
-    #   ISO8601::DateTime
-    #
-    def self.valid_date_time?(time)
+    def self.valid_date_time?(time, message = 'Expected a ISO8601::DateTime')
       return true if time.is_a?(ISO8601::DateTime)
-      fail(ISO8601::Errors::TypeError,
-           'Start time and End time must be an instance of ISO8601::DateTime')
+
+      fail(ISO8601::Errors::TypeError, message)
+    end
+
+    def self.guard_from_datetimes(atoms, message)
+      atoms.all? { |x| valid_date_time?(x, message) }
+    end
+
+    def self.guard_from_duration(atoms, message)
+      fail(ISO8601::Errors::TypeError, message) \
+        unless atoms.any? { |x| x.is_a?(ISO8601::Duration) } &&
+               atoms.any? { |x| x.is_a?(ISO8601::DateTime) }
     end
   end
 end

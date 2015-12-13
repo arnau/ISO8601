@@ -232,8 +232,8 @@ RSpec.describe ISO8601::TimeInterval do
     end
 
     it "should raise TypeError when compared object is not a ISO8601::TimeInterval" do
-      expect { @small < 'Hello!' }.to raise_error(ISO8601::Errors::TypeError)
-      expect { @small > 'Hello!' }.to raise_error(ISO8601::Errors::TypeError)
+      expect { @small < 'Hello!' }.to raise_error(ArgumentError)
+      expect { @small > 'Hello!' }.to raise_error(ArgumentError)
     end
 
     it "should check what interval is bigger" do
