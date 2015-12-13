@@ -1,4 +1,4 @@
-## 0.9.0 (wip)
+## 0.9.0
 
 This version is **not compatible** with previous versions.  Atoms and Durations
 changed their interface when treating base dates so it is only applied when

@@ -1,5 +1,12 @@
 # ISO8601
 
+Version 0.9.0 is **not compatible** with previous versions.  Atoms and Durations
+changed their interface when treating base dates so it is only applied when
+computing the Atom length (e.g. `#to_seconds`).  As a consequence, it is no
+longer possible to do operations like `DateTime + Duration`.
+
+Version 1.0.0 will lock public interfaces.
+
 Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md) if you are upgrading from an older version.
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/arnau/ISO8601?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
