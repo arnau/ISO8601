@@ -27,22 +27,37 @@ Gem::Specification.new do |s|
                iso8601.gemspec
                docs/date-time.md
                docs/duration.md
-               docs/time-intervals.md
+               docs/time-interval.md
                lib/iso8601.rb
-               lib/iso8601/atoms.rb
+               lib/iso8601/atomic.rb
                lib/iso8601/date.rb
                lib/iso8601/date_time.rb
+               lib/iso8601/days.rb
                lib/iso8601/duration.rb
                lib/iso8601/errors.rb
+               lib/iso8601/hours.rb
+               lib/iso8601/minutes.rb
+               lib/iso8601/months.rb
+               lib/iso8601/seconds.rb
                lib/iso8601/time.rb
+               lib/iso8601/time_interval.rb
                lib/iso8601/version.rb
-               spec/iso8601/atoms_spec.rb
+               lib/iso8601/weeks.rb
+               lib/iso8601/years.rb
                spec/iso8601/date_spec.rb
                spec/iso8601/date_time_spec.rb
+               spec/iso8601/days_spec.rb
                spec/iso8601/duration_spec.rb
+               spec/iso8601/hours_spec.rb
+               spec/iso8601/minutes_spec.rb
+               spec/iso8601/months_spec.rb
+               spec/iso8601/seconds_spec.rb
+               spec/iso8601/time_interval_spec.rb
                spec/iso8601/time_spec.rb
+               spec/iso8601/weeks_spec.rb
+               spec/iso8601/years_spec.rb
                spec/spec_helper.rb)
-  s.test_files = s.files.grep(%r{^(spec|features)/})
+  s.test_files = s.files.grep(%r{^spec/})
   s.require_paths = ['lib']
 
   s.has_rdoc = 'yard'
