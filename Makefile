@@ -18,14 +18,15 @@ internal_path = /usr/src/iso8601
 volumes = -v $(EXTERNAL_PATH):$(internal_path) \
           -v $(GEM_CREDENTIALS):/root/.gem/credentials
 
-include mk/*.mk
-
 default: build
+
+include mk/*.mk
 
 test: mri-test rbx-test jruby-test
 install: mri-pull rbx-pull jruby-pull
 clean: mri-clean rbx-clean jruby-clean
 build: mri-build rbx-build jruby-build
+doc: mri-doc
 
 repl: mri-repl
 shell: mri-shell
