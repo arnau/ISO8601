@@ -145,7 +145,11 @@ module ISO8601
     #
     # @return [String]
     def to_pattern(original)
-      (original.is_a? Numeric) ? "PT#{original}S" : original
+      if original.is_a? Numeric
+        "#{original < 0 ? '-' : ''}PT#{original.abs}S"
+      else
+        original
+      end
     end
 
     ##
