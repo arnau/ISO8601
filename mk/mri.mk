@@ -1,4 +1,4 @@
-mri_image_name = $(image_name):mri-2.2.3
+mri_image_name = $(image_name):mri-2.3
 
 ##
 # Run unit tests

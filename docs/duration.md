@@ -18,15 +18,14 @@ PnW
 
 ## Usage
 
-Some times using durations might be more convenient than using time intervals
-(e.g. you don't need or want a specific point in time).
+Some times using durations might be more convenient than using time intervals:
 
 ```ruby
 duration = ISO8601::Duration.new('PT10H')
 duration.to_seconds # => 36000.0
 ```
 
-Although you reuse the duration with a time interval:
+You can reuse the duration with a time interval:
 
 ```ruby
 start_time = ISO8601::DateTime.new('2015-01-01T10:11:12Z')
@@ -45,7 +44,7 @@ duration.to_seconds(base) # => 36000.0
 ```
 
 **Warning**: When using durations without base, the result of `#to_seconds` is
-an _average_.  See the implementation of the atoms for details.
+an _average_.  See the atoms' implementation for details.
 
 
 # Operate with durations
