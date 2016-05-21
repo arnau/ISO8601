@@ -1,3 +1,7 @@
+## 0.9.1
+
+* Fix `Duration#to_pattern` for negative durations based on a `Numeric` (thanks @figwit).
+
 ## 0.9.0
 
 This version is **not compatible** with previous versions.  Atoms and Durations
