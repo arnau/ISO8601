@@ -61,6 +61,7 @@ RSpec.describe ISO8601::Duration do
     it "should return the duration pattern" do
       expect(ISO8601::Duration.new('P1Y1M1DT1H1M1S').pattern).to eq('P1Y1M1DT1H1M1S')
       expect(ISO8601::Duration.new(60).pattern).to eq('PT60S')
+      expect(ISO8601::Duration.new(-60).pattern).to eq('-PT60S')
     end
   end
 
