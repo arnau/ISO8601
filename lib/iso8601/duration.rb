@@ -123,6 +123,7 @@ module ISO8601
     #
     # @return [Boolean]
     def ==(other)
+      return false if other.nil?
       (to_seconds == fetch_seconds(other))
     end
 
