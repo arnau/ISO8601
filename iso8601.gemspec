@@ -64,6 +64,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.0.0'
   s.add_development_dependency 'rspec', '~> 3.4'
   s.add_development_dependency 'rubocop', '~> 0.40'
-  s.add_development_dependency 'pry', '~> 0.10.3'
-  s.add_development_dependency 'pry-doc', '~> 0.8.0'
+  s.add_development_dependency 'pry', '~> 0.11.0'
+  s.add_development_dependency 'pry-doc', '~> 0.11.0'
 end
