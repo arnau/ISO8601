@@ -112,6 +112,7 @@ module ISO8601
     # @param [String] input
     #
     # @return [Array<Integer>]
+    # rubocop:disable Metrics/AbcSize
     def atomize(input)
       week_date = parse_weekdate(input)
       return atomize_week_date(input, week_date[2], week_date[1]) unless week_date.nil?
@@ -121,7 +122,7 @@ module ISO8601
 
       _, year, separator, month, day = parse_date(input)
 
-      fail ISO8601::Errors::UnknownPattern, @original if year.nil?
+      raise(ISO8601::Errors::UnknownPattern, @original) if year.nil?
 
       @separator = separator
 

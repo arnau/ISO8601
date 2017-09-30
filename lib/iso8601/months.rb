@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module ISO8601
   ##
   # A Months atom in a {ISO8601::Duration}
@@ -67,9 +65,10 @@ module ISO8601
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def zero_calculation(base)
-      month = (base.month <= 12) ? base.month : (base.month % 12)
-      year = base.year + ((base.month) / 12).to_i
+      month = base.month <= 12 ? base.month : (base.month % 12)
+      year = base.year + (base.month / 12).to_i
 
       (::Time.utc(year, month) - ::Time.utc(base.year, base.month))
     end
@@ -79,15 +78,15 @@ module ISO8601
       if initial <= 0
         month = base.month + atom
 
-        if initial % 12 == 0
+        if (initial % 12).zero?
           year = base.year + (initial / 12) - 1
           month = 12
         else
           year = base.year + (initial / 12).floor
-          month = (12 + initial > 0) ? (12 + initial) : (12 + (initial % -12))
+          month = 12 + initial > 0 ? (12 + initial) : (12 + (initial % -12))
         end
       else
-        month = (initial <= 12) ? initial : (initial % 12)
+        month = initial <= 12 ? initial : (initial % 12)
         month = 12 if month.zero?
         year = base.year + ((base.month + atom) / 12).to_i
       end

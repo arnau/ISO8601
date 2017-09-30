@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module ISO8601
   ##
   # The Minutes atom in a {ISO8601::Duration}

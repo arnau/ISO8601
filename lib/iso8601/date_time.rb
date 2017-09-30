@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module ISO8601
   ##
   # A DateTime representation
@@ -59,7 +57,7 @@ module ISO8601
     def to_a
       [year, month, day, hour, minute, second, zone]
     end
-    alias_method :atoms, :to_a
+    alias atoms to_a
 
     ##
     # Converts DateTime to a floating point number of seconds since the Epoch.
@@ -98,8 +96,9 @@ module ISO8601
     # It enhances the parsing capabilities of the native DateTime.
     #
     # @param [String] date_time The ISO representation
+    # rubocop:disable Metrics/AbcSize
     def parse(date_time)
-      fail ISO8601::Errors::UnknownPattern, date_time if date_time.empty?
+      raise(ISO8601::Errors::UnknownPattern, date_time) if date_time.empty?
 
       date, time = date_time.split('T')
 
@@ -107,10 +106,8 @@ module ISO8601
       time_atoms = Array(time && parse_time(time))
       separators = [date_atoms.pop, time_atoms.pop]
 
-      fail ISO8601::Errors::UnknownPattern,
-           @original unless valid_representation?(date_atoms, time_atoms)
-      fail ISO8601::Errors::UnknownPattern,
-           @original unless valid_separators?(separators)
+      raise(ISO8601::Errors::UnknownPattern, @original) unless valid_representation?(date_atoms, time_atoms)
+      raise(ISO8601::Errors::UnknownPattern, @original) unless valid_separators?(separators)
 
       ::DateTime.new(*(date_atoms + time_atoms).compact)
     end
@@ -146,7 +143,7 @@ module ISO8601
       return true if separators.length == 1 || separators[0] == :ignore
 
       unless separators.all?(&:empty?)
-        return false if (separators.first.length != separators.last.length)
+        return false if separators.first.length != separators.last.length
       end
 
       true

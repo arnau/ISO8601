@@ -17,3 +17,5 @@ Gemfile.lock
 # documentation
 .yardoc
 doc
+bundle
+.bundle

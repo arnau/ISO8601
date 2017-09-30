@@ -5,3 +5,5 @@
 .vagrant
 .yardoc
 pkg
+.bundle
+bundle

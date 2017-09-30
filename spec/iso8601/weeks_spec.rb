@@ -5,17 +5,17 @@ RSpec.describe ISO8601::Weeks do
     let(:subject) { ISO8601::Weeks.new(1) }
 
     it "should respond to the Atomic interface" do
-      [:factor,
-       :to_seconds,
-       :symbol,
-       :to_i,
-       :to_f,
-       :to_s,
-       :value,
-       :<=>,
-       :eql?,
-       :hash,
-       :valid_atom?].each { |m| expect(subject).to respond_to(m) }
+      %i[factor
+         to_seconds
+         symbol
+         to_i
+         to_f
+         to_s
+         value
+         <=>
+         eql?
+         hash
+         valid_atom?].each { |m| expect(subject).to respond_to(m) }
     end
   end
 

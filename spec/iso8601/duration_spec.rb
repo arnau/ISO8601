@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'spec_helper'
 
 RSpec.describe ISO8601::Duration do
@@ -268,8 +266,8 @@ RSpec.describe ISO8601::Duration do
     end
 
     it "should equal by hash identity" do
-      expect(ISO8601::Duration.new('PT1H').eql? ISO8601::Duration.new('PT1H')).to be_truthy
-      expect(ISO8601::Duration.new('PT1H').eql? ISO8601::Duration.new('PT60M')).to be_falsy
+      expect(ISO8601::Duration.new('PT1H').eql?(ISO8601::Duration.new('PT1H'))).to be_truthy
+      expect(ISO8601::Duration.new('PT1H').eql?(ISO8601::Duration.new('PT60M'))).to be_falsy
     end
   end
 

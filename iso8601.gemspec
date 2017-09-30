@@ -1,8 +1,7 @@
-# encoding: utf-8
-
 $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'iso8601/version'
 
+# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |s|
   s.name = 'iso8601'
   s.version = ISO8601::VERSION
@@ -11,14 +10,14 @@ Gem::Specification.new do |s|
   s.email = 'arnau.siches@gmail.com'
   s.homepage = 'https://github.com/arnau/ISO8601'
   s.summary = "Ruby parser to work with ISO 8601 dateTimes and durations - http://en.wikipedia.org/wiki/ISO_8601"
-  s.description = <<-EOD
+  s.description = <<-DESC
     ISO8601 is a simple implementation in Ruby of the ISO 8601 (Data elements and
     interchange formats - Information interchange - Representation of dates
     and times) standard.
-  EOD
+  DESC
   s.license = 'MIT'
   s.rubyforge_project = 'iso8601'
-  s.files = %W(CHANGELOG.md
+  s.files = %w[CHANGELOG.md
                CONTRIBUTING.md
                Gemfile
                LICENSE
@@ -56,14 +55,14 @@ Gem::Specification.new do |s|
                spec/iso8601/time_spec.rb
                spec/iso8601/weeks_spec.rb
                spec/iso8601/years_spec.rb
-               spec/spec_helper.rb)
+               spec/spec_helper.rb]
   s.test_files = s.files.grep(%r{^spec/})
   s.require_paths = ['lib']
 
   s.has_rdoc = 'yard'
   s.required_ruby_version = '>= 2.0.0'
   s.add_development_dependency 'rspec', '~> 3.4'
-  s.add_development_dependency 'rubocop', '~> 0.40'
+  s.add_development_dependency 'rubocop', '~> 0.50'
   s.add_development_dependency 'pry', '~> 0.11.0'
   s.add_development_dependency 'pry-doc', '~> 0.11.0'
 end

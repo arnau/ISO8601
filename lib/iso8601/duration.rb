@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module ISO8601
   ##
   # A duration representation. When no base is provided, all atoms use an
@@ -24,6 +22,7 @@ module ISO8601
   #     di == dp # => true
   #     di == ds # => true
   #
+  # rubocop:disable Metrics/ClassLength
   class Duration
     ##
     # @param [String, Numeric] input The duration pattern
@@ -42,7 +41,7 @@ module ISO8601
     ##
     # @return [String] The string representation of the duration
     attr_reader :pattern
-    alias_method :to_s, :pattern
+    alias to_s pattern
 
     ##
     # @return [ISO8601::Years] The years of the duration
@@ -188,7 +187,7 @@ module ISO8601
     #
     # @return [Hash<Float>]
     def atomize(input)
-      duration = parse(input) || fail(ISO8601::Errors::UnknownPattern, input)
+      duration = parse(input) || raise(ISO8601::Errors::UnknownPattern, input)
 
       valid_pattern?(duration)
 
@@ -212,7 +211,7 @@ module ISO8601
     end
 
     def sign_to_i(sign)
-      (sign == '-') ? -1 : 1
+      sign == '-' ? -1 : 1
     end
 
     def parse(input)
@@ -238,10 +237,11 @@ module ISO8601
     # @param [Numeric] value The seconds to promote
     #
     # @return [ISO8601::Duration]
+    # rubocop:disable Metrics/AbcSize
     def seconds_to_iso(value)
       return self.class.new('PT0S') if value.zero?
 
-      sign_str = (value < 0) ? '-' : ''
+      sign_str = value < 0 ? '-' : ''
       value = value.abs
 
       y, y_mod = decompose_atom(value, years)
@@ -266,11 +266,11 @@ module ISO8601
     end
 
     def to_time_s(*args)
-      (args.map(&:value).reduce(&:+) > 0) ? "T#{args.map(&:to_s).join('')}" : ''
+      args.map(&:value).reduce(&:+) > 0 ? "T#{args.map(&:to_s).join('')}" : ''
     end
 
     def validate_base(input)
-      fail ISO8601::Errors::TypeError unless input.nil? || input.is_a?(ISO8601::DateTime)
+      raise(ISO8601::Errors::TypeError) unless input.nil? || input.is_a?(ISO8601::DateTime)
 
       input
     end
@@ -288,20 +288,19 @@ module ISO8601
       missing_time = (weeks.nil? && !components[:time].nil? && time.empty?)
       empty = missing_time || all.empty?
 
-      fail ISO8601::Errors::UnknownPattern,
-           @pattern if empty
+      raise(ISO8601::Errors::UnknownPattern, @pattern) if empty
     end
 
     def valid_fractions?(values)
       values = values.reject(&:zero?)
-      fractions = values.select { |a| (a % 1) != 0 }
+      fractions = values.reject { |a| (a % 1).zero? }
       consistent = (fractions.size == 1 && fractions.last != values.last)
 
-      fail ISO8601::Errors::InvalidFractions if fractions.size > 1 || consistent
+      raise(ISO8601::Errors::InvalidFractions) if fractions.size > 1 || consistent
     end
 
     def compare_bases(other, base)
-      fail ISO8601::Errors::DurationBaseError, other if base != other.base
+      raise(ISO8601::Errors::DurationBaseError, other) if base != other.base
     end
 
     ##
@@ -321,7 +320,7 @@ module ISO8601
       when Numeric
         other.to_f
       else
-        fail(ISO8601::Errors::TypeError, other)
+        raise(ISO8601::Errors::TypeError, other)
       end
     end
   end

@@ -113,12 +113,12 @@ module ISO8601
     # @param [String] input
     #
     # @return [Array<Integer, Float>]
+    # rubocop:disable Metrics/AbcSize
     def atomize(input)
       _, time, zone = parse_timezone(input)
       _, hour, separator, minute, second = parse_time(time)
 
-      fail ISO8601::Errors::UnknownPattern,
-           @original if hour.nil?
+      raise(ISO8601::Errors::UnknownPattern, @original) if hour.nil?
 
       @separator = separator
       require_separator = require_separator(minute)
@@ -129,8 +129,7 @@ module ISO8601
 
       atoms = [hour, minute, second, zone].compact
 
-      fail ISO8601::Errors::UnknownPattern,
-           @original unless valid_zone?(zone, require_separator)
+      raise(ISO8601::Errors::UnknownPattern, @original) unless valid_zone?(zone, require_separator)
 
       atoms
     end
@@ -180,7 +179,7 @@ module ISO8601
     #
     # @return [::DateTime]
     def compose(atoms, base)
-      ::DateTime.new(*[base.year, base.month, base.day], *atoms)
+      ::DateTime.new(base.year, base.month, base.day, *atoms)
     rescue ArgumentError
       raise ISO8601::Errors::RangeError, @original
     end

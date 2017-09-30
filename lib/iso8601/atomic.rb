@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module ISO8601
   module Atomic
     include Comparable
@@ -27,7 +25,7 @@ module ISO8601
     #
     # @return [String]
     def to_s
-      (value.zero?) ? '' : "#{value}#{symbol}"
+      value.zero? ? '' : "#{value}#{symbol}"
     end
 
     ##
@@ -66,13 +64,13 @@ module ISO8601
     ##
     # Validates the atom is a Numeric
     def valid_atom?(atom)
-      fail ISO8601::Errors::TypeError,
-           "The atom argument for #{self.class} should be a Numeric value." unless atom.is_a?(Numeric)
+      raise(ISO8601::Errors::TypeError, "The atom argument for #{self.class} should be a Numeric value.") \
+        unless atom.is_a?(Numeric)
     end
 
     def valid_base?(base)
-      fail ISO8601::Errors::TypeError,
-           "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil." unless base.is_a?(ISO8601::DateTime) || base.nil?
+      raise(ISO8601::Errors::TypeError, "The base argument for #{self.class} should be a ISO8601::DateTime instance or nil.") \
+        unless base.is_a?(ISO8601::DateTime) || base.nil?
     end
   end
 end

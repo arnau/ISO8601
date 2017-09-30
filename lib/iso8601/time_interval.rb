@@ -95,7 +95,7 @@ module ISO8601
       when Array
         from_atoms(input)
       else
-        fail(ISO8601::Errors::TypeError, 'The pattern must be a String or a Hash')
+        raise(ISO8601::Errors::TypeError, 'The pattern must be a String or a Hash')
       end
     end
 
@@ -111,14 +111,14 @@ module ISO8601
     #
     # @return [ISO8601::DateTime] start time
     attr_reader :first
-    alias_method :start_time, :first
+    alias start_time first
 
     ##
     # The end time (last) of the interval.
     #
     # @return [ISO8601::DateTime] end time
     attr_reader :last
-    alias_method :end_time, :last
+    alias end_time last
 
     ##
     # The pattern for the interval.
@@ -129,7 +129,7 @@ module ISO8601
 
       "#{@atoms.first}/#{@atoms.last}"
     end
-    alias_method :to_s, :pattern
+    alias to_s pattern
 
     ##
     # The size of the interval. If any bound is a Duration, the
@@ -137,8 +137,8 @@ module ISO8601
     #
     # @return [Float] Size of the interval in seconds
     attr_reader :size
-    alias_method :to_f, :size
-    alias_method :length, :size
+    alias to_f size
+    alias length size
 
     ##
     # Checks if the interval is empty.
@@ -159,13 +159,13 @@ module ISO8601
     #
     # @return [Boolean]
     def include?(other)
-      fail(ISO8601::Errors::TypeError, 'The parameter must respond_to #to_time') \
+      raise(ISO8601::Errors::TypeError, "The parameter must respond_to #to_time") \
         unless other.respond_to?(:to_time)
 
       (first.to_time <= other.to_time &&
        last.to_time >= other.to_time)
     end
-    alias_method :member?, :include?
+    alias member? include?
 
     ##
     # Returns true if the interval is a subset of the given interval.
@@ -177,7 +177,7 @@ module ISO8601
     #
     # @return [Boolean]
     def subset?(other)
-      fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
+      raise(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
       other.include?(first) && other.include?(last)
@@ -193,7 +193,7 @@ module ISO8601
     #
     # @return [Boolean]
     def superset?(other)
-      fail(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
+      raise(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
       include?(other.first) && include?(other.last)
@@ -209,8 +209,7 @@ module ISO8601
     #
     # @return [Boolean]
     def intersect?(other)
-      fail(ISO8601::Errors::TypeError,
-           "The parameter must be an instance of #{self.class}") \
+      raise(ISO8601::Errors::TypeError, "The parameter must be an instance of #{self.class}") \
         unless other.is_a?(self.class)
 
       include?(other.first) || include?(other.last)
@@ -225,7 +224,7 @@ module ISO8601
     #
     # @return [Boolean]
     def intersection(other)
-      fail(ISO8601::Errors::IntervalError, "The intervals are disjoint") \
+      raise(ISO8601::Errors::IntervalError, "The intervals are disjoint") \
         if disjoint?(other) && other.disjoint?(self)
 
       return self if subset?(other)
@@ -274,6 +273,22 @@ module ISO8601
       @atoms.hash
     end
 
+    def self.valid_date_time?(time, message = "Expected a ISO8601::DateTime")
+      return true if time.is_a?(ISO8601::DateTime)
+
+      raise(ISO8601::Errors::TypeError, message)
+    end
+
+    def self.guard_from_datetimes(atoms, message)
+      atoms.all? { |x| valid_date_time?(x, message) }
+    end
+
+    def self.guard_from_duration(atoms, message)
+      raise(ISO8601::Errors::TypeError, message) \
+        unless atoms.any? { |x| x.is_a?(ISO8601::Duration) } &&
+               atoms.any? { |x| x.is_a?(ISO8601::DateTime) }
+    end
+
     private
 
     # Initialize a TimeInterval ISO8601 by a pattern. If you initialize it with
@@ -289,19 +304,19 @@ module ISO8601
     # @raise [ISO8601::Errors::UnknownPattern] If given pattern is not a valid
     #     ISO8601 pattern.
     def parse(pattern)
-      fail(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
+      raise(ISO8601::Errors::UnknownPattern, pattern) unless pattern.include?('/')
 
       @pattern = pattern
       subpatterns = pattern.split('/')
 
-      fail(ISO8601::Errors::UnknownPattern, pattern) if subpatterns.size != 2
+      raise(ISO8601::Errors::UnknownPattern, pattern) if subpatterns.size != 2
 
       @atoms = subpatterns.map { |x| parse_subpattern(x) }
       @first, @last, @size = limits(@atoms)
     end
 
     def sort_pair(a, b)
-      (a.first < b.first) ? [a, b] : [b, a]
+      a.first < b.first ? [a, b] : [b, a]
     end
 
     ##
@@ -334,13 +349,10 @@ module ISO8601
     def limits(atoms)
       valid_atoms?(atoms)
 
-      if atoms.none? { |x| x.is_a?(ISO8601::Duration) }
-        return tuple_by_both(atoms)
-      elsif atoms.first.is_a?(ISO8601::Duration)
-        return tuple_by_end(atoms)
-      else
-        return tuple_by_start(atoms)
-      end
+      return tuple_by_both(atoms) if atoms.none? { |x| x.is_a?(ISO8601::Duration) }
+      return tuple_by_end(atoms) if atoms.first.is_a?(ISO8601::Duration)
+
+      tuple_by_start(atoms)
     end
 
     def tuple_by_both(atoms)
@@ -364,29 +376,12 @@ module ISO8601
     end
 
     def valid_atoms?(atoms)
-      fail(ISO8601::Errors::UnknownPattern,
-           "The pattern of a time interval can't be <duration>/<duration>") \
+      raise(ISO8601::Errors::UnknownPattern, "The pattern of a time interval can't be <duration>/<duration>") \
         if atoms.all? { |x| x.is_a?(ISO8601::Duration) }
     end
 
     def valid_date_time?(time)
-      self.valid_date_time?(time)
-    end
-
-    def self.valid_date_time?(time, message = 'Expected a ISO8601::DateTime')
-      return true if time.is_a?(ISO8601::DateTime)
-
-      fail(ISO8601::Errors::TypeError, message)
-    end
-
-    def self.guard_from_datetimes(atoms, message)
-      atoms.all? { |x| valid_date_time?(x, message) }
-    end
-
-    def self.guard_from_duration(atoms, message)
-      fail(ISO8601::Errors::TypeError, message) \
-        unless atoms.any? { |x| x.is_a?(ISO8601::Duration) } &&
-               atoms.any? { |x| x.is_a?(ISO8601::DateTime) }
+      valid_date_time?(time)
     end
   end
 end

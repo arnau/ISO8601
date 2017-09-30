@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module ISO8601
   ##
   # A Weeks atom in a {ISO8601::Duration}
