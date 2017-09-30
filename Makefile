@@ -31,3 +31,6 @@ doc: mri-doc
 repl: mri-repl
 shell: mri-shell
 check: mri-check
+
+local-install:
+	bundle install --path bundle/vendors
