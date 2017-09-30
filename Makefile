@@ -22,10 +22,10 @@ default: build
 
 include mk/*.mk
 
-test: mri-test rbx-test jruby-test
-install: mri-pull rbx-pull jruby-pull
-clean: mri-clean rbx-clean jruby-clean
-build: mri-build rbx-build jruby-build
+test: mri-test jruby-test
+install: mri-pull jruby-pull
+clean: mri-clean jruby-clean
+build: mri-build jruby-build
 doc: mri-doc
 
 repl: mri-repl

@@ -1,4 +1,4 @@
-# ISO8601
+u ISO8601
 
 Version 0.9.0 is **not compatible** with previous versions.  Atoms and Durations
 changed their interface when treating base dates so it is only applied when
@@ -24,7 +24,6 @@ times) standard.
 ## Supported versions
 
 * MRI 2.x
-* RBX 2
 * JRuby 9
 
 ## Documentation
@@ -49,7 +48,6 @@ take a look to the implementation notes:
 You can alse target specific runtimes:
 
     $ make mri-test
-    $ make rbx-test
     $ make jruby-test
 
 ### Raw
