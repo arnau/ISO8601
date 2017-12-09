@@ -1,4 +1,4 @@
-u ISO8601
+# ISO8601
 
 Version 0.9.0 is **not compatible** with previous versions.  Atoms and Durations
 changed their interface when treating base dates so it is only applied when
