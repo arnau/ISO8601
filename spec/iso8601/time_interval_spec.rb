@@ -178,6 +178,107 @@ RSpec.describe ISO8601::TimeInterval do
       expect(ISO8601::TimeInterval.parse(pattern2).first).to eq(start_time)
       expect(ISO8601::TimeInterval.parse(pattern3).first).to eq(start_time)
     end
+
+    describe "November" do
+      pairs = [
+        {pattern: 'P1Y/2017-11-09T07:00:00Z',
+         start_time: ISO8601::DateTime.new('2016-11-09T07:00:00Z')},
+        {pattern: 'P1M/2017-11-09T07:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-10-09T07:00:00Z')},
+        {pattern: 'P1D/2017-11-09T07:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-11-08T07:00:00Z')},
+        {pattern: 'PT1H/2017-11-09T07:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-11-09T06:00:00Z')},
+      ]
+
+      pairs.each do |pair|
+        it "should calculate correctly the start_time for #{pair[:pattern]}" do
+          expect(ISO8601::TimeInterval.parse(pair[:pattern]).first.to_s).to eq(pair[:start_time].to_s)
+        end
+      end
+    end
+
+    describe "December" do
+      pairs = [
+        {pattern: 'P1Y/2017-12-09T07:00:00Z',
+         start_time: ISO8601::DateTime.new('2016-12-09T07:00:00Z')},
+        {pattern: 'P1M/2017-12-09T07:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-11-09T07:00:00Z')},
+        {pattern: 'P3D/2017-12-06T18:30:00Z',
+         start_time: ISO8601::DateTime.new('2017-12-03T18:30:00Z')},
+        {pattern: 'P1D/2017-12-09T07:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-12-08T07:00:00Z')},
+        {pattern: 'PT1H/2017-12-09T07:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-12-09T06:00:00Z')},
+      ]
+
+      pairs.each do |pair|
+        it "should calculate correctly the start_time for #{pair[:pattern]}" do
+          expect(ISO8601::TimeInterval.parse(pair[:pattern]).first.to_s).to eq(pair[:start_time].to_s)
+        end
+      end
+    end
+
+    describe "January" do
+      pairs = [
+        {pattern: 'P1Y/2017-01-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2016-01-01T00:00:00Z')},
+        {pattern: 'P1M/2017-01-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2016-12-01T00:00:00Z')},
+        {pattern: 'P1D/2017-01-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2016-12-31T00:00:00Z')},
+        {pattern: 'PT1H/2017-01-01T01:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-01-01T00:00:00Z')},
+      ]
+
+      pairs.each do |pair|
+        it "should calculate correctly the start_time for #{pair[:pattern]}" do
+          expect(ISO8601::TimeInterval.parse(pair[:pattern]).first.to_s).to eq(pair[:start_time].to_s)
+        end
+      end
+    end
+
+    describe "February" do
+      pairs = [
+        {pattern: 'P1Y/2017-02-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2016-02-01T00:00:00Z')},
+        {pattern: 'P1M/2017-02-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-01-01T00:00:00Z')},
+        {pattern: 'P1D/2017-02-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-01-31T00:00:00Z')},
+        {pattern: 'PT1H/2017-02-01T01:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-02-01T00:00:00Z')},
+      ]
+
+      pairs.each do |pair|
+        it "should calculate correctly the start_time for #{pair[:pattern]}" do
+          expect(ISO8601::TimeInterval.parse(pair[:pattern]).first.to_s).to eq(pair[:start_time].to_s)
+        end
+      end
+    end
+
+    describe "March" do
+      pairs = [
+        {pattern: 'P1Y/2017-03-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2016-03-01T00:00:00Z')},
+        {pattern: 'P1M/2017-03-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-02-01T00:00:00Z')},
+        {pattern: 'P1D/2017-03-01T00:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-02-28T00:00:00Z')},
+        {pattern: 'PT1H/2017-03-01T01:00:00Z',
+         start_time: ISO8601::DateTime.new('2017-03-01T00:00:00Z')},
+      ]
+
+      pairs.each do |pair|
+        it "should calculate correctly the start_time for #{pair[:pattern]}" do
+          expect(ISO8601::TimeInterval.parse(pair[:pattern]).first.to_s).to eq(pair[:start_time].to_s)
+        end
+      end
+    end
+
+
+
+
   end
 
   describe "#last" do

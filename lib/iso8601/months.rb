@@ -34,7 +34,7 @@ module ISO8601
     # @return [Numeric]
     def factor(base = nil)
       return AVERAGE_FACTOR if base.nil?
-      return zero_calculation(base) if atom.zero?
+      return calculation(1, base) if atom.zero?
 
       calculation(atom, base)
     end
@@ -47,12 +47,7 @@ module ISO8601
     #
     # @return [Numeric]
     def to_seconds(base = nil)
-      valid_base?(base)
-
-      return (AVERAGE_FACTOR * atom) if base.nil?
-      return zero_calculation(base) if atom.zero?
-
-      calculation(atom, base) * atom
+      factor(base) * atom
     end
 
     ##
@@ -64,14 +59,6 @@ module ISO8601
     end
 
     private
-
-    # rubocop:disable Metrics/AbcSize
-    def zero_calculation(base)
-      month = base.month <= 12 ? base.month : (base.month % 12)
-      year = base.year + (base.month / 12).to_i
-
-      (::Time.utc(year, month) - ::Time.utc(base.year, base.month))
-    end
 
     def calculation(atom, base)
       initial = base.month + atom

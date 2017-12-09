@@ -45,16 +45,18 @@ module ISO8601
     ##
     # The amount of seconds
     #
+    # TODO: Fractions of year will fail
+    #
     # @param [ISO8601::DateTime, nil] base (nil) The base datetime to compute
     #   the year length.
     #
     # @return [Numeric]
     def to_seconds(base = nil)
       valid_base?(base)
+      return factor(base) * atom if base.nil?
+      target = ::Time.utc(base.year + atom.to_i, base.month, base.day, base.hour, base.minute, base.second)
 
-      return (AVERAGE_FACTOR * atom) if base.nil?
-
-      ::Time.utc(year(atom, base)) - ::Time.utc(base.year)
+      target - base.to_time
     end
 
     ##
