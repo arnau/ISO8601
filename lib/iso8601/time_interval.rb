@@ -295,8 +295,8 @@ module ISO8601
     # a duration pattern, the second argument is mandatory because you need to
     # specify an start/end point to calculate the interval.
     #
-    # @param [String] pattern This parameter define a full time interval. These
-    #     patterns are defined in the ISO8601:
+    # @param [String] pattern This parameter defines a full time interval.
+    #     Valid patterns are defined in the ISO8601 as:
     #         * <start_time>/<end_time>
     #         * <start_time>/<duration>
     #         * <duration>/<end_time>
@@ -311,7 +311,9 @@ module ISO8601
 
       raise(ISO8601::Errors::UnknownPattern, pattern) if subpatterns.size != 2
 
-      @atoms = subpatterns.map { |x| parse_subpattern(x) }
+      fst = parse_start_subpattern(subpatterns.first)
+      snd = parse_subpattern(subpatterns.last)
+      @atoms = [fst, snd]
       @first, @last, @size = limits(@atoms)
     end
 
@@ -327,6 +329,12 @@ module ISO8601
     # @return [ISO8601::Duration, ISO8601::DateTime]
     def parse_subpattern(pattern)
       return ISO8601::Duration.new(pattern) if pattern.start_with?('P')
+
+      ISO8601::DateTime.new(pattern)
+    end
+
+    def parse_start_subpattern(pattern)
+      return ISO8601::Duration.new("-#{pattern}") if pattern.start_with?('P')
 
       ISO8601::DateTime.new(pattern)
     end
@@ -363,9 +371,9 @@ module ISO8601
 
     def tuple_by_end(atoms)
       seconds = atoms.first.to_seconds(atoms.last)
-      [(atoms.last - seconds),
+      [(atoms.last + seconds),
        atoms.last,
-       seconds]
+       seconds.abs]
     end
 
     def tuple_by_start(atoms)

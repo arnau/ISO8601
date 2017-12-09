@@ -1,3 +1,6 @@
+* Fix `TimeInterval` with `<duration>/<end>` patterns and leap years.
+* Fix decimal fractions on date atoms.
+
 ## 0.9.1
 
 * Fix `Duration#to_pattern` for negative durations based on a `Numeric` (thanks @figwit).
