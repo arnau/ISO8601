@@ -54,19 +54,13 @@ RSpec.describe ISO8601::TimeInterval do
     context "allowed patterns" do
       it "should parse <start>/<duration>" do
         expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y') }.to_not raise_error
-        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P0.5Y') }.to_not raise_error
-        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y0.5M') }.to_not raise_error
-        expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y0,5M') }.to_not raise_error
         expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y1M1D') }.to_not raise_error
         expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1.0S') }.to_not raise_error
         expect { ISO8601::TimeInterval.parse('2007-03-01T13:00:00Z/P1Y1M1DT1H1M1,0S') }.to_not raise_error
       end
 
       it "should parse <duration>/<end>" do
-        expect { ISO8601::TimeInterval.parse('P1Y0,5M/2010-05-09T10:30:12+04') }.to_not raise_error
         expect { ISO8601::TimeInterval.parse('P1Y1M1D/2010-05-09T10:30:12+04:00') }.to_not raise_error
-        expect { ISO8601::TimeInterval.parse('P1Y1M0.5D/2010-05-09T10:30:12-04:00') }.to_not raise_error
-        expect { ISO8601::TimeInterval.parse('P1Y1M0,5D/2010-05-09T10:30:12-00:00') }.to_not raise_error
         expect { ISO8601::TimeInterval.parse('P1Y1M1DT1H/-2014-05-31T16:26:00Z') }.to_not raise_error
         expect { ISO8601::TimeInterval.parse('P1Y1M1DT0.5H/2014-05-31T16:26:10.5Z') }.to_not raise_error
         expect { ISO8601::TimeInterval.parse('P1Y1M1DT0,5H/2014-05-31T16:26:10,5Z') }.to_not raise_error
@@ -306,8 +300,8 @@ RSpec.describe ISO8601::TimeInterval do
 
   describe "#to_s" do
     it "should return the pattern if TimeInterval is initialized with a pattern" do
-      pattern = 'P1Y1M1DT0,5H/2014-05-31T16:26:10,5Z'
-      pattern2 = '2007-03-01T13:00:00Z/P1Y0,5M'
+      pattern = 'P1Y1M1DT0,5S/2014-05-31T16:26:10Z'
+      pattern2 = '2007-03-01T13:00:00Z/P1Y'
 
       expect(ISO8601::TimeInterval.parse(pattern).to_s).to eq(pattern)
       expect(ISO8601::TimeInterval.parse(pattern2).to_s).to eq(pattern2)
