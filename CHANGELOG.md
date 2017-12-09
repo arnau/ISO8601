@@ -1,5 +1,8 @@
+## 0.10.0
+
 * Fix `TimeInterval` with `<duration>/<end>` patterns and leap years.
-* Fix decimal fractions on date atoms.
+* Fix decimal fractions on date atoms. **WARNING** some duration patterns are
+  no longer valid.
 
 ## 0.9.1
 
