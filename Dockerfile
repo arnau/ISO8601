@@ -1,4 +1,4 @@
-FROM ruby:2.4-slim
+FROM ruby:2.5-slim
 MAINTAINER Arnau Siches <asiches@gmail.com>
 
 RUN mkdir -p /usr/src/iso8601
