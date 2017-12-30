@@ -51,10 +51,11 @@ module ISO8601
     #   the year length.
     #
     # @return [Numeric]
+    # rubocop:disable Metrics/AbcSize
     def to_seconds(base = nil)
       valid_base?(base)
       return factor(base) * atom if base.nil?
-      target = ::Time.utc(base.year + atom.to_i, base.month, base.day, base.hour, base.minute, base.second)
+      target = ::Time.new(base.year + atom.to_i, base.month, base.day, base.hour, base.minute, base.second, base.zone)
 
       target - base.to_time
     end

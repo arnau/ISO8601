@@ -60,6 +60,7 @@ module ISO8601
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def calculation(atom, base)
       initial = base.month + atom
       if initial <= 0
