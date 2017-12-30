@@ -128,17 +128,32 @@ RSpec.describe ISO8601::TimeInterval do
   end
 
   describe "#to_f" do
-    it "should calculate the size of time interval" do
+    it "should calculate the size of time interval <start>/<end>" do
       hour = (60 * 60).to_f
-      pattern = 'PT1H/2010-05-09T10:30:00Z'
-      pattern2 = '2010-05-09T11:30:00Z/PT1H'
-      pattern3 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
+      pattern1 = '2010-05-09T11:30:00Z/2010-05-09T12:30:00Z'
+      pattern2 = '2010-05-09T11:30:00+01:00/2010-05-09T12:30:00+01:00'
 
-      expect(ISO8601::TimeInterval.parse(pattern).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.parse(pattern1).to_f).to eq(hour)
       expect(ISO8601::TimeInterval.parse(pattern2).to_f).to eq(hour)
-      expect(ISO8601::TimeInterval.parse(pattern3).to_f).to eq(hour)
     end
 
+    it "should calculate the size of time interval <start>/<duration>" do
+      hour = (60 * 60).to_f
+      pattern1 = '2010-05-09T11:30:00Z/PT1H'
+      pattern2 = '2010-05-09T11:30:00+01:00/PT1H'
+
+      expect(ISO8601::TimeInterval.parse(pattern1).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.parse(pattern2).to_f).to eq(hour)
+    end
+
+    it "should calculate the size of time interval <duration>/<end>" do
+      hour = (60 * 60).to_f
+      pattern1 = 'PT1H/2010-05-09T11:30:00Z'
+      pattern2 = 'PT1H/2010-05-09T11:30:00-09:00'
+
+      expect(ISO8601::TimeInterval.parse(pattern1).to_f).to eq(hour)
+      expect(ISO8601::TimeInterval.parse(pattern2).to_f).to eq(hour)
+    end
     it "should be 0" do
       expect(ISO8601::TimeInterval.parse('2015-01-01/2015-01-01').to_f).to eq(0)
     end
