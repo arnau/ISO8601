@@ -1,3 +1,7 @@
+## 0.10.1
+
+* Fix `TimeInterval` size for non UTC timezones. (#41)
+
 ## 0.10.0
 
 * Fix `TimeInterval` with `<duration>/<end>` patterns and leap years.
