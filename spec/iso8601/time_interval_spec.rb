@@ -190,14 +190,14 @@ RSpec.describe ISO8601::TimeInterval do
 
     describe "November" do
       pairs = [
-        {pattern: 'P1Y/2017-11-09T07:00:00Z',
-         start_time: ISO8601::DateTime.new('2016-11-09T07:00:00Z')},
-        {pattern: 'P1M/2017-11-09T07:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-10-09T07:00:00Z')},
-        {pattern: 'P1D/2017-11-09T07:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-11-08T07:00:00Z')},
-        {pattern: 'PT1H/2017-11-09T07:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-11-09T06:00:00Z')},
+        { pattern: 'P1Y/2017-11-09T07:00:00Z',
+          start_time: ISO8601::DateTime.new('2016-11-09T07:00:00Z') },
+        { pattern: 'P1M/2017-11-09T07:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-10-09T07:00:00Z') },
+        { pattern: 'P1D/2017-11-09T07:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-11-08T07:00:00Z') },
+        { pattern: 'PT1H/2017-11-09T07:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-11-09T06:00:00Z') }
       ]
 
       pairs.each do |pair|
@@ -209,16 +209,16 @@ RSpec.describe ISO8601::TimeInterval do
 
     describe "December" do
       pairs = [
-        {pattern: 'P1Y/2017-12-09T07:00:00Z',
-         start_time: ISO8601::DateTime.new('2016-12-09T07:00:00Z')},
-        {pattern: 'P1M/2017-12-09T07:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-11-09T07:00:00Z')},
-        {pattern: 'P3D/2017-12-06T18:30:00Z',
-         start_time: ISO8601::DateTime.new('2017-12-03T18:30:00Z')},
-        {pattern: 'P1D/2017-12-09T07:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-12-08T07:00:00Z')},
-        {pattern: 'PT1H/2017-12-09T07:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-12-09T06:00:00Z')},
+        { pattern: 'P1Y/2017-12-09T07:00:00Z',
+          start_time: ISO8601::DateTime.new('2016-12-09T07:00:00Z') },
+        { pattern: 'P1M/2017-12-09T07:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-11-09T07:00:00Z') },
+        { pattern: 'P3D/2017-12-06T18:30:00Z',
+          start_time: ISO8601::DateTime.new('2017-12-03T18:30:00Z') },
+        { pattern: 'P1D/2017-12-09T07:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-12-08T07:00:00Z') },
+        { pattern: 'PT1H/2017-12-09T07:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-12-09T06:00:00Z') }
       ]
 
       pairs.each do |pair|
@@ -230,14 +230,14 @@ RSpec.describe ISO8601::TimeInterval do
 
     describe "January" do
       pairs = [
-        {pattern: 'P1Y/2017-01-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2016-01-01T00:00:00Z')},
-        {pattern: 'P1M/2017-01-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2016-12-01T00:00:00Z')},
-        {pattern: 'P1D/2017-01-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2016-12-31T00:00:00Z')},
-        {pattern: 'PT1H/2017-01-01T01:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-01-01T00:00:00Z')},
+        { pattern: 'P1Y/2017-01-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2016-01-01T00:00:00Z') },
+        { pattern: 'P1M/2017-01-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2016-12-01T00:00:00Z') },
+        { pattern: 'P1D/2017-01-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2016-12-31T00:00:00Z') },
+        { pattern: 'PT1H/2017-01-01T01:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-01-01T00:00:00Z') }
       ]
 
       pairs.each do |pair|
@@ -249,14 +249,14 @@ RSpec.describe ISO8601::TimeInterval do
 
     describe "February" do
       pairs = [
-        {pattern: 'P1Y/2017-02-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2016-02-01T00:00:00Z')},
-        {pattern: 'P1M/2017-02-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-01-01T00:00:00Z')},
-        {pattern: 'P1D/2017-02-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-01-31T00:00:00Z')},
-        {pattern: 'PT1H/2017-02-01T01:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-02-01T00:00:00Z')},
+        { pattern: 'P1Y/2017-02-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2016-02-01T00:00:00Z') },
+        { pattern: 'P1M/2017-02-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-01-01T00:00:00Z') },
+        { pattern: 'P1D/2017-02-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-01-31T00:00:00Z') },
+        { pattern: 'PT1H/2017-02-01T01:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-02-01T00:00:00Z') }
       ]
 
       pairs.each do |pair|
@@ -268,14 +268,14 @@ RSpec.describe ISO8601::TimeInterval do
 
     describe "March" do
       pairs = [
-        {pattern: 'P1Y/2017-03-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2016-03-01T00:00:00Z')},
-        {pattern: 'P1M/2017-03-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-02-01T00:00:00Z')},
-        {pattern: 'P1D/2017-03-01T00:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-02-28T00:00:00Z')},
-        {pattern: 'PT1H/2017-03-01T01:00:00Z',
-         start_time: ISO8601::DateTime.new('2017-03-01T00:00:00Z')},
+        { pattern: 'P1Y/2017-03-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2016-03-01T00:00:00Z') },
+        { pattern: 'P1M/2017-03-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-02-01T00:00:00Z') },
+        { pattern: 'P1D/2017-03-01T00:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-02-28T00:00:00Z') },
+        { pattern: 'PT1H/2017-03-01T01:00:00Z',
+          start_time: ISO8601::DateTime.new('2017-03-01T00:00:00Z') }
       ]
 
       pairs.each do |pair|
@@ -284,10 +284,6 @@ RSpec.describe ISO8601::TimeInterval do
         end
       end
     end
-
-
-
-
   end
 
   describe "#last" do

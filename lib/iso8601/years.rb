@@ -51,6 +51,7 @@ module ISO8601
     #   the year length.
     #
     # @return [Numeric]
+    # rubocop:disable Metrics/AbcSize
     def to_seconds(base = nil)
       valid_base?(base)
       return factor(base) * atom if base.nil?

@@ -10,7 +10,6 @@ RSpec.describe ISO8601::Months do
   let(:common_december) { ISO8601::DateTime.new('2017-12-01') }
   let(:leap_december) { ISO8601::DateTime.new('2000-12-01') }
 
-
   describe 'Atomic' do
     let(:subject) { ISO8601::Months.new(1) }
 
