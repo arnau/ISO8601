@@ -64,5 +64,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 3.6'
   s.add_development_dependency 'rubocop', '~> 0.50'
   s.add_development_dependency 'pry', '~> 0.11.0'
-  s.add_development_dependency 'pry-doc', '~> 0.11.0'
+  s.add_development_dependency 'pry-doc', '~> 0.13.1'
 end
