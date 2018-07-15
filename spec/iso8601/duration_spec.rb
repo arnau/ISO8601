@@ -251,6 +251,23 @@ RSpec.describe ISO8601::Duration do
     end
   end
 
+  describe '#-@' do
+    let(:positive) { ISO8601::Duration.new('PT1H') }
+    let(:negative) { ISO8601::Duration.new('-PT1H') }
+
+    it "should return a kind of duration" do
+      expect(-negative).to be_instance_of(ISO8601::Duration)
+    end
+
+    it "should return the negation of a positive duration" do
+      expect(-positive).to eq(negative)
+    end
+
+    it "should return the negation of a negative duration" do
+      expect(-negative).to eq(positive)
+    end
+  end
+
   describe '#eql?' do
     it "should respond to #eql?" do
       subject = ISO8601::Duration.new('PT1H')

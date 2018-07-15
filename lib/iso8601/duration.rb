@@ -126,6 +126,13 @@ module ISO8601
     end
 
     ##
+    #
+    # @return [ISO8601::Duration]
+    def -@
+      seconds_to_iso(-to_seconds)
+    end
+
+    ##
     # @param [ISO8601::Duration] other The duration to compare
     #
     # @return [Boolean]
