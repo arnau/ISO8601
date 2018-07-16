@@ -1,3 +1,7 @@
+## 0.11.0
+
+* Add support for unary minus operator (thanks @walterbrebels).
+
 ## 0.10.1
 
 * Fix `TimeInterval` size for non UTC timezones. (#41)
