@@ -7,6 +7,9 @@ RSpec.describe ISO8601::Duration do
   let(:common_february) { ISO8601::DateTime.new('2010-02-01') }
   let(:leap_february) { ISO8601::DateTime.new('2000-02-01') }
 
+  let(:common_november) { ISO8601::DateTime.new('2010-11-01') }
+  let(:common_december) { ISO8601::DateTime.new('2010-12-01') }
+
   it "should raise a ISO8601::Errors::UnknownPattern for any unknown pattern" do
     expect { ISO8601::Duration.new('') }.to raise_error(ISO8601::Errors::UnknownPattern)
     expect { ISO8601::Duration.new('P') }.to raise_error(ISO8601::Errors::UnknownPattern)
@@ -120,6 +123,8 @@ RSpec.describe ISO8601::Duration do
         expect(ISO8601::Duration.new('P1M').to_seconds(common_year)).to eq(2678400)
         expect(ISO8601::Duration.new('P19M').to_seconds(ISO8601::DateTime.new('2012-05-01'))).to eq(Time.utc(2014, 12) - Time.utc(2012, 5))
         expect(ISO8601::Duration.new('P14M').to_seconds(common_year)).to eq(Time.utc(2011, 3) - Time.utc(2010, 1))
+        expect(ISO8601::Duration.new('P1M').to_seconds(common_november)).to eq(Time.utc(2010, 12) - Time.utc(2010, 11))
+        expect(ISO8601::Duration.new('P1M').to_seconds(common_december)).to eq(Time.utc(2011, 1) - Time.utc(2010, 12))
       end
 
       it "should return the seconds of a P[n]M duration in a leap year" do
