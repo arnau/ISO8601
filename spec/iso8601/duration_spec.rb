@@ -125,6 +125,8 @@ RSpec.describe ISO8601::Duration do
         expect(ISO8601::Duration.new('P14M').to_seconds(common_year)).to eq(Time.utc(2011, 3) - Time.utc(2010, 1))
         expect(ISO8601::Duration.new('P1M').to_seconds(common_november)).to eq(Time.utc(2010, 12) - Time.utc(2010, 11))
         expect(ISO8601::Duration.new('P1M').to_seconds(common_december)).to eq(Time.utc(2011, 1) - Time.utc(2010, 12))
+        expect(ISO8601::Duration.new('P2M').to_seconds(common_november)).to eq(Time.utc(2011, 1) - Time.utc(2010, 11))
+        expect(ISO8601::Duration.new('P3M').to_seconds(common_november)).to eq(Time.utc(2011, 2) - Time.utc(2010, 11))
       end
 
       it "should return the seconds of a P[n]M duration in a leap year" do
