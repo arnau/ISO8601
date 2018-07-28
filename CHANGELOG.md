@@ -1,3 +1,7 @@
+## 0.12.0
+
+* Fix `Months#to_seconds` from November (thanks @walterbrebels).
+
 ## 0.11.0
 
 * Add support for unary minus operator (thanks @walterbrebels).
