@@ -7,6 +7,8 @@ RSpec.describe ISO8601::Months do
   let(:common_february) { ISO8601::DateTime.new('2010-02-01') }
   let(:leap_february) { ISO8601::DateTime.new('2000-02-01') }
 
+  let(:common_november) { ISO8601::DateTime.new('2017-11-01') }
+
   let(:common_december) { ISO8601::DateTime.new('2017-12-01') }
   let(:leap_december) { ISO8601::DateTime.new('2000-12-01') }
 
@@ -62,6 +64,9 @@ RSpec.describe ISO8601::Months do
       expect(ISO8601::Months.new(1).to_seconds(common_year)).to eq(2678400)
       expect(ISO8601::Months.new(0).to_seconds(common_year)).to eq(0)
       expect(ISO8601::Months.new(0).to_seconds(common_december)).to eq(0)
+      expect(ISO8601::Months.new(2).to_seconds(common_november)).to eq(5270400)
+      expect(ISO8601::Months.new(1).to_seconds(common_november)).to eq(2592000)
+      expect(ISO8601::Months.new(0).to_seconds(common_november)).to eq(0)
     end
 
     it "should return the amount of seconds for a leap year" do

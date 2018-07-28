@@ -76,7 +76,7 @@ module ISO8601
       else
         month = initial <= 12 ? initial : (initial % 12)
         month = 12 if month.zero?
-        year = base.year + ((base.month + atom) / 12).to_i
+        year = initial <= 12 ? base.year : base.year + (initial / 12).to_i
       end
 
       (::Time.utc(year, month) - ::Time.utc(base.year, base.month)) / atom
