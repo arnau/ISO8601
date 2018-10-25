@@ -1,3 +1,7 @@
+## 0.12.1
+
+* Reduce the number of files that ship in the artifact (thanks @tas50).
+
 ## 0.12.0
 
 * Fix `Months#to_seconds` from November (thanks @walterbrebels).

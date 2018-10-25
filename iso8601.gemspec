@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.test_files = %w{Rakefile iso8601.gemspec Gemfile} + `git ls-files`.split("\n").select { |f| f =~ %r{^(?:specs/)}i }
   s.require_paths = ['lib']
 
-  s.has_rdoc = 'yard'
+  s.metadata["yard.run"] = "yri"
   s.required_ruby_version = '>= 2.0.0'
   s.add_development_dependency 'rspec', '~> 3.6'
   s.add_development_dependency 'rubocop', '~> 0.50'
