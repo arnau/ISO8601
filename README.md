@@ -1,5 +1,7 @@
 # ISO8601
 
+**[New maintainer wanted](https://github.com/arnau/ISO8601/issues/50)**
+
 Version 0.9.0 is **not compatible** with previous versions.  Atoms and Durations
 changed their interface when treating base dates so it is only applied when
 computing the Atom length (e.g. `#to_seconds`).  As a consequence, it is no
