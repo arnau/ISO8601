@@ -47,9 +47,9 @@ module ISO8601
     ##
     # Converts DateTime to a formated string
     def to_s
-      second_format = format((second % 1).zero? ? '%02d' : '%04.1f', second)
+      second_format = (second % 1).zero? ? '%02d' : '%04.1f'
 
-      format("%04d-%02d-%02dT%02d:%02d:#{second_format}#{zone}", *atoms)
+      format("%04d-%02d-%02dT%02d:%02d:#{second_format}%s", *atoms)
     end
 
     ##
