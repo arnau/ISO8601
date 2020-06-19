@@ -1,3 +1,7 @@
+## 0.12.2
+
+* Fix `DateTime#to_s` (thanks @nbeyer).
+
 ## 0.12.1
 
 * Reduce the number of files that ship in the artifact (thanks @tas50).

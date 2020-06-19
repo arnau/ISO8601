@@ -25,7 +25,6 @@ times) standard.
 ## Supported versions
 
 * MRI 2.x
-* JRuby 9
 
 ## Documentation
 
@@ -39,32 +38,25 @@ take a look to the implementation notes:
 
 ## Testing
 
+Install a Ruby version. E.g. you can install Ruby 2.7 with:
 
-### Docker
+```
+$ nix-shell
+```
 
-    # Install Docker
-    $ make install
-    $ make test
+Then
 
-You can alse target specific runtimes:
-
-    $ make mri-test
-    $ make jruby-test
-
-### Raw
-
-The old fashion way:
-
-    # Install a Ruby flavour
-    $ bundle install
-    $ bundle exec rspec
-
+```
+$ bundle install
+$ bundle exec rspec
+```
 
 ## Contributing
 
 [Contributors](https://github.com/arnau/ISO8601/graphs/contributors)
 
 Please see [CONTRIBUTING.md](./CONTRIBUTING.md)
+
 
 ## License
 

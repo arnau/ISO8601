@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   DESC
   s.license = 'MIT'
   s.files =  %w{LICENSE README.md CONTRIBUTING.md} + `git ls-files`.split("\n").select { |f| f =~ %r{^(?:lib/)}i }
-  s.test_files = %w{Rakefile iso8601.gemspec Gemfile} + `git ls-files`.split("\n").select { |f| f =~ %r{^(?:specs/)}i }
+  s.test_files = %w{iso8601.gemspec Gemfile} + `git ls-files`.split("\n").select { |f| f =~ %r{^(?:specs/)}i }
   s.require_paths = ['lib']
 
   s.metadata["yard.run"] = "yri"
