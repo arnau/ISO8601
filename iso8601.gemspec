@@ -16,15 +16,14 @@ Gem::Specification.new do |s|
     and times) standard.
   DESC
   s.license = 'MIT'
-  s.rubyforge_project = 'iso8601'
   s.files =  %w{LICENSE README.md CONTRIBUTING.md} + `git ls-files`.split("\n").select { |f| f =~ %r{^(?:lib/)}i }
   s.test_files = %w{Rakefile iso8601.gemspec Gemfile} + `git ls-files`.split("\n").select { |f| f =~ %r{^(?:specs/)}i }
   s.require_paths = ['lib']
 
   s.metadata["yard.run"] = "yri"
   s.required_ruby_version = '>= 2.0.0'
-  s.add_development_dependency 'rspec', '~> 3.6'
-  s.add_development_dependency 'rubocop', '~> 0.50'
-  s.add_development_dependency 'pry', '~> 0.11.0'
-  s.add_development_dependency 'pry-doc', '~> 0.13.4'
+  s.add_development_dependency 'rspec', '~> 3.9'
+  s.add_development_dependency 'rubocop', '~> 0.85'
+  s.add_development_dependency 'pry', '~> 0.13.1'
+  s.add_development_dependency 'pry-doc', '~> 1.1.0'
 end
