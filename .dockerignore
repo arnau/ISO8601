@@ -1,9 +1,0 @@
-.git
-.editorconfig
-.rubocop.yml
-.travis.yml
-.vagrant
-.yardoc
-pkg
-.bundle
-bundle
