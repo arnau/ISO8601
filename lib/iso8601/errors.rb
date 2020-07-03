@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ISO8601
   ##
   # Contains all ISO8601-specific errors.

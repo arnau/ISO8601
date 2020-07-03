@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ISO8601
   ##
   # A duration representation. When no base is provided, all atoms use an
