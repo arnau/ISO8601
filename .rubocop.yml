@@ -26,6 +26,9 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 8
 
+Naming/MethodParameterName:
+  Enabled: false
+
 Style/NumericLiterals:
   MinDigits: 10
 
