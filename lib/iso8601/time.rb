@@ -168,9 +168,7 @@ module ISO8601
       _, offset, separator = zone_regexp.match(zone).to_a.compact
 
       wrong_pattern = !zone.nil? && offset.nil?
-      if require_separator
-        invalid_separators = zone.to_s.match(/^[+-]\d{2}:?\d{2}$/) && (@separator != separator)
-      end
+      invalid_separators = zone.to_s.match(/^[+-]\d{2}:?\d{2}$/) && (@separator != separator) if require_separator
 
       !(wrong_pattern || invalid_separators)
     end
