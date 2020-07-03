@@ -1,3 +1,7 @@
+## 0.12.3
+
+* Remove git dependency (thanks @utkarsh2102).
+
 ## 0.12.2
 
 * Fix `DateTime#to_s` (thanks @nbeyer).
