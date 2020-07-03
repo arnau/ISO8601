@@ -32,12 +32,6 @@ Style/NumericLiterals:
 Style/StringLiterals:
   Enabled: false
 
-Style/Encoding:
-  EnforcedStyle: when_needed
-
-Style/BracesAroundHashParameters:
-  EnforcedStyle: braces
-
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
