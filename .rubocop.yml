@@ -29,6 +29,9 @@ Metrics/PerceivedComplexity:
 Style/NumericLiterals:
   MinDigits: 10
 
+Style/NumericPredicate:
+  Enabled: false
+
 Style/StringLiterals:
   Enabled: false
 
