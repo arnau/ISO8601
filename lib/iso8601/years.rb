@@ -53,6 +53,7 @@ module ISO8601
     #   the year length.
     #
     # @return [Numeric]
+    #
     # rubocop:disable Metrics/AbcSize
     def to_seconds(base = nil)
       valid_base?(base)
@@ -61,6 +62,7 @@ module ISO8601
 
       target - base.to_time
     end
+    # rubocop:enable Metrics/AbcSize
 
     ##
     # The atom symbol.

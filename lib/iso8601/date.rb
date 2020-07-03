@@ -114,6 +114,7 @@ module ISO8601
     # @param [String] input
     #
     # @return [Array<Integer>]
+    #
     # rubocop:disable Metrics/AbcSize
     def atomize(input)
       week_date = parse_weekdate(input)
@@ -130,6 +131,7 @@ module ISO8601
 
       [year, month, day].compact.map(&:to_i)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def parse_weekdate(input)
       /^([+-]?)\d{4}(-?)W\d{2}(?:\2\d)?$/.match(input)

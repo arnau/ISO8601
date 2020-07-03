@@ -12,7 +12,7 @@ Lint/UselessComparison:
   Enabled: false
 
 Metrics/ClassLength:
-  Max: 150
+  Max: 165
 
 # Work in progress
 Metrics/LineLength:

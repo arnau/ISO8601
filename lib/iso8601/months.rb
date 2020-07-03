@@ -83,5 +83,6 @@ module ISO8601
 
       (::Time.utc(year, month) - ::Time.utc(base.year, base.month)) / atom
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
