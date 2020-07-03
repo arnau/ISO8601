@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.push File.expand_path('../lib', __FILE__)
-require 'iso8601/version'
+require_relative 'iso8601/version'
 
-# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |s|
   s.name = 'iso8601'
   s.version = ISO8601::VERSION
@@ -23,10 +21,10 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.metadata["yard.run"] = "yri"
-  s.required_ruby_version = '>= 2.0.0'
+  s.required_ruby_version = '>= 2.4.0'
+  s.add_development_dependency 'pry', '~> 0.13.1'
+  s.add_development_dependency 'pry-doc', '~> 1.1.0'
   s.add_development_dependency 'rspec', '~> 3.9'
   s.add_development_dependency 'rubocop', '~> 0.85'
   s.add_development_dependency 'rubocop-packaging', '~> 0.1.1'
-  s.add_development_dependency 'pry', '~> 0.13.1'
-  s.add_development_dependency 'pry-doc', '~> 1.1.0'
 end
