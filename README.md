@@ -11,8 +11,6 @@ Version 1.0.0 will lock public interfaces.
 
 Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md) if you are upgrading from an older version.
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/arnau/ISO8601?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 ISO8601 is a simple implementation of the ISO 8601 (Data elements and
 interchange formats — Information interchange — Representation of dates and
 times) standard.
