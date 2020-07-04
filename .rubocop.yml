@@ -12,7 +12,7 @@ Lint/UselessComparison:
   Enabled: false
 
 Metrics/ClassLength:
-  Max: 150
+  Max: 165
 
 # Work in progress
 Metrics/LineLength:
@@ -26,17 +26,17 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 8
 
+Naming/MethodParameterName:
+  Enabled: false
+
 Style/NumericLiterals:
   MinDigits: 10
 
-Style/StringLiterals:
+Style/NumericPredicate:
   Enabled: false
 
-Style/Encoding:
-  EnforcedStyle: when_needed
-
-Style/BracesAroundHashParameters:
-  EnforcedStyle: braces
+Style/StringLiterals:
+  Enabled: false
 
 Metrics/BlockLength:
   Exclude:

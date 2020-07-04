@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ISO8601
   ##
   # A Months atom in a {ISO8601::Duration}
@@ -60,7 +62,7 @@ module ISO8601
 
     private
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize,Metrics/PerceivedComplexity
     def calculation(atom, base)
       initial = base.month + atom
       if initial <= 0
@@ -81,5 +83,6 @@ module ISO8601
 
       (::Time.utc(year, month) - ::Time.utc(base.year, base.month)) / atom
     end
+    # rubocop:enable Metrics/AbcSize,Metrics/PerceivedComplexity
   end
 end

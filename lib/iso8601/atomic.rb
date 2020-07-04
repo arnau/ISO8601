@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ISO8601
   module Atomic
     include Comparable

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ISO8601
   ##
   # A Years atom in a {ISO8601::Duration}
@@ -51,14 +53,17 @@ module ISO8601
     #   the year length.
     #
     # @return [Numeric]
+    #
     # rubocop:disable Metrics/AbcSize
     def to_seconds(base = nil)
       valid_base?(base)
       return factor(base) * atom if base.nil?
+
       target = ::Time.new(base.year + atom.to_i, base.month, base.day, base.hour, base.minute, base.second, base.zone)
 
       target - base.to_time
     end
+    # rubocop:enable Metrics/AbcSize
 
     ##
     # The atom symbol.

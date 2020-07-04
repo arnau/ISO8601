@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ISO8601
   ##
   # A DateTime representation
@@ -96,6 +98,7 @@ module ISO8601
     # It enhances the parsing capabilities of the native DateTime.
     #
     # @param [String] date_time The ISO representation
+    #
     # rubocop:disable Metrics/AbcSize
     def parse(date_time)
       raise(ISO8601::Errors::UnknownPattern, date_time) if date_time.empty?
@@ -111,6 +114,7 @@ module ISO8601
 
       ::DateTime.new(*(date_atoms + time_atoms).compact)
     end
+    # rubocop:enable Metrics/AbcSize
 
     ##
     # Validates the date has the right pattern.

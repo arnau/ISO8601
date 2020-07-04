@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ISO8601
   ##
   # A duration representation. When no base is provided, all atoms use an
@@ -21,8 +23,6 @@ module ISO8601
   #     dp = ISO8601::Duration.new('P2Y1MT2H')
   #     di == dp # => true
   #     di == ds # => true
-  #
-  # rubocop:disable Metrics/ClassLength
   class Duration
     ##
     # @param [String, Numeric] input The duration pattern
@@ -244,6 +244,7 @@ module ISO8601
     # @param [Numeric] value The seconds to promote
     #
     # @return [ISO8601::Duration]
+    #
     # rubocop:disable Metrics/AbcSize
     def seconds_to_iso(value)
       return self.class.new('PT0S') if value.zero?
@@ -263,6 +264,7 @@ module ISO8601
 
       self.class.new(date + time)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def decompose_atom(value, atom)
       [atom.class.new((value / atom.factor).to_i), (value % atom.factor)]
@@ -282,6 +284,7 @@ module ISO8601
       input
     end
 
+    # rubocop:disable Metrics/AbcSize
     def valid_pattern?(components)
       date = [components[:years],
               components[:months],
@@ -297,6 +300,7 @@ module ISO8601
 
       raise(ISO8601::Errors::UnknownPattern, @pattern) if empty
     end
+    # rubocop:enable Metrics/AbcSize
 
     def valid_fractions?(values)
       values = values.reject(&:zero?)
