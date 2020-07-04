@@ -11,13 +11,11 @@ Create your _feature_ branch:
 git checkout -b features/xyz
 ```
 
-Set up your machine.  I recommend using [Docker](https://docker.com):
+Set up your machine.  I recommend using [Nix](https://nixos.org/nix/manual/):
 
 ```sh
-make install
+nix-shell
 ```
-
-But of course you can go raw style
 
 ```sh
 bundle install
@@ -26,25 +24,10 @@ bundle install
 Add your code and tests and check it passes:
 
 ```sh
-make test  # mri, jruby
-# or
-make mri-test
-make jruby-test
-```
-
-Or raw style
-
-```sh
 bundle exec rspec
 ```
 
 Although not required, try to adhere to Rubocop's checks:
-
-```sh
-make check
-```
-
-Or raw style
 
 ```sh
 bundle exec rubocop
