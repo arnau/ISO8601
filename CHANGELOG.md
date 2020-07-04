@@ -1,3 +1,7 @@
+## Next
+
+* Fix RuboCop issues (thanks @utkarsh2102).
+
 ## 0.12.3
 
 * Remove git dependency (thanks @utkarsh2102).
