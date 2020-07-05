@@ -2,11 +2,13 @@ require:
   - rubocop-packaging
 
 AllCops:
+  NewCops: enable
   Exclude:
     - bundle/vendors/**/*
+  TargetRubyVersion: 2.4
 
-Documentation:
-  Enabled: false
+Layout/LineLength:
+  Max: 170
 
 Lint/UselessComparison:
   Enabled: false
@@ -14,19 +16,13 @@ Lint/UselessComparison:
 Metrics/ClassLength:
   Max: 165
 
-# Work in progress
-Metrics/LineLength:
-  Max: 183
-
-# Work in progress
 Metrics/MethodLength:
   Max: 24
 
-# Work in progress
-Metrics/PerceivedComplexity:
-  Max: 8
-
 Naming/MethodParameterName:
+  Enabled: false
+
+Style/Documentation:
   Enabled: false
 
 Style/NumericLiterals:
