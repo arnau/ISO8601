@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'iso8601/version'
+require_relative 'lib/iso8601/version'
 
 Gem::Specification.new do |s|
   s.name = 'iso8601'
