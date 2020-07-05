@@ -1,6 +1,6 @@
-sudo: false
+---
 language: ruby
+before_install: gem install bundler -v 2.1.4
 rvm:
-  - 2.7.0
+  - 2.7.1
   - ruby-head
-script: bundle exec rspec spec
