@@ -1,6 +1,7 @@
 ## Next
 
 * Fix RuboCop issues (thanks @utkarsh2102).
+* Add support for Ruby 2.5 and Ruby 2.6 (thanks @utkarsh2102).
 
 ## 0.12.3
 

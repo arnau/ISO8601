@@ -22,7 +22,7 @@ times) standard.
 
 ## Supported versions
 
-* MRI 2.x
+* MRI 2.5, 2.6, 2.7
 
 ## Documentation
 
@@ -46,7 +46,7 @@ Then
 
 ```
 $ bundle install
-$ bundle exec rspec
+$ bundle exec rake
 ```
 
 ## Contributing
