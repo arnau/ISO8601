@@ -5,6 +5,7 @@ let
     pkgs.xsv
     pkgs.git
     pkgs.ruby_2_7
+    pkgs.rubyPackages_2_7.rake
   ];
 
 in

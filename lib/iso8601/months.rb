@@ -62,7 +62,7 @@ module ISO8601
 
     private
 
-    # rubocop:disable Metrics/AbcSize,Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
     def calculation(atom, base)
       initial = base.month + atom
       if initial <= 0
@@ -83,6 +83,6 @@ module ISO8601
 
       (::Time.utc(year, month) - ::Time.utc(base.year, base.month)) / atom
     end
-    # rubocop:enable Metrics/AbcSize,Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize
   end
 end
