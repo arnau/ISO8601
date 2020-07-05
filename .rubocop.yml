@@ -22,6 +22,9 @@ Metrics/MethodLength:
 Naming/MethodParameterName:
   Enabled: false
 
+Metrics/PerceivedComplexity:
+  Max: 9
+
 Style/Documentation:
   Enabled: false
 
