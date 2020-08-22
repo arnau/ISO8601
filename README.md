@@ -9,7 +9,7 @@ longer possible to do operations like `DateTime + Duration`.
 
 Version 1.0.0 will lock public interfaces.
 
-Check the [changelog](https://github.com/arnau/ISO8601/blob/master/CHANGELOG.md) if you are upgrading from an older version.
+Check the [changelog](https://github.com/arnau/ISO8601/blob/main/CHANGELOG.md) if you are upgrading from an older version.
 
 ISO8601 is a simple implementation of the ISO 8601 (Data elements and
 interchange formats — Information interchange — Representation of dates and
@@ -17,7 +17,7 @@ times) standard.
 
 ## Build status
 
-[![Build Status](https://secure.travis-ci.org/arnau/ISO8601.png?branch=master)](http://travis-ci.org/arnau/ISO8601/)
+[![Build Status](https://secure.travis-ci.org/arnau/ISO8601.png?branch=main)](http://travis-ci.org/arnau/ISO8601/)
 [![Gem Version](https://badge.fury.io/rb/iso8601.svg)](http://badge.fury.io/rb/iso8601)
 
 ## Supported versions
@@ -58,4 +58,4 @@ Please see [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## License
 
-Arnau Siches under the [MIT License](https://github.com/arnau/ISO8601/blob/master/LICENSE)
+Arnau Siches under the [MIT License](https://github.com/arnau/ISO8601/blob/main/LICENSE)
