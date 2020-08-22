@@ -80,7 +80,9 @@ RSpec.describe ISO8601::Duration do
     end
 
     it "should raise ISO8601::Errors::TypeError when other object is not Numeric or ISO8601::Duration" do
+      # rubocop:disable Style/StringConcatenation
       expect { ISO8601::Duration.new('PT1H') + 'wololo' }.to raise_error(ISO8601::Errors::TypeError)
+      # rubocop:enable Style/StringConcatenation
     end
   end
 

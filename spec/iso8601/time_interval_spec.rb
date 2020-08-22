@@ -371,10 +371,12 @@ RSpec.describe ISO8601::TimeInterval do
     end
 
     it "should check if the intervals are equals" do
+      # rubocop:disable Lint/FloatComparison
       expect(@small == @small).to be_truthy
       expect(@small == @small.to_f).to be_falsy
       expect(@small == @big).to be_falsy
       expect(@small == @big.to_f).to be_falsy
+      # rubocop:enable Lint/FloatComparison
     end
   end
 

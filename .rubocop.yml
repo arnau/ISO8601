@@ -10,7 +10,7 @@ AllCops:
 Layout/LineLength:
   Max: 170
 
-Lint/UselessComparison:
+Lint/BinaryOperatorWithIdenticalOperands:
   Enabled: false
 
 Metrics/ClassLength:

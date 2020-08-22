@@ -115,8 +115,6 @@ module ISO8601
     # @param [String] input
     #
     # @return [Array<Integer, Float>]
-    #
-    # rubocop:disable Metrics/AbcSize
     def atomize(input)
       _, time, zone = parse_timezone(input)
       _, hour, separator, minute, second = parse_time(time)
@@ -136,7 +134,6 @@ module ISO8601
 
       atoms
     end
-    # rubocop:enable Metrics/AbcSize
 
     def require_separator(input)
       !input.nil?
