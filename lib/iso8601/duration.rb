@@ -228,14 +228,14 @@ module ISO8601
           (?:
             (?:(?<years>\d+)Y)?
             (?:(?<months>\d+)M)?
+            (?<weeks>\d+(?:[.,]\d+)?W)?
             (?:(?<days>\d+)D)?
             (?<time>T
               (?:(?<hours>\d+(?:[.,]\d+)?)H)?
               (?:(?<minutes>\d+(?:[.,]\d+)?)M)?
               (?:(?<seconds>\d+(?:[.,]\d+)?)S)?
             )?
-          ) |
-          (?<weeks>\d+(?:[.,]\d+)?W)
+          )
         ) # Duration
       $/x)
     end
